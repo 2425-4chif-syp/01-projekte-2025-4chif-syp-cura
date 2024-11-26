@@ -1,0 +1,59 @@
+
+*** These modified files were found in JOE when it aborted on Tue Nov 26 13:29:03 2024
+*** JOE was aborted by UNIX signal 1
+
+*** Datei '(Unbenannt)'
+/home/eliasmahr/Syp-Cura/BranchRevealJs/01-projekte-2025-4chif-syp-cura/.git/COMMIT_EDITMSG
+
+*** Datei '/home/eliasmahr/Syp-Cura/BranchRevealJs/01-projekte-2025-4chif-syp-cura/.git/COMMIT_EDITMSG'
+
+
+
+ 
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Auf Branch main
+# Ihr Branch ist auf demselben Stand wie 'origin/main'.
+#
+# Zum Commit vorgemerkte Änderungen:
+#	neue Datei:     README.adoc
+#	neue Datei:     README.md
+#	neue Datei:     asciidocs/.nojekyll
+#	neue Datei:     asciidocs/docs/file.adoc
+#	neue Datei:     asciidocs/docs/images/.gitkeep
+#	neue Datei:     asciidocs/docs/images/img.png
+#	neue Datei:     asciidocs/docs/index.adoc
+#	neue Datei:     asciidocs/docs/somePage.adoc
+#	neue Datei:     asciidocs/scripts/PLEASE_DO_NOT_TOUCH.txt
+#	neue Datei:     asciidocs/scripts/docker-convert-util.sh
+#	neue Datei:     asciidocs/scripts/docker-convert.sh
+#	neue Datei:     asciidocs/slides/css/atom-one-light.css
+#	neue Datei:     asciidocs/slides/css/presentation.css
+#	neue Datei:     asciidocs/slides/demo.adoc
+#	neue Datei:     asciidocs/slides/images/img.png
+#	neue Datei:     config.sh
+#	gelöscht:       erd.puml
+#	neue Datei:     img/adoc-to-html.png
+#	neue Datei:     img/conver_strategy.jpg
+#	neue Datei:     img/permissions-for-asciidoc-2.png
+#	neue Datei:     img/permissions-for-asciidoc.png
+#	neue Datei:     local-convert.sh
+#	gelöscht:       project.adoc
+#	gelöscht:       projectstucture.puml
+#	neue Datei:     publish.sh
+#
+
+*** Datei '* Startup Log *'
+Bearbeite '/etc/joe/editorrc'...Bearbeite '/etc/joe/ftyperc'...Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/editorrc
+
+*** These modified files were found in JOE when it aborted on Tue Nov 26 13:29:52 2024
+*** JOE was aborted by UNIX signal 1
+
+*** Datei '(Unbenannt)'
+/home/eliasmahr/Syp-Cura/BranchRevealJs/01-projekte-2025-4chif-syp-cura/.git/COMMIT_EDITMSG
+
+*** Datei '* Startup Log *'
+Bearbeite '/etc/joe/editorrc'...Bearbeite '/etc/joe/ftyperc'...Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/editorrc
