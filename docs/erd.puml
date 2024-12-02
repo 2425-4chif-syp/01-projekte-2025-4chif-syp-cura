@@ -55,15 +55,17 @@ entity "Medicament" as medicament{
     description : varchar(100)
 }
 
-entity "MedicamentPlan" as plan{
+entity "Medication" as plan{
     +medicamentPlanId : int
     --
     medicamentId : int
     patientId : int
-    currentStatus : boolean (token sets to false Monday 1am)
+    MedicationTime : timestamp
     timeSlot : VARCHAR2(5) (08:00, 12:00, 16:00, 20:00)
     dayOfWeek : NUMBER(1) (1:Monday, 2:Tuesday, ..)
     amountOfMedicament : int
+    startDate : (optional)
+    endDate : (optional)
 }
 
 caresFor }|--|| contactPerson
