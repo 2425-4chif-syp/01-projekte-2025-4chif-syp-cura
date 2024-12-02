@@ -1,0 +1,87 @@
+## digitailieren
+
+## watchdog 
+totmannschalter
+
+## dashboard
+amatourenbrett
+
+## telemetry
+
+## broker
+Verteilen (MQTT Daten verteilen)
+
+## m2m protokoll
+topics sind speziefische themen die man subcriben kann(observer pattern)
+
+### QoS 0
+Nachricht wird nur einmal verschickt
+ 
+### Qos 1
+Sender warte, bis Empfänger Erhaltbetätigt hat
+
+### Qos 2:
+Strengste, Empfänger erhält Nachticht nur einmal
+
+
+Toggeln --> Umschalten
+
+### duck DNS
+wandelt eine dynamische IP Adresse in eine Domain
+
+### VPN (Wireguard)
+Verschlüssleter Tunnel
+
+### Grafana
+Komplexe Diagramme
+
+### Yaml
+mark Up lanugange
+configurationsdatei von Homeassistant
+Syntax is sehr schwer
+
+### node Red
+profesionelles Tool
+man kann verschiedene Blöcke verbinden
+KEINE KINDER SOFTWARE
+
+### Responsive web desing
+Das Layout passt sich automatisch an das gerät an
+Handy
+Computer
+Handy dreht sich
+
+### Add on
+zusätzliche Softwar die man installieren kann
+Mosquitto
+MariaDB
+
+### Geräte/Plattformen
+Integratioen sind extrerne Geräte/Dienste und Plattformen mit den sich homeassistant verbindet
+Lampe
+Sensoren
+ESP32
+
+### EspHome
+
+## Dynamische Webseite
+Webseite die sich automatisch anpasst
+
+
+## Statische Webseite
+Webseite die sich nicht anpasst
+
+
+## User story
+Kundenanforderung
+
+## Tasks
+Technische Umsetzungsschritte
+
+## business Value
+bringt es der Firma einen Mehrwert
+
+## rest
+so wie html für maschinen json
+
+
