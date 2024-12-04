@@ -65,22 +65,22 @@ HomeAssistant --> MobilePhone2 : Sends notification if late
 title cura
 
 entity "Person" as person {
-    +PersonId : int
+    +PersonId : int PRIMARY KEY
     --
-    firstName : string
-    lastName : string
-    phoneNumber : string
+    firstName : varchar(100)
+    lastName : varchar(100)
+    phoneNumber : varchar(15)
     addressId : int
 }
 
 entity "Patient" as patient {
-    +PatientId : int
+    +PatientId : int PRIMARY KEY
     --
     personId : int
 }
 
 entity "ContactPerson" as contactPerson{
-    +ContactPersonId : int
+    +ContactPersonId : int PRIMARY KEY
     --
     personId : int
 }
@@ -92,56 +92,67 @@ entity "CaresFor" as caresFor{
 }
 
 entity "ContactType" as contactType{
-    +ContactTypeId : int
+    +ContactTypeId : int PRIMARY KEY
     --
-    description : string
+    description : varchar(200)
 }
 
-
 entity "Address" as location{
-    +AddressId : int
+    +AddressId : int PRIMARY KEY
     --
-    country : string
-    state : string
-    city : string
-    street : string
+    country : varchar(100)
+    state : varchar(100)
+    city : varchar(100)
+    street : varchar(100)
     houseNumber : int
     stair : int
     floor : int
     doorNumber : int
-    addressExtra : string
+    addressExtra : varchar(100)
 }
-
-
 
 entity "Medicament" as medicament{
-    +MedicamentId : int
+    +MedicamentId : int PRIMARY KEY
     --
-    medicamentName : string
-    description : string
-
+    medicamentName : varchar(100)
+    description : varchar(100)
 }
 
-entity "MedicamentPlan" as plan{
-    medicamentId : int
+entity "Medication-id" as plan {
+    +MedicationPlanId : int PRIMARY KEY
+    --
     patientId : int
-    currentStatus : boolean (token sets to false Monday 1am)
-    time : time (8:00, 12:00, ...)
-    day : byte (1:Monday, 2:Tuesday, ..)
+    medicamentId : int
+    timeSlot : enum -- (08:00, 12:00, 16:00, 20:00)
+    dayOfWeek : enum -- (Monday, Tuesday,...)
     amountOfMedicament : int
+    startDate : date -- (optional)
+    endDate : date -- (optional)
 }
+
+entity "PillBoxOpening" as medicationLog {
+    +LogId : int PRIMARY KEY
+    --
+    medicationPlanId : int
+    timestamp : timestamp -- Timestamp of the actual intake
+    drawer : byte
+}
+
+
 
 
 caresFor }|--|| contactPerson
 caresFor }|--|| patient
 contactPerson ||--|| person
 patient ||--|| person
-plan ||--|| patient
-medicament }|--|{ plan
+plan }|--|| patient
+medicament ||--|| plan
 person ||--|| location
 contactType }|--|{ caresFor
 
+
 @enduml
+
 
 ---
 

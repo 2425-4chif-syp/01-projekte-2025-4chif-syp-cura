@@ -55,26 +55,37 @@ entity "Medicament" as medicament{
     description : varchar(100)
 }
 
-entity "Medication" as plan{
-    +medicamentPlanId : int
+entity "Medication-id" as plan {
+    +MedicationPlanId : int PRIMARY KEY
     --
-    medicamentId : int
     patientId : int
-    MedicationTime : timestamp
-    timeSlot : VARCHAR2(5) (08:00, 12:00, 16:00, 20:00)
-    dayOfWeek : NUMBER(1) (1:Monday, 2:Tuesday, ..)
+    medicamentId : int
+    timeSlot : enum -- (08:00, 12:00, 16:00, 20:00)
+    dayOfWeek : enum -- (Monday, Tuesday,...)
     amountOfMedicament : int
-    startDate : (optional)
-    endDate : (optional)
+    startDate : date -- (optional)
+    endDate : date -- (optional)
 }
+
+entity "PillBoxOpening" as medicationLog {
+    +LogId : int PRIMARY KEY
+    --
+    medicationPlanId : int
+    timestamp : timestamp -- Timestamp of the actual intake
+    drawer : byte
+}
+
+
+
 
 caresFor }|--|| contactPerson
 caresFor }|--|| patient
 contactPerson ||--|| person
 patient ||--|| person
-plan ||--|| patient
-medicament }|--|{ plan
+plan }|--|| patient
+medicament ||--|| plan
 person ||--|| location
 contactType }|--|{ caresFor
+
 
 @enduml
