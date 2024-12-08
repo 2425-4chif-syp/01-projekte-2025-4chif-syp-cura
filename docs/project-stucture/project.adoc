@@ -7,9 +7,9 @@ Datum: [9.10.2024]
 
 == Projektbeschreibung
 Das Projekt zielt darauf ab, ein intelligentes Medikamentenspender-System zu entwickeln,
- das sicherstellt, dass Patienten ihre Medikamente rechtzeitig einnehmen. 
- Das System überwacht die Medikamenteneinnahme, sendet Benachrichtigungen an den Patienten 
- und kann bei Bedarf auch externe Kontakte (z.B. Familienmitglieder, Pflegekräfte) benachrichtigen, 
+ das sicherstellt, dass Patienten ihre Medikamente rechtzeitig einnehmen.
+ Das System überwacht die Medikamenteneinnahme, sendet Benachrichtigungen an den Patienten
+ und kann bei Bedarf auch externe Kontakte (z.B. Familienmitglieder, Pflegekräfte) benachrichtigen,
  wenn die Tabletten nicht rechtzeitig eingenommen werden.
 
 
@@ -23,138 +23,13 @@ Das Projekt zielt darauf ab, ein intelligentes Medikamentenspender-System zu ent
 - **Datenbank**: Speichert Informationen zur Medikamenteneinnahme und Benutzerprofile
 
 
-["plantuml"]
-----
-@startuml projectstucture
-
-title Cura
-
-cloud "Home Network" {
-  node "ESP32" {
-    component "Medication Box Detection" as MedicationBox
-  }
-
-  node "Raspberry Pi" {
-    database "Database" as DB {
-      frame "Medication Data" as MedicationData
-      frame "User Profiles" as UserProfiles
-      frame "Medical Status" as MedicalStatus
-    }
-    component "Home Assistant" as HomeAssistant
-    component "MQTT Broker" as MQTTBroker
-  }
-  component "Mobile Phone" as MobilePhone1
-}
-
-cloud "External Network" {
-  component "Mobile Phone" as MobilePhone2
-}
-
-MedicationBox --> MQTTBroker : pill box event
-MQTTBroker <--> HomeAssistant : Receives pill status
-HomeAssistant <--> DB
-HomeAssistant --> MobilePhone1 : Sends notification if late
-HomeAssistant --> MobilePhone2 : Sends notification if late
-
-@enduml
-----
 
 ["plantuml"]
-----
-@startuml cura
-title cura
-
-entity "Person" as person {
-    +PersonId : int PRIMARY KEY
-    --
-    firstName : varchar(100)
-    lastName : varchar(100)
-    phoneNumber : varchar(15)
-    addressId : int
-}
-
-entity "Patient" as patient {
-    +PatientId : int PRIMARY KEY
-    --
-    personId : int
-}
-
-entity "ContactPerson" as contactPerson{
-    +ContactPersonId : int PRIMARY KEY
-    --
-    personId : int
-}
-
-entity "CaresFor" as caresFor{
-    patientId : int
-    contactPersonId : int
-    contactTypeId : int
-}
-
-entity "ContactType" as contactType{
-    +ContactTypeId : int PRIMARY KEY
-    --
-    description : varchar(200)
-}
-
-entity "Address" as location{
-    +AddressId : int PRIMARY KEY
-    --
-    country : varchar(100)
-    state : varchar(100)
-    city : varchar(100)
-    street : varchar(100)
-    houseNumber : int
-    stair : int
-    floor : int
-    doorNumber : int
-    addressExtra : varchar(100)
-}
-
-entity "Medicament" as medicament{
-    +MedicamentId : int PRIMARY KEY
-    --
-    medicamentName : varchar(100)
-    description : varchar(100)
-}
-
-entity "Medication-id" as plan {
-    +MedicationPlanId : int PRIMARY KEY
-    --
-    patientId : int
-    medicamentId : int
-    timeSlot : enum -- (08:00, 12:00, 16:00, 20:00)
-    dayOfWeek : enum -- (Monday, Tuesday,...)
-    amountOfMedicament : int
-    startDate : date -- (optional)
-    endDate : date -- (optional)
-}
-
-entity "PillBoxOpening" as medicationLog {
-    +LogId : int PRIMARY KEY
-    --
-    medicationPlanId : int
-    timestamp : timestamp -- Timestamp of the actual intake
-    drawer : byte
-}
+plantuml::projectstructure.puml[]
 
 
-
-
-caresFor }|--|| contactPerson
-caresFor }|--|| patient
-contactPerson ||--|| person
-patient ||--|| person
-plan }|--|| patient
-medicament ||--|| plan
-person ||--|| location
-contactType }|--|{ caresFor
-
-
-@enduml
-
-
----
+["plantuml"]
+plantuml::erd.puml[]
 
 
 
