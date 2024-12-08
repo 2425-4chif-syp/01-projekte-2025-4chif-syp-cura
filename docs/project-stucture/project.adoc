@@ -1,26 +1,22 @@
-= Projektantrag: Medikamentenspender-System
-Autor: [Leopold Mistelberger, Elias Mahr, Timon Schmalzer]
-Datum: [9.10.2024]
+= Project Proposal: Medication Dispenser System
+Author: [Leopold Mistelberger, Elias Mahr, Timon Schmalzer]
+Date: [October 9, 2024]
+
 
 == Cura
 
 
-== Projektbeschreibung
-Das Projekt zielt darauf ab, ein intelligentes Medikamentenspender-System zu entwickeln,
- das sicherstellt, dass Patienten ihre Medikamente rechtzeitig einnehmen.
- Das System überwacht die Medikamenteneinnahme, sendet Benachrichtigungen an den Patienten
- und kann bei Bedarf auch externe Kontakte (z.B. Familienmitglieder, Pflegekräfte) benachrichtigen,
- wenn die Tabletten nicht rechtzeitig eingenommen werden.
+== Project Description
+The project aims to develop an intelligent medication dispenser system that ensures patients take their medications on time.
+The system monitors medication intake, sends notifications to the patient,
+and, if necessary, can also notify external contacts (e.g., family members, caregivers) if the medications are not taken on time.
 
-
-
-
-== Technologien
-- **ESP32**: Mikrocontroller zur Erfassung des Schachtelstatus.
-- **MQTT**: Protokoll zur Kommunikation zwischen ESP32 und Raspberry Pi.
-- **Raspberry Pi**: Zentrale Steuerungseinheit, die die Datenbank (SQL) hostet und Home Assistant zur Automatisierung verwendet.
-- **Home Assistant**: Plattform zur Überwachung und Benachrichtigung.
-- **Datenbank**: Speichert Informationen zur Medikamenteneinnahme und Benutzerprofile
+== Technologies
+- **ESP32**: Microcontroller for detecting the status of the pillbox.
+- **MQTT**: Protocol for communication between the ESP32 and the Raspberry Pi.
+- **Raspberry Pi**: Central control unit hosting the database (SQL) and running Home Assistant for automation.
+- **Home Assistant**: Platform for monitoring and sending notifications.
+- **Database**: Stores information about medication schedules and user profiles.
 
 
 
