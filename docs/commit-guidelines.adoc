@@ -1,0 +1,21 @@
+= Commit guidelines
+
+We use the conventional commits guidelines from the following website
+link:https://www.conventionalcommits.org/en/v1.0.0/[conventional commits website]
+
+== the most important guidelines are the following
+* fix: when patching a bug
+* feat: when a new feature is added
+* docs: when adding or changing documents
+* chore: cleaning the repository (removing unnecessary files)
+
+a possible commit could look like this:
+----
+docs: added commit guidelines file
+----
+
+== Youtrack integration
+in our case we also have to add the hashcode of the Youtrack task. If the task has the hashcode "cura-4", then the commit will look like the following:
+----
+docs: added commit guidelines file #cura-4
+----

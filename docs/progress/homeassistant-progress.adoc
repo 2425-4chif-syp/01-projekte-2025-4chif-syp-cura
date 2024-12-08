@@ -1,0 +1,25 @@
+= Homeassistant Progress: Cura
+
+----
+Author: Timon Schmalzer
+Date: 8.12.2024
+----
+
+== Planed features
+=== display all medicine to be taken during the chosen timespan (can be changed with a calendar button or something similar)
+
+=== Display if the user
+* missed a medicine intake (displayed with a red color)
+* should still take the medicine but is within the allowed time frame (displayed with a yellow color)
+* has already taken the medicine (displayed with a green color)
+
+=== send a notification
+* to the device of the user if the intake was missed
+* to a contact person if the user still didn't take the medicine even after the first notification
+* to whoever is registered as next person (usually a doctor) if the user still didn't take the medicine after the contact person was contacted
+
+
+
+== Current work in progress
+* basic Dashboard with MQTT connection
+* configuring logic behind colors
