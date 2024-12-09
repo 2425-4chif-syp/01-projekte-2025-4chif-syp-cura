@@ -84,4 +84,6 @@ bringt es der Firma einen Mehrwert
 ## rest
 so wie html für maschinen json
 
+## rest definition
+POST / GET / Paramter will wissen
 

@@ -32,19 +32,23 @@ This document tracks the progress of the technical project "Cura"
 image::pics/esp32-circuit-diagram.png[alt="Circuit Design", width=600]
 The circuit design can be viewed online at the following link:
 
-https://wokwi.com/projects/your-project-id
+https://wokwi.com/projects/416470290979815425
 
 The code is as simple as possible and does not contain MQTT
 
 === Medicine Box
-
+Picture of medicine box
 
 
 == Current Focus
 * Routing (VPN Wireguard, DuckDNS)
 * Show MQTT data on Homeassistant
+* Create Postgres Database
+
 
 == Next Steps
 1. Order Magnet Sensors
 2. Impliment Sensors on medicine box
-3. Prepare test cases for the core features.
+3. Quarkus backend
+4. Notification on Homeassistant
+5. Website for doctor

@@ -23,7 +23,10 @@ and, if necessary, can also notify external contacts (e.g., family members, care
 ["plantuml"]
 plantuml::projectstructure.puml[]
 
+image::pics/project-architecture.png[alt="Circuit Design", width=600]
 
+
+== ERD
 ["plantuml"]
 plantuml::erd.puml[]
 
