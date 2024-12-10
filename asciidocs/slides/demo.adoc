@@ -38,7 +38,6 @@ Timon Schmalzer
 Elias Mahr
 
 [%auto-animate]
-== !
 == Slide w/ image
 
 [.stretch]
@@ -55,7 +54,7 @@ image::img.png[background, size="contain"]
 * Topic 3
 
 [%auto-animate]
-
+== !
 
 [.highlight]
 Matched element will be animated automatically!
