@@ -40,10 +40,10 @@ Timon Schmalzer
 Elias Mahr
 
 [%auto-animate]
-== Slide w/ image
+== Preject Architecture
 
 [.stretch]
-image::img.png[]
+image::/01-projekte-2025-4chif-syp-cura/blob/main/docs/project-stucture/pics/project-architecture.png[]
 
 [.lightbg,background-opacity="0.7"]
 == Slide w/ text and background image
