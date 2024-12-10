@@ -1,5 +1,4 @@
 = Cura
-:author: Elias Mahr
 :revnumber: 1.0
 :revdate: {docdate}
 :revremark: SLIDEDEMO @ HTL Leonding
@@ -31,9 +30,15 @@ endif::[]
 //:title-slide-background-image: img.png
 :title-slide-transition: zoom
 :title-slide-transition-speed: fast
+== !
 
-Testing filter by changing documentation file
+Project Team:
+Leopold Mistelberger
+Timon Schmalzer
+Elias Mahr
 
+[%auto-animate]
+== !
 == Slide w/ image
 
 [.stretch]
@@ -50,12 +55,7 @@ image::img.png[background, size="contain"]
 * Topic 3
 
 [%auto-animate]
-== !
 
-Matched element will be animated automatically!
-
-[%auto-animate]
-== !
 
 [.highlight]
 Matched element will be animated automatically!
