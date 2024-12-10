@@ -30,6 +30,7 @@ endif::[]
 //:title-slide-background-image: img.png
 :title-slide-transition: zoom
 :title-slide-transition-speed: fast
+:revealjs_transition: slide
 
 
 == Project Team
@@ -39,13 +40,11 @@ Leopold Mistelberger
 Timon Schmalzer
 Elias Mahr
 
-[%auto-animate]
 == Preject Architecture
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/images/project-architecture.png[]
 
-[%auto-animate]
 == Erd
 
 [.stretch]
