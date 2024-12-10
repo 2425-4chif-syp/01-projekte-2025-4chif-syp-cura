@@ -43,7 +43,7 @@ Elias Mahr
 == Preject Architecture
 
 [.stretch]
-image::/docs/project-stucture/pics/project-architecture.png[]
+image::/01-projekte-2025-4chif-syp-cura/docs/project-stucture/pics/project-architecture.png[]
 
 [.lightbg,background-opacity="0.7"]
 == Erd
