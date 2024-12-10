@@ -30,9 +30,11 @@ endif::[]
 //:title-slide-background-image: img.png
 :title-slide-transition: zoom
 :title-slide-transition-speed: fast
+
+
 == Project Team
 
-Project Team:
+[%hardbreaks]
 Leopold Mistelberger
 Timon Schmalzer
 Elias Mahr
