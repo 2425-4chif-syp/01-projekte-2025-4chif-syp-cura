@@ -1,6 +1,5 @@
-= Some Slide
-:author: firstname lastname
-:email: x.y@htl.at
+= Cura
+:author: Elias Mahr
 :revnumber: 1.0
 :revdate: {docdate}
 :revremark: SLIDEDEMO @ HTL Leonding
