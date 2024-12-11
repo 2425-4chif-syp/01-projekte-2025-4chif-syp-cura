@@ -36,9 +36,9 @@ endif::[]
 == Project Team
 
 [%hardbreaks]
-Leopold Mistelberger
-Timon Schmalzer
-Elias Mahr
+- Leopold Mistelberger
+- Timon Schmalzer
+- Elias Mahr
 
 == Preject Architecture
 
