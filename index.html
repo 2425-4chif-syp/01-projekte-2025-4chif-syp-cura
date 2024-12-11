@@ -451,7 +451,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_useful_links">1. Useful Links</a></li>
-<li><a href="#_index">2. Index</a></li>
+<li><a href="#_project_description">2. Project Description</a></li>
+<li><a href="#_technologies">3. Technologies</a></li>
 </ul>
 </div>
 </div>
@@ -472,12 +473,34 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_index"><a class="anchor" href="#_index"></a>2. Index</h2>
+<h2 id="_project_description"><a class="anchor" href="#_project_description"></a>2. Project Description</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The project aims to develop an intelligent medication dispenser system that ensures patients take their medications on time.
+The system monitors medication intake, sends notifications to the patient,
+and, if necessary, can also notify external contacts (e.g., family members, caregivers) if the medications are not taken on time.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_technologies"><a class="anchor" href="#_technologies"></a>3. Technologies</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><a href="/01-projekte-2025-4chif-syp-cura/project">Project Description</a></p>
+<p><strong>ESP32</strong>: Microcontroller for detecting the status of the pillbox.</p>
+</li>
+<li>
+<p><strong>MQTT</strong>: Protocol for communication between the ESP32 and the Raspberry Pi.</p>
+</li>
+<li>
+<p><strong>Raspberry Pi</strong>: Central control unit hosting the database (SQL) and running Home Assistant for automation.</p>
+</li>
+<li>
+<p><strong>Home Assistant</strong>: Platform for monitoring and sending notifications.</p>
+</li>
+<li>
+<p><strong>Database</strong>: Stores information about medication schedules and user profiles.</p>
 </li>
 </ul>
 </div>
@@ -486,7 +509,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-12-11 14:11:24 UTC
+Last updated 2024-12-11 14:17:45 UTC
 </div>
 </div>
 </body>
