@@ -1,4 +1,4 @@
-= Index page
+= Cura
 ifndef::imagesdir[:imagesdir: images]
 
 image::img.png[]
