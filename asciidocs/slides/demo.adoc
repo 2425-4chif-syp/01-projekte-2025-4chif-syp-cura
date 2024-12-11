@@ -40,7 +40,7 @@ endif::[]
 - Timon Schmalzer
 - Elias Mahr
 
-== Preject Architecture
+== Project Architecture
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/images/project-architecture.png[]
