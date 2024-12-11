@@ -8,6 +8,7 @@ link:https://www.conventionalcommits.org/en/v1.0.0/[conventional commits website
 * feat: when a new feature is added
 * docs: when adding or changing documents
 * chore: cleaning the repository (removing unnecessary files)
+* slides: added or changed something in the GitHub slides/pages
 
 a possible commit could look like this:
 ----
