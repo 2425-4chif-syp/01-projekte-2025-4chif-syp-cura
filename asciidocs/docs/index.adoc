@@ -6,4 +6,5 @@ ifndef::imagesdir[:imagesdir: images]
 - https://vm81.htl-leonding.ac.at/projects/6b3d8e01-d6ac-47ef-89d0-44e32425d26a[YouTrack Board]
 
 == Index 
-- link:/01-projekte-2025-4chif-syp-cura/docs/project-stucture/project[Project Description]
+- link:/01-projekte-2025-4chif-syp-cura/docs/project-stucture/project.adoc[Project Description]
+
