@@ -16,25 +16,20 @@ entity "Patient" as patient {
     personId : int
 }
 
-entity "ContactPerson" as contactPerson{
+entity "ContactPerson" as contactPerson {
     +ContactPersonId : int PRIMARY KEY
     --
     personId : int
 }
 
-entity "CaresFor" as caresFor{
+entity "CaresFor" as caresFor {
     patientId : int
     contactPersonId : int
     contactTypeId : int
+    PRIMARY KEY (patientId, contactPersonId)
 }
 
-entity "ContactType" as contactType{
-    +ContactTypeId : int PRIMARY KEY
-    --
-    description : varchar(200)
-}
-
-entity "Address" as location{
+entity "Address" as address {
     +AddressId : int PRIMARY KEY
     --
     country : varchar(100)
@@ -48,23 +43,29 @@ entity "Address" as location{
     addressExtra : varchar(100)
 }
 
-entity "Medicament" as medicament{
+entity "Medicament" as medicament {
     +MedicamentId : int PRIMARY KEY
     --
     medicamentName : varchar(100)
     description : varchar(100)
 }
 
-entity "Medication-id" as plan {
+entity "MedicationPlan" as medicationPlan {
     +MedicationPlanId : int PRIMARY KEY
     --
     patientId : int
-    medicamentId : int
+    startDate : date -- (optional)
+    endDate : date -- (optional)
+}
+
+entity "MedicationPlan_Medicament" as medPlanMedicament {
+    +MedicationPlanId : int
+    +MedicamentId : int
+    --
     timeSlot : enum -- (08:00, 12:00, 16:00, 20:00)
     dayOfWeek : enum -- (Monday, Tuesday,...)
     amountOfMedicament : int
-    startDate : date -- (optional)
-    endDate : date -- (optional)
+    PRIMARY KEY (MedicationPlanId, MedicamentId, timeSlot, dayOfWeek)
 }
 
 entity "PillBoxOpening" as medicationLog {
@@ -72,20 +73,18 @@ entity "PillBoxOpening" as medicationLog {
     --
     medicationPlanId : int
     timestamp : timestamp -- Timestamp of the actual intake
-    drawer : byte
+    drawerId : int -- Reference to the drawer or tag
 }
-
-
-
 
 caresFor }|--|| contactPerson
 caresFor }|--|| patient
+
 contactPerson ||--|| person
 patient ||--|| person
-plan }|--|| patient
-medicament ||--|| plan
-person ||--|| location
-contactType }|--|{ caresFor
 
+medicationPlan }|--|| patient
+medicationPlan ||--o{ medPlanMedicament
+medicament ||--o{ medPlanMedicament
 
+person ||--o| address
 @enduml
