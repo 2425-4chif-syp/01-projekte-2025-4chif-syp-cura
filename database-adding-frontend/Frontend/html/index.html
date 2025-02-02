@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cura - Medicine Planer</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Cura</h1>
+            <div onclick="navigateTo('mqtt.html')">
+                <h3>MQTT Values</h3>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Welcome to Cura</h2>
+        <div class="grid">
+            <div class="card" onclick="openModal()">
+                <h3>Add Patient</h3>
+                <p>Add a new patient to the database or to a caretaker</p>
+            </div>
+            <div class="card" onclick="navigateTo('add-medicine.html')">
+                <h3>Add Medicine</h3>
+                <p>Add a new medicine to the database</p>
+            </div>
+            <div class="card" onclick="navigateTo('add-medicine-plan.html')">
+                <h3>Add Medicine Plan</h3>
+                <p>Create a new medicine plan</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="optionsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Choose an Option</h2>
+            <button class="option-button" onclick="addNewPatient()">Add New Patient to Database</button>
+            <button class="option-button" onclick="assignPatientToCaretaker()">Assign Patient to Caretaker</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Cura. All rights reserved.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

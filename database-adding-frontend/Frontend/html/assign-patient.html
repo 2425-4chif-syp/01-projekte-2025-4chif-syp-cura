@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cura - Assign Patient</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Cura</h1>
+            <div onclick="navigateTo('index.html')">
+                <h3>Back to Home</h3>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Assign Patient to Caretaker</h2>
+        <div class="form-container">
+            <form id="assignForm" onsubmit="handleAssignment(event)">
+                <div class="form-group">
+                    <label for="patientSelect">Select Patient:</label>
+                    <select id="patientSelect" required>
+                        <option value="">Choose a patient...</option>
+                    </select>
+                    <div class="error-message" id="patientError">Please select a patient</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="caretakerSelect">Select Caretaker:</label>
+                    <select id="caretakerSelect" required>
+                        <option value="">Choose a caretaker...</option>
+                    </select>
+                    <div class="error-message" id="caretakerError">Please select a caretaker</div>
+                </div>
+
+                <button type="submit" class="submit-button">Assign Patient</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Cura. All rights reserved.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/assign-patient.js"></script>
+</body>
+</html>

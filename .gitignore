@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos
 
@@ -36,3 +35,14 @@ Temporary Items
 dist/
 docs/slides/revealjs
 .idea/
+
+# App-specific ignores
+database-adding-frontend/Frontend/js/db.js
+database-adding-frontend/**/*.sql    # Ignoriert alle SQL-Dateien im App-Ordner
+database-adding-frontend/node_modules/
+database-adding-frontend/.env
+database-adding-frontend/init.sql     # Explizit die Haupt-SQL-Dateien ignorieren
+database-adding-frontend/update_schema.sql
+
+# Additional OS files
+Thumbs.db

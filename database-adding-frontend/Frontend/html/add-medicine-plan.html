@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cura - Add Medication Plan</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Cura</h1>
+            <div onclick="navigateTo('index.html')">
+                <h3>Back to Home</h3>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Add Medication Plan</h2>
+        <div class="form-container">
+            <form id="medicationPlanForm" onsubmit="handleAddMedicationPlan(event)">
+                <div class="form-group">
+                    <label for="patientSelect">Patient:</label>
+                    <select id="patientSelect" required>
+                        <option value="">Select a patient...</option>
+                    </select>
+                    <div class="error-message" id="patientError">Please select a patient</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate">
+                </div>
+
+                <div id="medications">
+                    <h3>Medications</h3>
+                    <div class="medication-entry">
+                        <div class="form-group">
+                            <label for="medicamentSelect">Medicament:</label>
+                            <select class="medicament-select" required>
+                                <option value="">Select a medicament...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="timeSlot">Time Slot:</label>
+                            <select class="time-slot" required>
+                                <option value="">Select time...</option>
+                                <option value="08:00">08:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="20:00">20:00</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dayOfWeek">Day of Week:</label>
+                            <select class="day-of-week" required>
+                                <option value="">Select day...</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount:</label>
+                            <input type="number" class="amount" required min="1">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" onclick="addMedicationEntry()" class="secondary-button">Add Another Medication</button>
+                <button type="submit" class="submit-button">Create Medication Plan</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Cura. All rights reserved.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Load patients and medicaments when page loads
+        async function loadData() {
+            try {
+                // Load patients
+                const patientsResponse = await fetch('http://localhost:3000/api/patients');
+                const patients = await patientsResponse.json();
+                const patientSelect = document.getElementById('patientSelect');
+                patients.forEach(patient => {
+                    const option = document.createElement('option');
+                    option.value = patient.PatientId;
+                    option.textContent = `${patient.firstName} ${patient.lastName}`;
+                    patientSelect.appendChild(option);
+                });
+
+                // Load medicaments
+                const medicamentsResponse = await fetch('http://localhost:3000/api/medicaments');
+                const medicaments = await medicamentsResponse.json();
+                document.querySelectorAll('.medicament-select').forEach(select => {
+                    medicaments.forEach(medicament => {
+                        const option = document.createElement('option');
+                        option.value = medicament.MedicamentId;
+                        option.textContent = medicament.medicamentName;
+                        select.appendChild(option);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data. Please try again.');
+            }
+        }
+
+        // Add new medication entry
+        function addMedicationEntry() {
+            const medications = document.getElementById('medications');
+            const newEntry = medications.querySelector('.medication-entry').cloneNode(true);
+            
+            // Clear values
+            newEntry.querySelectorAll('select, input').forEach(input => {
+                input.value = '';
+            });
+            
+            medications.appendChild(newEntry);
+        }
+
+        // Handle form submission
+        async function handleAddMedicationPlan(event) {
+            event.preventDefault();
+            
+            const patientId = document.getElementById('patientSelect').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            // Get all medication entries
+            const medications = [];
+            document.querySelectorAll('.medication-entry').forEach(entry => {
+                medications.push({
+                    medicamentId: entry.querySelector('.medicament-select').value,
+                    timeSlot: entry.querySelector('.time-slot').value,
+                    dayOfWeek: entry.querySelector('.day-of-week').value,
+                    amount: parseInt(entry.querySelector('.amount').value)
+                });
+            });
+
+            try {
+                const response = await fetch('http://localhost:3000/api/medication-plans', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patientId,
+                        startDate,
+                        endDate,
+                        medications
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Medication plan added successfully!');
+                    navigateTo('index.html');
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.message}`);
+                }
+            } catch (error) {
+                console.error('Error adding medication plan:', error);
+                alert('Failed to add medication plan. Please try again.');
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

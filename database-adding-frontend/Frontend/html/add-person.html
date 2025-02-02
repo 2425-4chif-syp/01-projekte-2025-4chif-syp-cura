@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cura - Add Person</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Cura</h1>
+            <div onclick="navigateTo('index.html')">
+                <h3>Back to Home</h3>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Add New Person</h2>
+        <div class="form-container">
+            <form id="personForm" onsubmit="handleAddPerson(event)">
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <select id="role" required onchange="handleRoleChange()">
+                        <option value="">Select a role...</option>
+                        <option value="patient">Patient</option>
+                        <option value="caretaker">Caretaker</option>
+                    </select>
+                    <div class="error-message" id="roleError">Please select a role</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" required>
+                    <div class="error-message" id="firstNameError">Please enter a first name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" required>
+                    <div class="error-message" id="lastNameError">Please enter a last name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number:</label>
+                    <input type="tel" id="phoneNumber" required>
+                    <div class="error-message" id="phoneNumberError">Please enter a phone number</div>
+                </div>
+
+                <h3>Address Information</h3>
+
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <input type="text" id="country">
+                </div>
+
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" id="state">
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" id="city">
+                </div>
+
+                <div class="form-group">
+                    <label for="street">Street:</label>
+                    <input type="text" id="street" required>
+                    <div class="error-message" id="streetError">Please enter a street</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="houseNumber">House Number:</label>
+                    <input type="number" id="houseNumber">
+                </div>
+
+                <div class="form-group">
+                    <label for="stair">Stair:</label>
+                    <input type="number" id="stair">
+                </div>
+
+                <div class="form-group">
+                    <label for="floor">Floor:</label>
+                    <input type="number" id="floor">
+                </div>
+
+                <div class="form-group">
+                    <label for="doorNumber">Door Number:</label>
+                    <input type="number" id="doorNumber">
+                </div>
+
+                <div class="form-group">
+                    <label for="addressExtra">Additional Address Information:</label>
+                    <input type="text" id="addressExtra">
+                </div>
+
+                <button type="submit" class="submit-button">Add Person</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Cura. All rights reserved.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/add-person.js"></script>
+</body>
+</html>
