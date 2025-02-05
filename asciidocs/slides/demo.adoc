@@ -84,7 +84,6 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/erdNew.png[]
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/ProjectArchitektureNew.png[]
 
-ProjectArchitektureNew
 == Funktionsweise Tablettenschachtel
 
 [.stretch]
