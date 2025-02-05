@@ -182,6 +182,26 @@ app.post('/api/plan', (req, res) => {
   );
 });
 
+// Neuer DELETE-Endpoint für Planeinträge
+app.delete('/api/plan/:id', (req, res) => {
+  const planId = req.params.id;
+
+  db.query('DELETE FROM plan WHERE id = ?', [planId], (err, result) => {
+    if (err) {
+      console.error('Fehler beim Löschen des Planeintrags:', err);
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    if (result.affectedRows === 0) {
+      res.status(404).json({ error: 'Planeintrag nicht gefunden' });
+      return;
+    }
+
+    res.json({ message: 'Planeintrag erfolgreich gelöscht' });
+  });
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
