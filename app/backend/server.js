@@ -49,6 +49,22 @@ app.get('/api/drugs', (req, res) => {
   });
 });
 
+pp.post('/api/drugs', (req, res) => {
+  const { name, side_effects, description } = req.body;
+  db.query(
+    'INSERT INTO drugs (name, side_effects, description) VALUES (?, ?, ?)',
+    [name, side_effects, description],
+    (err, result) => {
+      if (err) {
+        console.error('Fehler beim Erstellen des Medikaments:', err);
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      res.json({ id: result.insertId, name, side_effects, description });
+    }
+  );
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
