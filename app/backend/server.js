@@ -144,6 +144,44 @@ app.get('/api/plan', (req, res) => {
 });
 
 
+app.post('/api/plan', (req, res) => {
+  const { drug_id, day, time } = req.body;
+
+  // Prüfe zuerst, ob bereits ein Eintrag existiert
+  db.query(
+    'SELECT * FROM plan WHERE drug_id = ? AND day = ? AND time = ?',
+    [drug_id, day, time],
+    (err, results) => {
+      if (err) {
+        console.error('Fehler bei der Duplikat-Prüfung:', err);
+        res.status(500).json({ error: err.message });
+        return;
+      }
+
+      if (results.length > 0) {
+        res.status(400).json({
+          error: 'Es existiert bereits ein Eintrag für dieses Medikament an diesem Tag zur gleichen Uhrzeit'
+        });
+        return;
+      }
+
+      // Wenn kein Duplikat gefunden wurde, füge den neuen Eintrag hinzu
+      db.query(
+        'INSERT INTO plan (drug_id, day, time) VALUES (?, ?, ?)',
+        [drug_id, day, time],
+        (err, result) => {
+          if (err) {
+            console.error('Fehler beim Erstellen des Planeintrags:', err);
+            res.status(500).json({ error: err.message });
+            return;
+          }
+          res.json({ id: result.insertId, drug_id, day, time });
+        }
+      );
+    }
+  );
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
