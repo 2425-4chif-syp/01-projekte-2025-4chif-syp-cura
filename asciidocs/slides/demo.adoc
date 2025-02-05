@@ -33,19 +33,62 @@ endif::[]
 :revealjs_transition: slide
 
 
-== Project Team
+== Projekt Team
 
 [%hardbreaks]
 - Leopold Mistelberger
 - Timon Schmalzer
 - Elias Mahr
 
-== Project Architecture
+== Projekt Beschreibung
+Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, das die pünktliche Einnahme der Medikamente sicherstellt. Das System **überwacht die Medikamenteneinnahme** und kann **bei Bedarf** den Pflegefall über eine Nachricht auf dem **Fernseher** oder durch Geräusche aufmerksam machen.
+
+== Organigram
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/orga.png[]
+
+== Erd alt
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/ErdOld.png[]
+
+== Project Architektur alt
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/project-architecture.png[]
 
-== Erd
+== Erd neu
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/erd.png[]
+
+== Project Architektur neu
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/project.png[]
+
+== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img1.jpg[]
+
+== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img2.jpg[]
+
+== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img3.jpg[]
+
+== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img4.jpg[]
+
+== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img5.jpg[]
