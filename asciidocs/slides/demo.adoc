@@ -41,6 +41,7 @@ endif::[]
 - Elias Mahr
 
 == Projekt Beschreibung
+
 Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, das die pünktliche Einnahme der Medikamente sicherstellt. Das System **überwacht die Medikamenteneinnahme** und kann **bei Bedarf** den Pflegefall über eine Nachricht auf dem **Fernseher** oder durch Geräusche aufmerksam machen.
 
 == Organigramm alt
@@ -63,6 +64,11 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/erd.png[]
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/project-architecture.png[]
 
+== Projekt Architektur alt
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/project.png[]
+
 == Organigramm neu
 
 [.stretch]
@@ -76,8 +82,9 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/erdNew.png[]
 == Projekt Architektur neu
 
 [.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/project.png[]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/ProjectArchitektureNew.png[]
 
+ProjectArchitektureNew
 == Funktionsweise Tablettenschachtel
 
 [.stretch]
