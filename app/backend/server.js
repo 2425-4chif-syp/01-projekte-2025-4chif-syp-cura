@@ -65,6 +65,36 @@ pp.post('/api/drugs', (req, res) => {
   );
 });
 
+// Vereinfachter DELETE-Endpoint für Medikamente
+app.delete('/api/drugs/:id', (req, res) => {
+  const drugId = req.params.id;
+
+  // Zuerst löschen wir alle zugehörigen Planeinträge
+  db.query('DELETE FROM plan WHERE drug_id = ?', [drugId], (err) => {
+    if (err) {
+      console.error('Fehler beim Löschen der Planeinträge:', err);
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    // Dann löschen wir das Medikament
+    db.query('DELETE FROM drugs WHERE id = ?', [drugId], (err, result) => {
+      if (err) {
+        console.error('Fehler beim Löschen des Medikaments:', err);
+        res.status(500).json({ error: err.message });
+        return;
+      }
+
+      if (result.affectedRows === 0) {
+        res.status(404).json({ error: 'Medikament nicht gefunden' });
+        return;
+      }
+
+      res.json({ message: 'Medikament und zugehörige Planeinträge erfolgreich gelöscht' });
+    });
+  });
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
