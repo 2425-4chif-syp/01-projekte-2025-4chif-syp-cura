@@ -37,6 +37,18 @@ function connectWithRetry() {
 connectWithRetry();
 
 
+// API Endpoints für Medikamente
+app.get('/api/drugs', (req, res) => {
+  db.query('SELECT * FROM drugs ORDER BY name ASC', (err, results) => {
+    if (err) {
+      console.error('Fehler beim Abrufen der Medikamente:', err);
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(results);
+  });
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
