@@ -53,6 +53,11 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/orga.png[]
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/ErdOld.png[]
 
+== Erd alt
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/erd.png[]
+
 == Project Architektur alt
 
 [.stretch]
@@ -61,7 +66,7 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/project-architecture.png[]
 == Erd neu
 
 [.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/erd.png[]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/erdNew.png[]
 
 == Project Architektur neu
 
