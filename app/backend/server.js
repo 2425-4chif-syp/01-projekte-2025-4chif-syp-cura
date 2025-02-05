@@ -95,6 +95,55 @@ app.delete('/api/drugs/:id', (req, res) => {
   });
 });
 
+// API Endpoints für Medikamentenplan
+app.get('/api/plan', (req, res) => {
+  const query = `
+        SELECT
+            p.*,
+            d.name as drug_name,
+            d.description as drug_description,
+            d.side_effects as drug_side_effects
+        FROM plan p
+        LEFT JOIN drugs d ON p.drug_id = d.id
+        ORDER BY
+            CASE p.day
+                WHEN 'Monday' THEN 1
+                WHEN 'Tuesday' THEN 2
+                WHEN 'Wednesday' THEN 3
+                WHEN 'Thursday' THEN 4
+                WHEN 'Friday' THEN 5
+                WHEN 'Saturday' THEN 6
+                WHEN 'Sunday' THEN 7
+            END,
+            p.time
+    `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Fehler beim Abrufen des Plans:', err);
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    // Formatiere die Ergebnisse
+    const formattedResults = results.map(row => ({
+      id: row.id,
+      drug_id: row.drug_id,
+      day: row.day,
+      time: row.time,
+      drug: {
+        id: row.drug_id,
+        name: row.drug_name,
+        description: row.drug_description,
+        side_effects: row.drug_side_effects
+      }
+    }));
+
+    res.json(formattedResults);
+  });
+});
+
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
