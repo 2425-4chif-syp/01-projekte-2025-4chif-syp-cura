@@ -1,0 +1,51 @@
+= Besprechungsprotokoll 12.02.2025
+Elias Mahr
+
+.Teilnehmer
+|===
+|Anwesend 
+|P. Bauer
+|T. Stuetz
+|L. Mistelberger
+|T. Schmalzer
+|E. Mahr
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Keller Bunker
+
+|von-bis
+|Mi. 12.02.2025, 2. EH
+|Dauer
+|10 min
+|===
+
+
+
+== Besprochene Themen
+
+* Project Tablettenschachtel
+
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |macht was 
+
+| Team Cura
+a| Erstellung von mehreren Prozessen, die den Pflegefall warnen bei Nichteinnahme des Medikaments.
+
+* fix vereinbart: 
+- Nachricht auf einem Fernseher ausgeben. Wenn moeglich, noch Transparent so das der vorherige Bildschirm nicht komplett ueberdeckt wird.
+
+* weiter Optionen:
+- Display, das auf der Schachtel selbst montiert wird.
+- Lautsprecher, der auf der Schachtel selbst montiert wird.
+- Whatsapp Nachricht an die Person selbst
+- App am Handy, die den Bildschirm zu blinken bringt
+|===
