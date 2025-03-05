@@ -57,7 +57,7 @@ Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, d
 | Raspi MQTT |  |
 |===
 
-<pagebreak>
+===  ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍
 
 [cols="^1,^1,^1", options="header"]
 |===
@@ -69,7 +69,7 @@ Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, d
 |  | Hotspot mit SIM-Karte/Raspi |
 |===
 
-<pagebreak>
+===  ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍
 
 [cols="^1,^1,^1", options="header"]
 |===
