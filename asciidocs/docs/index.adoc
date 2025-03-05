@@ -19,11 +19,11 @@ and, if necessary, can also notify external contacts (e.g., family members, care
 
 == mom
 
-link:protocoll\Protokoll_12.02.25.adoc[Protocoll: 12.02.25]
+link:Protokoll_12.02.25.adoc[Protocoll: 12.02.25]
 
-link:protocoll\protokoll_26.02.25_1.adoc[1  Protocoll: 26.02.25]
+link:protokoll_26.02.25_1.adoc[1  Protocoll: 26.02.25]
 
-link:protocoll\protokoll_26.02.25.adoc[2 Protocoll: 26.02.25]
+link:protokoll_26.02.25.adoc[2 Protocoll: 26.02.25]
 
 
 
