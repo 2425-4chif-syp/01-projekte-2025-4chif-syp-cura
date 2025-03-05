@@ -44,6 +44,16 @@ endif::[]
 
 Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, das die pünktliche Einnahme der Medikamente sicherstellt. Das System **überwacht die Medikamenteneinnahme** und kann **bei Bedarf** den Pflegefall über eine Nachricht auf dem **Fernseher/Display auf der Schachtel** oder durch Geräusche aufmerksam machen.
 
+== Erd
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/erd_05.03.2025.png[]
+
+== Projekt Architektur
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/systhem.png[]
+
 == Alte Documente
 
 === Organigramm alt
@@ -118,13 +128,4 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/img4.jpg[]
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/img5.jpg[]
 
-== Erd
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/erd_05.03.2025.png[]
-
-== Projekt Architektur
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/systhem.png[]
 
