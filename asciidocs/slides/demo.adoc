@@ -46,46 +46,38 @@ Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, d
 
 == Einteilung
 
-=== Einteilung
-
-[cols="^1,^1,^1",options="header"]
+[cols="^1,^1,^1", options="header"]
 |===
-
 | Leopold | Timi | Elias
-
 | ESP RFID Scanner |  |
 | ESP Access Point |  |
 | ESP Touch Display |  |
 | ESP Summer (Ton) |  |
 | ESP Web hosten |  |
 | Raspi MQTT |  |
-
 |===
 
-=== Einteilung
+<pagebreak>
 
-[cols="^1,^1,^1",options="header"]
+[cols="^1,^1,^1", options="header"]
 |===
-
 |  | Quarkus | Quarkus
 |  | Wireframe | Wireframe
 |  |  | N2 →
 |  | Website | Website
 |  | Capture Card Befehl |
 |  | Hotspot mit SIM-Karte/Raspi |
-
 |===
 
-=== Einteilung
+<pagebreak>
 
-[cols="^1,^1,^1",options="header"]
+[cols="^1,^1,^1", options="header"]
 |===
-
 |  |  | Benachrichtigung WhatsApp
 |  |  | Erd zeichnen
 |  |  | Systemarchitektur
-
 |===
+
 
 == Erd
 
