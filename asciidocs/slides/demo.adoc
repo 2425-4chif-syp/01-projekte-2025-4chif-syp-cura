@@ -44,6 +44,8 @@ endif::[]
 
 Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, das die pünktliche Einnahme der Medikamente sicherstellt. Das System **überwacht die Medikamenteneinnahme** und kann **bei Bedarf** den Pflegefall über eine Nachricht auf dem **Fernseher/Display auf der Schachtel** oder durch Geräusche aufmerksam machen.
 
+=== Einteilung
+
 == Einteilung
 
 [cols="^1,^1,^1",options="header"]
@@ -57,12 +59,28 @@ Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, d
 | ESP Summer (Ton) |  |
 | ESP Web hosten |  |
 | Raspi MQTT |  |
+
+|===
+
+== Einteilung
+
+[cols="^1,^1,^1",options="header"]
+|===
+
 |  | Quarkus | Quarkus
 |  | Wireframe | Wireframe
 |  |  | N2 →
 |  | Website | Website
 |  | Capture Card Befehl |
 |  | Hotspot mit SIM-Karte/Raspi |
+
+|===
+
+== Einteilung
+
+[cols="^1,^1,^1",options="header"]
+|===
+
 |  |  | Benachrichtigung WhatsApp
 |  |  | Erd zeichnen
 |  |  | Systemarchitektur
