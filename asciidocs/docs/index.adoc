@@ -17,6 +17,16 @@ and, if necessary, can also notify external contacts (e.g., family members, care
 - **Home Assistant**: Platform for monitoring and sending notifications.
 - **Database**: Stores information about medication schedules and user profiles.
 
+== mom
+
+link:..\..\docs\Protokolle\Protokoll_12.02.25.adoc[Protocoll: 12.02.25]
+
+link:..\..\docs\Protokolle\protokoll_26.02.25_1.adoc[1  Protocoll: 26.02.25]
+
+link:..\..\docs\Protokolle\protokoll_26.02.25.adoc[2 Protocoll: 26.02.25]
+
+
+
 
 
 
