@@ -17,10 +17,8 @@ wifi:
   password: !secret wifi_password
 
 mqtt:
-  broker: "cura.local"
+  broker: !secret mqtt_broker
   port: 1883
-
-
 
 spi:
   clk_pin: GPIO19
