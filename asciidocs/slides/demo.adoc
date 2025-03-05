@@ -46,12 +46,15 @@ Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, d
 
 == Alte Documente
 
-Alte Documente
-
 === Organigramm alt
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/orga.png[]
+
+=== Organigramm alt
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/organigramNew.png[]
 
 === Erd alt
 
@@ -63,7 +66,7 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/ErdOld.png[]
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/erd.png[]
 
-=== Erd für die Zukunft
+=== Erd für die Zukunft alt
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/erdNew.png[]
@@ -83,17 +86,12 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/ProjectArchitektureNew.png
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/project.png[]
 
-== Organigramm neu
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/organigramNew.png[]
-
-== Erd neu
+== Erd
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/erdLog.png[]
 
-== Projekt Architektur neu
+== Projekt Architektur
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/systhem.png[]
