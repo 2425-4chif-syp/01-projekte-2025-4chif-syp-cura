@@ -54,25 +54,25 @@ Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, d
 | ESP Touch Display |  |
 | ESP Summer (Ton) |  |
 | ESP Web hosten |  |
-| Raspi MQTT |  |
 |===
 
 ===  ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍
 
 [cols="^1,^1,^1", options="header"]
 |===
+| Raspi MQTT |  |
 |  | Quarkus | Quarkus
 |  | Wireframe | Wireframe
 |  |  | N2 →
 |  | Website | Website
 |  | Capture Card Befehl |
-|  | Hotspot mit SIM-Karte/Raspi |
 |===
 
 ===  ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍
 
 [cols="^1,^1,^1", options="header"]
 |===
+|  | Hotspot mit SIM-Karte/Raspi |
 |  |  | Benachrichtigung WhatsApp
 |  |  | Erd zeichnen
 |  |  | Systemarchitektur
