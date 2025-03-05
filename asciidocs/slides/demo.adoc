@@ -42,7 +42,7 @@ endif::[]
 
 == Projekt Beschreibung
 
-Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, das die pünktliche Einnahme der Medikamente sicherstellt. Das System **überwacht die Medikamenteneinnahme** und kann **bei Bedarf** den Pflegefall über eine Nachricht auf dem **Fernseher** oder durch Geräusche aufmerksam machen.
+Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, das die pünktliche Einnahme der Medikamente sicherstellt. Das System **überwacht die Medikamenteneinnahme** und kann **bei Bedarf** den Pflegefall über eine Nachricht auf dem **Fernseher/Display auf der Schachtel** oder durch Geräusche aufmerksam machen.
 
 == Alte Documente
 
@@ -71,6 +71,11 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/erd.png[]
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/erdNew.png[]
 
+=== Erd alt
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/erdLog.png[]
+
 === Project Architektur alt
 
 [.stretch]
@@ -86,37 +91,40 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/ProjectArchitektureNew.png
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/project.png[]
 
+== Funktionsweise Tablettenschachtel
+
+=== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img1.jpg[]
+
+=== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img2.jpg[]
+
+=== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img3.jpg[]
+
+=== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img4.jpg[]
+
+=== Funktionsweise Tablettenschachtel
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/img5.jpg[]
+
 == Erd
 
 [.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/erdLog.png[]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/erd_05.03.2025.png[]
 
 == Projekt Architektur
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/systhem.png[]
 
-== Funktionsweise Tablettenschachtel
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/img1.jpg[]
-
-== Funktionsweise Tablettenschachtel
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/img2.jpg[]
-
-== Funktionsweise Tablettenschachtel
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/img3.jpg[]
-
-== Funktionsweise Tablettenschachtel
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/img4.jpg[]
-
-== Funktionsweise Tablettenschachtel
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/img5.jpg[]
