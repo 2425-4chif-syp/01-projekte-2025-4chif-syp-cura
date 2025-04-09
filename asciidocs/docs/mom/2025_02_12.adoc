@@ -15,10 +15,10 @@ Elias Mahr
 [cols=2*]
 |===
 |Ort
-|Keller Bunker
+|HTL Leonding
 
 |von-bis
-|Mi. 12.02.2025, 2. EH
+|16:20 - 16:30
 |Dauer
 |10 min
 |===
