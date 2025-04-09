@@ -1,0 +1,39 @@
+@startuml
+entity "Person" as Person {
+  *id : int
+  FirstName : string
+  Address : string
+  PhoneNumber : string
+}
+
+entity "Contact_Person" as ContactPerson {
+  *id : int
+  PersonId : int
+  FirstName : string
+  PhoneNumber : string
+  NotifyIfTaken : boolean
+  NotifyIfNotTaken : boolean
+}
+
+
+entity "RfidTag" as RFID {
+  *id : string
+  PersonId : int
+  DayOfWeek : DayOfWeek
+}
+
+enum DayOfWeek {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
+
+Person ||--o{ ContactPerson : "has"
+Person ||--o{ RFID : "uses"
+RFID }o--|| DayOfWeek : "has"
+
+@enduml
