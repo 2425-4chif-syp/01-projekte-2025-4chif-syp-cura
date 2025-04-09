@@ -6,7 +6,8 @@ ifndef::imagesdir[:imagesdir: images]
 :sectnums:
 :toc: left
 
-== Useful Links
+== Documentation
+- https://github.com/2425-4chif-syp/01-projekte-2025-4chif-syp-cura[GitHub]
 - https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-cura/slides/demo.html[RevealJS slides]
 - https://vm81.htl-leonding.ac.at/projects/6b3d8e01-d6ac-47ef-89d0-44e32425d26a[YouTrack Board]
 
@@ -26,8 +27,6 @@ include::diagrams/project-architecture.puml[]
 ----
 include::diagrams/erd.puml[]
 ----
-
-
 
 == Minutes of Meeting
 
