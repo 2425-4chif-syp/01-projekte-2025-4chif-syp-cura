@@ -1,5 +1,10 @@
 = Cura
+Leopold Mistelberger, Elias Mahr, Timon Schmalzer
+2024/25
 ifndef::imagesdir[:imagesdir: images]
+:icons: font
+:sectnums:
+:toc: left
 
 == Useful Links
 - https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-cura/slides/demo.html[RevealJS slides]
@@ -10,20 +15,27 @@ The project aims to develop an intelligent **medication dispenser system** that 
 The system monitors medication intake, sends **notifications** to the patient,
 and, if necessary, can also notify external contacts (e.g., family members, caregivers) if the medications are not taken on time.
 
-== Technologies
-- **ESP32**: Microcontroller for detecting the status of the pillbox.
-- **MQTT**: Protocol for communication between the ESP32 and the Raspberry Pi.
-- **Raspberry Pi**: Central control unit hosting the database (SQL) and running Home Assistant for automation.
-- **Home Assistant**: Platform for monitoring and sending notifications.
-- **Database**: Stores information about medication schedules and user profiles.
+== Project Architecture
+[plantuml, project-architecture, svg]
+----
+include::diagrams/project-architecture.puml[]
+----
 
-== mom
+== ERD
+[plantuml, er-diagramm, svg]
+----
+include::diagrams/erd.puml[]
+----
 
-<<./mom/2025_02_12.adoc#, Protokoll vom 12.02.2025>>
 
-<<./mom/2025_02_26.adoc#, Protokoll vom 26.02.2025>>
 
-<<./mom/2025_02_26_1.adoc#, Zweites Protokoll vom 26.02.2025>>
+== Minutes of Meeting
+
+<<./mom/2025_02_12.adoc#, 12.02.2025>>
+
+<<./mom/2025_02_26.adoc#, 26.02.2025>>
+
+<<./mom/2025_02_26_1.adoc#, 26.02.2025>>
 
 
 
