@@ -19,11 +19,11 @@ and, if necessary, can also notify external contacts (e.g., family members, care
 
 == mom
 
-link:.\mom\protokoll\protokoll_12.02.25.html[Protocoll: 12.02.25]
+link:.\mom\protokoll_12.02.25.html[Protocoll: 12.02.25]
 
-link:protokoll_26.02.25_1.html[1  Protocoll: 26.02.25]
+link:.\mom\protokoll_26.02.25_1.html[1  Protocoll: 26.02.25]
 
-link:protokoll\protokoll_26.02.25.html[2 Protocoll: 26.02.25]
+link:.\mom\protokoll\protokoll_26.02.25.html[2 Protocoll: 26.02.25]
 
 
 
