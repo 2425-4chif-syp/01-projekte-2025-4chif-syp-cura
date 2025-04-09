@@ -3,39 +3,44 @@
 !define RECTANGLE class
 skinparam defaultTextAlignment center
 skinparam linetype ortho
+skinparam component {
+    BackgroundColor<<MQTT>> #FFDD99
+    BackgroundColor<<Quarkus>> #D0E0E3
+    BackgroundColor<<Angular>> #FFD1DC
+    BackgroundColor<<ESP32>> #CFE2F3
+    BackgroundColor<<ESPHome>> #EAD1DC
+    BackgroundColor<<RFID>> #D9EAD3
+    FontColor black
+}
 
 ' Hauptkomponenten
 node "Raspberry Pi" as raspberryPi {
-    [MQTT]
-    [Quarkus\n(Panache, Qute)]
+    [MQTT] <<MQTT>>
+    [Quarkus\n(Panache, Renarde)] <<Quarkus>>
     database "H2" as h2
 }
 
 node "Browser" as browser {
-    [Angular]
+    [Angular] <<Angular>>
 }
 
-component "ESP32" as esp
+component "ESP32" as esp <<ESP32>>
 
-node "ESPHome\n(Sound + Display)" as esphome {
+node "ESPHome" as esphome <<ESPHome>> {
+    [RFID-Scanner] as rfidscanner <<RFID>>
     [Soundausgabe]
     [Display]
 }
 
-component "RFID-Scanner" as rfidscanner
-component "RFID-Chip\n(Montag–Sonntag)" as rfidchip
-
+component "RFID-Chip" as rfidchip <<RFID>>
 
 ' Verbindungen
-raspberryPi --> esp : MQTT Client
-raspberryPi --> browser : Qute HTML
+raspberryPi --> esp
+raspberryPi --> browser : Renarde
 raspberryPi --> h2
 
-esp --> rfidscanner
-rfidscanner --> rfidchip
+esp --> esphome
 
-esp --> esphome : ESPHome
-esphome --> [Soundausgabe]
-esphome --> [Display]
+rfidscanner --> rfidchip
 
 @enduml
