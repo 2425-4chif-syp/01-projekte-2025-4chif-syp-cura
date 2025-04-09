@@ -1,28 +1,22 @@
 @startuml
+left to right direction
+
 entity "Person" as Person {
   *id : int
+  --
   FirstName : string
   Address : string
   PhoneNumber : string
 }
 
-entity "Contact_Person" as ContactPerson {
-  *id : int
-  PersonId : int
-  FirstName : string
-  PhoneNumber : string
-  NotifyIfTaken : boolean
-  NotifyIfNotTaken : boolean
-}
-
-
 entity "RfidTag" as RFID {
   *id : string
+  --
   PersonId : int
-  DayOfWeek : DayOfWeek
+  LinkedDay : DayOfWeek
 }
 
-enum DayOfWeek {
+enum "DayOfWeek" as DayOfWeek {
   Monday
   Tuesday
   Wednesday
@@ -32,8 +26,12 @@ enum DayOfWeek {
   Sunday
 }
 
-Person ||--o{ ContactPerson : "has"
-Person ||--o{ RFID : "uses"
-RFID }o--|| DayOfWeek : "has"
+' Beziehungen:
+Person ||--|{ RFID : "besitzt (7)"
+RFID }|--|| DayOfWeek : "für"
 
+note right of RFID
+  Jede Person hat 7 RFID-Tags,
+  jeweils für einen Wochentag.
+end note
 @enduml
