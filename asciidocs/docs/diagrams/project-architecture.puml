@@ -1,0 +1,41 @@
+@startuml Medikamentenverteilungssystem
+
+!define RECTANGLE class
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+' Hauptkomponenten
+node "Raspberry Pi" as raspberryPi {
+    [MQTT]
+    [Quarkus\n(Panache, Qute)]
+    database "H2" as h2
+}
+
+node "Browser" as browser {
+    [Angular]
+}
+
+component "ESP32" as esp
+
+node "ESPHome\n(Sound + Display)" as esphome {
+    [Soundausgabe]
+    [Display]
+}
+
+component "RFID-Scanner" as rfidscanner
+component "RFID-Chip\n(Montag–Sonntag)" as rfidchip
+
+
+' Verbindungen
+raspberryPi --> esp : MQTT Client
+raspberryPi --> browser : Qute HTML
+raspberryPi --> h2
+
+esp --> rfidscanner
+rfidscanner --> rfidchip
+
+esp --> esphome : ESPHome
+esphome --> [Soundausgabe]
+esphome --> [Display]
+
+@enduml
