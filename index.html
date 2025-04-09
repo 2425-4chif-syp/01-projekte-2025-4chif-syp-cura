@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
+<meta name="author" content="Leopold Mistelberger, Elias Mahr, Timon Schmalzer">
 <link rel="icon" type="image/png" href="themes/favicon.png">
 <title>Cura</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -447,13 +448,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <body class="article toc2 toc-left">
 <div id="header">
 <h1>Cura</h1>
+<div class="details">
+<span id="author" class="author">Leopold Mistelberger, Elias Mahr, Timon Schmalzer</span><br>
+<span id="revdate">2024/25</span>
+</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_useful_links">1. Useful Links</a></li>
 <li><a href="#_project_description">2. Project Description</a></li>
-<li><a href="#_technologies">3. Technologies</a></li>
-<li><a href="#_mom">4. mom</a></li>
+<li><a href="#_project_architecture">3. Project Architecture</a></li>
+<li><a href="#_erd">4. ERD</a></li>
+<li><a href="#_minutes_of_meeting">5. Minutes of Meeting</a></li>
 </ul>
 </div>
 </div>
@@ -484,47 +490,43 @@ and, if necessary, can also notify external contacts (e.g., family members, care
 </div>
 </div>
 <div class="sect1">
-<h2 id="_technologies"><a class="anchor" href="#_technologies"></a>3. Technologies</h2>
+<h2 id="_project_architecture"><a class="anchor" href="#_project_architecture"></a>3. Project Architecture</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><strong>ESP32</strong>: Microcontroller for detecting the status of the pillbox.</p>
-</li>
-<li>
-<p><strong>MQTT</strong>: Protocol for communication between the ESP32 and the Raspberry Pi.</p>
-</li>
-<li>
-<p><strong>Raspberry Pi</strong>: Central control unit hosting the database (SQL) and running Home Assistant for automation.</p>
-</li>
-<li>
-<p><strong>Home Assistant</strong>: Platform for monitoring and sending notifications.</p>
-</li>
-<li>
-<p><strong>Database</strong>: Stores information about medication schedules and user profiles.</p>
-</li>
-</ul>
+<div class="imageblock">
+<div class="content">
+<img src="images/project-architecture.svg" alt="project architecture" width="720" height="456">
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_mom"><a class="anchor" href="#_mom"></a>4. mom</h2>
+<h2 id="_erd"><a class="anchor" href="#_erd"></a>4. ERD</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/er-diagramm.svg" alt="er diagramm" width="455" height="589">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_minutes_of_meeting"><a class="anchor" href="#_minutes_of_meeting"></a>5. Minutes of Meeting</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="./mom/2025_02_12.html">Protokoll vom 12.02.2025</a></p>
+<p><a href="./mom/2025_02_12.html">12.02.2025</a></p>
 </div>
 <div class="paragraph">
-<p><a href="./mom/2025_02_26.html">Protokoll vom 26.02.2025</a></p>
+<p><a href="./mom/2025_02_26.html">26.02.2025</a></p>
 </div>
 <div class="paragraph">
-<p><a href="./mom/2025_02_26_1.html">Zweites Protokoll vom 26.02.2025</a></p>
+<p><a href="./mom/2025_02_26_1.html">26.02.2025</a></p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-04-09 16:27:46 UTC
+Last updated 2025-04-09 17:03:35 UTC
 </div>
 </div>
 </body>
