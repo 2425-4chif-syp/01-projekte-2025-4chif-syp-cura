@@ -55,8 +55,8 @@ Ziel des Projektes ist die Entwicklung eines **Medikamentenverteilersystems**, d
 === Angehöriger
 
 * Als Angehöriger oder Pflegekraft möchte ich benachrichtigt werden, wenn ein Patient seine Medikamente nicht rechtzeitig nimmt, damit ich schnell reagieren und helfen kann.
-* Als Administrator oder Angehöriger möchte ich über eine Website den Zeitpunkt der Medikamenteneinnahme ändern können, damit der Plan flexibel an den Alltag angepasst werden kann.
-* Als Administrator oder Angehöriger möchte ich über die Website Notfallkontakte verwalten können, damit im Ernstfall immer die richtigen Personen benachrichtigt werden.
+* Als Angehöriger möchte ich über eine Website den Zeitpunkt der Medikamenteneinnahme ändern können, damit der Plan flexibel an den Alltag angepasst werden kann.
+* Als Angehöriger möchte ich über die Website Notfallkontakte verwalten können, damit im Ernstfall immer die richtigen Personen benachrichtigt werden.
 * Als Angehöriger möchte ich über WhatsApp informiert werden, wenn Medikamente nicht eingenommen wurden, damit ich sofort reagieren kann – auch unterwegs.
 * Als Angehöriger möchte ich auswählen können, ob ich auch bei erfolgreicher Medikamenteneinnahme benachrichtigt werde, damit ich über den Gesundheitszustand auf dem Laufenden bleibe.
 
