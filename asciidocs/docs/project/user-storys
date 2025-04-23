@@ -1,0 +1,18 @@
+== User Stories: Cura
+
+=== Erinnerung an Medikamenteneinnahme
+
+* Als Patient möchte ich visuelle Hinweise auf dem Display der Tablettenschachtel erhalten, damit ich leicht erkennen kann, wann ich meine Medikamente einnehmen soll.
+* Als Patient möchte ich eine Meldung auf meinem Fernseher erhalten, damit ich auch beim Fernsehen rechtzeitig an die Medikamenteneinnahme erinnert werde.
+* Als Patient möchte ich akustische Hinweise durch einen Lautsprecher hören, damit ich auch ohne hinzusehen an meine Medikamente erinnert werde.
+
+=== Notfallmaßnahmen bei Nicht-Einnahme
+
+* Als Angehöriger oder Pflegekraft möchte ich benachrichtigt werden, wenn ein Patient seine Medikamente nicht rechtzeitig nimmt, damit ich schnell reagieren und helfen kann.
+
+=== Webinterface
+
+* Als Angehöriger möchte ich über eine Website den Zeitpunkt der Medikamenteneinnahme ändern können, damit der Plan flexibel an den Alltag angepasst werden kann.
+* Als Angehöriger möchte ich über die Website Notfallkontakte verwalten können, damit im Ernstfall immer die richtigen Personen benachrichtigt werden.
+* Als Angehöriger möchte ich über WhatsApp informiert werden, wenn Medikamente nicht eingenommen wurden, damit ich sofort reagieren kann – auch unterwegs.
+* Als Angehöriger möchte ich auswählen können, ob ich auch bei erfolgreicher Medikamenteneinnahme benachrichtigt werde, damit ich über den Gesundheitszustand auf dem Laufenden bleibe.
