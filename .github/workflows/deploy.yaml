@@ -26,8 +26,8 @@ jobs:
 
       - name: SSH-Key einrichten
         run: |
-          set -e  
           mkdir -p $HOME/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" 
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_ed25519
           chmod 600 $HOME/.ssh/id_ed25519
           ssh-keyscan cura.local >> $HOME/.ssh/known_hosts
