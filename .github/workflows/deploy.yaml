@@ -20,7 +20,7 @@ jobs:
           java-version: '21'
 
       - name: Projekt bauen
-        run: ./gradlew build
+        run: mvn package --no-transfer-progress
 
       - name: SSH-Key einrichten
         run: |
@@ -30,4 +30,4 @@ jobs:
           ssh-keyscan cura.local >> ~/.ssh/known_hosts
 
       - name: JAR auf Raspberry Pi kopieren
-        run: scp build/libs/*.jar pi@cura.local:/home/pi/app.jar
+        run: scp target/*.jar pi@cura.local:/home/pi/app.jar
