@@ -20,7 +20,9 @@ jobs:
           java-version: '21'
 
       - name: Projekt bauen
-        run: mvn package --no-transfer-progress
+        run: |
+          cd cura
+          mvn package --no-transfer-progress
 
       - name: SSH-Key einrichten
         run: |
@@ -30,4 +32,5 @@ jobs:
           ssh-keyscan cura.local >> ~/.ssh/known_hosts
 
       - name: JAR auf Raspberry Pi kopieren
-        run: scp target/*.jar pi@cura.local:/home/pi/app.jar
+        run: |
+          scp cura/target/*.jar pi@cura.local:/home/pi/app.jar
