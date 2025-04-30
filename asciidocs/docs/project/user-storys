@@ -19,6 +19,7 @@
 * Als Angehöriger oder Pflegekraft möchte ich benachrichtigt werden, wenn ein Patient seine Medikamente nicht rechtzeitig nimmt, damit ich schnell reagieren und helfen kann.
 - Eine Benachrichtigung wird automatisch versendet, wenn die Einnahme nicht innerhalb von 15 Minuten nach geplanter Zeit erfolgt.
 - Die Benachrichtigung enthält Uhrzeit und Patientennamen
+
 === Webinterface
 
 * Als Angehöriger möchte ich über eine Website den Zeitpunkt der Medikamenteneinnahme ändern können, damit der Plan flexibel an den Alltag angepasst werden kann.
