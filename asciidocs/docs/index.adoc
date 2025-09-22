@@ -19,7 +19,7 @@ and, if necessary, can also notify external contacts (e.g., family members, care
 == Project Architecture
 
 [.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/orga.png[]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/projectArchitecture-22.09.2025.png[]
 
 == ERD
 [plantuml, er-diagramm, svg]
