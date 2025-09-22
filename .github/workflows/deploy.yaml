@@ -24,6 +24,14 @@ jobs:
           cd cura
           mvn package --no-transfer-progress
 
+      - name: SSH-Key einrichten
+        run: |
+          mkdir -p $HOME/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" 
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_ed25519
+          chmod 600 $HOME/.ssh/id_ed25519
+          ssh-keyscan cura.local >> $HOME/.ssh/known_hosts
+
       - name: JAR auf Raspberry Pi kopieren
         run: |
           scp cura/target/*.jar pi@cura.local:/home/pi/app.jar
