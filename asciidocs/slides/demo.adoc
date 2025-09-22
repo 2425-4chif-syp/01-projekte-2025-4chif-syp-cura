@@ -67,7 +67,7 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/erd-01.04.2025.png[]
 == Projekt Architektur
 
 [.stretch]
-image::/01-projekte-2025-4chif-syp-cura/slides/images/systhem.png[]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/projectArchitecture-22.09.2025.png[]
 
 == Alte Documente
 
@@ -120,6 +120,11 @@ image::/01-projekte-2025-4chif-syp-cura/slides/images/ProjectArchitektureNew.png
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-cura/slides/images/project.png[]
+
+== Projekt Architektur alt
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/systhem.png[]
 
 == Funktionsweise Tablettenschachtel
 
