@@ -16,43 +16,45 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Deploy to VM12 - File-based Version
+    - name: Copy web files to VM12
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: vm12.htl-leonding.ac.at
+        username: curaadm
+        password: ${{ secrets.VM12_PASSWORD }}
+        source: "web/*"
+        target: "/tmp/cura-web/"
+        strip_components: 1
+        
+    - name: Deploy web files
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: vm12.htl-leonding.ac.at
         username: curaadm
         password: ${{ secrets.VM12_PASSWORD }}
         script: |
-          echo "🚀 Starting file-based deployment..."
+          echo "🚀 Deploying web files..."
           
-          # Remove old files
-          sudo rm -f /var/www/html/index.nginx-debian.html*
-          sudo rm -f /var/www/html/index.html
+          # Remove old nginx default page
+          sudo rm -f /var/www/html/index.nginx-debian.html
           
-          # Clone repo to temp directory
-          cd /tmp
-          rm -rf cura-deploy
-          git clone https://github.com/2425-4chif-syp/01-projekte-2025-4chif-syp-cura.git cura-deploy
+          # Copy new files from temp to web root
+          sudo cp -r /tmp/cura-web/* /var/www/html/
           
-          # Copy the HTML file from your web directory
-          sudo cp /tmp/cura-deploy/web/index.html /var/www/html/
+          # Set correct permissions
+          sudo chown -R www-data:www-data /var/www/html/
+          sudo chmod -R 644 /var/www/html/*
+          sudo chmod 755 /var/www/html/
           
-          # Set permissions
-          sudo chown www-data:www-data /var/www/html/index.html
-          sudo chmod 644 /var/www/html/index.html
-          
-          # Clean up
-          rm -rf /tmp/cura-deploy
+          # Clean up temp files
+          rm -rf /tmp/cura-web/
           
           # Reload nginx
           sudo nginx -t
           sudo systemctl reload nginx
           
-          # Verify deployment
-          echo "✅ Files in /var/www/html/:"
+          echo "✅ Web deployment completed!"
+          echo "📁 Files in /var/www/html/:"
           ls -la /var/www/html/
           
-          echo "📄 Content verification (first 10 lines):"
-          head -10 /var/www/html/index.html
-          
-          echo "🎉 File-based deployment completed! Your changes from web/index.html are now live!"
+          echo "🌐 Your site is live at: http://vm12.htl-leonding.ac.at"
