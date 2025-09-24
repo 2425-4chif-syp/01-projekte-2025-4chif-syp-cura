@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    # Deploy to VM12 - Embedded HTML Version
+    - name: Deploy to VM12 - Embedded HTML Version
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: vm12.htl-leonding.ac.at
