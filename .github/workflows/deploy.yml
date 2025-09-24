@@ -1,0 +1,48 @@
+name: Deploy to VM12
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'web/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to VM12
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: vm12.htl-leonding.ac.at
+        username: curaadm
+        password: ${{ secrets.VM12_PASSWORD }}
+        script: |
+          # Erstelle das Verzeichnis falls es nicht existiert
+          sudo mkdir -p /var/www/html/cura
+          sudo chown -R curaadm:curaadm /var/www/html/cura
+          
+          # Lösche alte Dateien
+          rm -rf /var/www/html/cura/*
+          
+          # Clone das Repository temporär
+          cd /tmp
+          rm -rf cura-temp
+          git clone https://github.com/2425-4chif-syp/01-projekte-2025-4chif-syp-cura.git cura-temp
+          
+          # Kopiere die Web-Dateien
+          cp -r cura-temp/web/* /var/www/html/cura/
+          
+          # Cleanup
+          rm -rf cura-temp
+          
+          # Setze die richtigen Berechtigungen
+          sudo chown -R www-data:www-data /var/www/html/cura
+          sudo chmod -R 755 /var/www/html/cura
+          
+          echo "Deployment completed successfully!"
