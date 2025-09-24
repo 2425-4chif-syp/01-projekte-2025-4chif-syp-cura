@@ -16,33 +16,38 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Deploy to VM12
+    - name: Copy files via SCP
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: vm12.htl-leonding.ac.at
+        username: curaadm
+        password: ${{ secrets.VM12_PASSWORD }}
+        source: "web/*"
+        target: "/tmp/cura-web/"
+        strip_components: 1
+        
+    - name: Deploy files and set permissions
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: vm12.htl-leonding.ac.at
         username: curaadm
         password: ${{ secrets.VM12_PASSWORD }}
         script: |
-          # Erstelle das Verzeichnis falls es nicht existiert
-          sudo mkdir -p /var/www/html/cura
-          sudo chown -R curaadm:curaadm /var/www/html/cura
+          # Backup existing nginx welcome page
+          sudo mv /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bak 2>/dev/null || true
           
-          # Lösche alte Dateien
-          rm -rf /var/www/html/cura/*
+          # Copy web files to nginx root
+          sudo cp -r /tmp/cura-web/* /var/www/html/
           
-          # Clone das Repository temporär
-          cd /tmp
-          rm -rf cura-temp
-          git clone https://github.com/2425-4chif-syp/01-projekte-2025-4chif-syp-cura.git cura-temp
+          # Set correct ownership and permissions
+          sudo chown -R www-data:www-data /var/www/html/
+          sudo chmod -R 644 /var/www/html/*
+          sudo chmod 755 /var/www/html/
           
-          # Kopiere die Web-Dateien
-          cp -r cura-temp/web/* /var/www/html/cura/
+          # Clean up temp files
+          rm -rf /tmp/cura-web/
           
-          # Cleanup
-          rm -rf cura-temp
+          # Reload nginx
+          sudo systemctl reload nginx
           
-          # Setze die richtigen Berechtigungen
-          sudo chown -R www-data:www-data /var/www/html/cura
-          sudo chmod -R 755 /var/www/html/cura
-          
-          echo "Deployment completed successfully!"
+          echo "Deployment completed! Your Cura website is live at http://vm12.htl-leonding.ac.at"
