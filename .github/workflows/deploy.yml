@@ -16,91 +16,35 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Deploy to VM12 - Embedded HTML Version
+    - name: Deploy to VM12 - File-based Version
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: vm12.htl-leonding.ac.at
         username: curaadm
         password: ${{ secrets.VM12_PASSWORD }}
         script: |
-          echo "🚀 Starting deployment..."
+          echo "🚀 Starting file-based deployment..."
           
-          # Remove old nginx files first
+          # Remove old files
           sudo rm -f /var/www/html/index.nginx-debian.html*
           sudo rm -f /var/www/html/index.html
           
-          # Create the HTML file directly with cat (embedded content)
-          sudo tee /var/www/html/index.html > /dev/null << 'EOF'
-          <!DOCTYPE html>
-          <html lang="de">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Cura - Medication Dispenser System</title>
-              <style>
-                  body {
-                      font-family: Arial, sans-serif;
-                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                      color: white;
-                      margin: 0;
-                      padding: 0;
-                      height: 100vh;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                  }
-                  .container {
-                      text-align: center;
-                      background: rgba(255, 255, 255, 0.1);
-                      padding: 40px;
-                      border-radius: 15px;
-                      backdrop-filter: blur(10px);
-                      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-                  }
-                  h1 {
-                      font-size: 3rem;
-                      margin-bottom: 20px;
-                      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-                  }
-                  .subtitle {
-                      font-size: 1.2rem;
-                      margin-bottom: 30px;
-                      opacity: 0.9;
-                  }
-                  .team {
-                      font-size: 1rem;
-                      opacity: 0.8;
-                  }
-                  .pulse {
-                      animation: pulse 2s infinite;
-                  }
-                  @keyframes pulse {
-                      0% { transform: scale(1); }
-                      50% { transform: scale(1.05); }
-                      100% { transform: scale(1); }
-                  }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <h1 class="pulse">Hello World!</h1>
-                  <div class="subtitle">Cura - Intelligent Medication Dispenser System</div>
-                  <div class="team">
-                      Leopold Mistelberger | Elias Mahr | Timon Schmalzer
-                  </div>
-                  <div class="team" style="margin-top: 10px;">
-                      HTL Leonding | 2024/25 | 🎯 Direct Pipeline Deploy!
-                  </div>
-              </div>
-          </body>
-          </html>
-          EOF
+          # Clone repo to temp directory
+          cd /tmp
+          rm -rf cura-deploy
+          git clone https://github.com/2425-4chif-syp/01-projekte-2025-4chif-syp-cura.git cura-deploy
           
-          # Set correct ownership and permissions
+          # Copy the HTML file from your web directory
+          sudo cp /tmp/cura-deploy/web/index.html /var/www/html/
+          
+          # Set permissions
           sudo chown www-data:www-data /var/www/html/index.html
           sudo chmod 644 /var/www/html/index.html
           
-          # Test nginx config and reload
+          # Clean up
+          rm -rf /tmp/cura-deploy
+          
+          # Reload nginx
           sudo nginx -t
           sudo systemctl reload nginx
           
@@ -108,7 +52,7 @@ jobs:
           echo "✅ Files in /var/www/html/:"
           ls -la /var/www/html/
           
-          echo "📄 Content verification:"
+          echo "📄 Content verification (first 10 lines):"
           head -10 /var/www/html/index.html
           
-          echo "🎉 Deployment completed! Your Cura website is live at http://vm12.htl-leonding.ac.at"
+          echo "🎉 File-based deployment completed! Your changes from web/index.html are now live!"
