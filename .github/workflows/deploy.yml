@@ -12,9 +12,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
       - name: Deploy via SSH
         run: |
           mkdir -p ~/.ssh
@@ -22,35 +19,11 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
           
-          ssh curaadm@vm12.htl-leonding.ac.at << 'EOF'
-            echo "🚀 Starting deployment..."
+          ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
+            echo "🚀 Simple git pull deployment..."
             
-            # Create web directory if not exists
-            mkdir -p ~/cura-project
             cd ~/cura-project
+            git pull origin main
             
-            # Clone or pull repository
-            if [ -d ".git" ]; then
-              echo "📥 Pulling latest changes..."
-              git pull origin main
-            else
-              echo "📥 Cloning repository..."
-              git clone https://github.com/2425-4chif-syp/01-projekte-2025-4chif-syp-cura.git .
-            fi
-            
-            # Deploy web files
-            echo "🌐 Deploying web files..."
-            sudo rm -f /var/www/html/index.nginx-debian.html
-            sudo cp web/* /var/www/html/
-            sudo chown -R www-data:www-data /var/www/html/
-            sudo chmod -R 644 /var/www/html/*
-            sudo chmod 755 /var/www/html/
-            
-            # Reload nginx
-            sudo nginx -t
-            sudo systemctl reload nginx
-            
-            echo "✅ Deployment completed!"
-            echo "🌐 Site live at: http://vm12.htl-leonding.ac.at"
-            ls -la /var/www/html/
+            echo "✅ Done! Nginx serves directly from repository!"
           EOF
