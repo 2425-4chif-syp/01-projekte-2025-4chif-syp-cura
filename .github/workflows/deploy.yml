@@ -20,12 +20,19 @@ jobs:
           ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
           
           ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
-            echo "🚀 Starting git pull deployment..."
+            echo "🚀 Starting robust deployment..."
             
             cd ~/cura-project
+            
+            # Fix ownership
+            sudo chown -R curaadm:curaadm .
+            
+            # Force pull (overwrites local changes)
+            git reset --hard HEAD
+            git clean -fd
             git pull origin main
             
-            echo "✅ Done! Changes are live at http://vm12.htl-leonding.ac.at"
-            echo "📄 Current index.html preview:"
-            head -5 web/index.html
+            echo "✅ Deployment completed!"
+            echo "📄 Current version:"
+            grep "HTL Leonding" web/index.html
           EOF
