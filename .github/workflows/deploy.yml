@@ -20,10 +20,12 @@ jobs:
           ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
           
           ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
-            echo "🚀 Simple git pull deployment..."
+            echo "🚀 Starting git pull deployment..."
             
             cd ~/cura-project
             git pull origin main
             
-            echo "✅ Done! Nginx serves directly from repository!"
+            echo "✅ Done! Changes are live at http://vm12.htl-leonding.ac.at"
+            echo "📄 Current index.html preview:"
+            head -5 web/index.html
           EOF
