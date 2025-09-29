@@ -1,37 +1,66 @@
-name: Deploy to Raspberry Pi
+name: Deploy Database to VM12
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'database/**'
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  deploy-db:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Repository klonen
-        uses: actions/checkout@v3
-
-      - name: Java installieren
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      - name: Projekt bauen
+      - name: Deploy Database via SSH
         run: |
-          cd cura
-          mvn package --no-transfer-progress
-
-      - name: SSH-Key einrichten
-        run: |
-          mkdir -p $HOME/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" 
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_ed25519
-          chmod 600 $HOME/.ssh/id_ed25519
-          ssh-keyscan cura.local >> $HOME/.ssh/known_hosts
-
-      - name: JAR auf Raspberry Pi kopieren
-        run: |
-          scp cura/target/*.jar pi@cura.local:/home/pi/app.jar
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VM12_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
+          
+          ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
+            echo "🗄️ Starting database deployment..."
+            
+            cd ~/cura-project
+            
+            # Fix ownership
+            sudo chown -R curaadm:curaadm .
+            
+            # Force pull (überschreibt lokale Änderungen)
+            git reset --hard HEAD
+            git clean -fd
+            git pull origin main
+            
+            cd database
+            
+            # Docker installieren falls noch nicht da
+            if ! command -v docker &> /dev/null; then
+              echo "🐳 Installing Docker..."
+              curl -fsSL https://get.docker.com -o get-docker.sh
+              sudo sh get-docker.sh
+              sudo usermod -aG docker curaadm
+            fi
+            
+            # Container starten/neustarten
+            echo "🚀 Starting PostgreSQL container..."
+            docker compose down || true
+            docker compose up -d
+            
+            # Warten bis PostgreSQL ready ist
+            echo "⏳ Waiting for database..."
+            for i in {1..30}; do
+              if docker compose exec -T postgres pg_isready -U cura_user -d cura_db > /dev/null 2>&1; then
+                echo "✅ Database is ready!"
+                break
+              fi
+              sleep 2
+            done
+            
+            echo "✅ Database deployment completed!"
+            echo "📋 Container status:"
+            docker compose ps
+            
+            echo "📊 Database tables:"
+            docker compose exec -T postgres psql -U cura_user -d cura_db -c "\dt" 2>/dev/null || echo "Database not ready yet"
+          EOF
