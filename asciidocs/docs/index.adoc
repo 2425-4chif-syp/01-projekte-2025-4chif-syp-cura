@@ -17,10 +17,9 @@ The system monitors medication intake, sends **notifications** to the patient,
 and, if necessary, can also notify external contacts (e.g., family members, caregivers) if the medications are not taken on time.
 
 == Project Architecture
-[plantuml, project-architecture, svg]
-----
-include::diagrams/project-architecture.puml[]
-----
+
+[.stretch]
+image::/01-projekte-2025-4chif-syp-cura/slides/images/projectArchitecture-22.09.2025.png[]
 
 == ERD
 [plantuml, er-diagramm, svg]
