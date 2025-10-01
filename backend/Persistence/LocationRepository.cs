@@ -24,8 +24,6 @@ namespace Persistence
         public async Task<Location?> GetByIdAsync(int id)
         {
             return await _context.Locations
-                .Include(l => l.Caregivers)
-                .Include(l => l.Patients)
                 .FirstOrDefaultAsync(l => l.Id == id);
         }
 

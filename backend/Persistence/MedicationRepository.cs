@@ -21,7 +21,6 @@ namespace Persistence
         public async Task<Medication?> GetByIdAsync(int id)
         {
             return await _context.Medications
-                .Include(m => m.MedicationPlans)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 

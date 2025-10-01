@@ -16,12 +16,12 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Liefert alle Patienten.
+        /// Ruft alle Patienten ab.
         /// </summary>
         /// <param name="name">Optional: Suchfilter für den Namen</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetPatients(string? name)
+        public async Task<IActionResult> GetPatients([FromQuery] string? name = null)
         {
             if (!string.IsNullOrEmpty(name))
             {

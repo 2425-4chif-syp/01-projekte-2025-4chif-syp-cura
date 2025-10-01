@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         /// <param name="name">Optional: Search filter for name</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetCaregivers(string? name)
+        public async Task<IActionResult> GetCaregivers([FromQuery] string? name = null)
         {
             if (!string.IsNullOrEmpty(name))
             {

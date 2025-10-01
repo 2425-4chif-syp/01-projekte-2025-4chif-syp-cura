@@ -16,7 +16,6 @@ namespace Persistence
         public async Task<List<Patient>> GetAllAsync()
         {
             return await _context.Patients
-                .Include(p => p.Location)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
         }
@@ -24,15 +23,12 @@ namespace Persistence
         public async Task<Patient?> GetByIdAsync(int id)
         {
             return await _context.Patients
-                .Include(p => p.Location)
-                .Include(p => p.MedicationPlans)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<List<Patient>> GetByNameAsync(string name)
         {
             return await _context.Patients
-                .Include(p => p.Location)
                 .Where(p => p.Name.Contains(name))
                 .OrderBy(p => p.Name)
                 .ToListAsync();

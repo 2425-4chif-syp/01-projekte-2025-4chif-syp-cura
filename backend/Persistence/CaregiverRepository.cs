@@ -16,7 +16,6 @@ namespace Persistence
         public async Task<List<Caregiver>> GetAllAsync()
         {
             return await _context.Caregivers
-                .Include(c => c.Location)
                 .OrderBy(c => c.Name)
                 .ToListAsync();
         }
@@ -24,15 +23,12 @@ namespace Persistence
         public async Task<Caregiver?> GetByIdAsync(int id)
         {
             return await _context.Caregivers
-                .Include(c => c.Location)
-                .Include(c => c.MedicationPlans)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<List<Caregiver>> GetByNameAsync(string name)
         {
             return await _context.Caregivers
-                .Include(c => c.Location)
                 .Where(c => c.Name.Contains(name))
                 .OrderBy(c => c.Name)
                 .ToListAsync();
@@ -41,7 +37,6 @@ namespace Persistence
         public async Task<Caregiver?> GetByEmailAsync(string email)
         {
             return await _context.Caregivers
-                .Include(c => c.Location)
                 .FirstOrDefaultAsync(c => c.Email == email);
         }
 

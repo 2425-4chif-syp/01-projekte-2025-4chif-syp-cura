@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         /// <param name="activeIngredient">Optional: Search filter for active ingredient</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetMedications(string? name, string? activeIngredient)
+        public async Task<IActionResult> GetMedications([FromQuery] string? name = null, [FromQuery] string? activeIngredient = null)
         {
             if (!string.IsNullOrEmpty(name))
             {

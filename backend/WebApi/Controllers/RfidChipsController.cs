@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         /// <param name="weekday">Optional: Filter by weekday</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetRfidChips(string? weekday)
+        public async Task<IActionResult> GetRfidChips([FromQuery] string? weekday = null)
         {
             if (!string.IsNullOrEmpty(weekday))
             {

@@ -16,10 +16,7 @@ namespace Persistence
         public async Task<List<MedicationPlan>> GetAllAsync()
         {
             return await _context.MedicationPlans
-                .Include(m => m.Patient)
-                .Include(m => m.Medication)
-                .Include(m => m.Caregiver)
-                .OrderBy(m => m.Patient.Name)
+                .OrderBy(m => m.PatientId)
                 .ThenBy(m => m.ValidFrom)
                 .ToListAsync();
         }
@@ -27,18 +24,12 @@ namespace Persistence
         public async Task<MedicationPlan?> GetByIdAsync(int id)
         {
             return await _context.MedicationPlans
-                .Include(m => m.Patient)
-                .Include(m => m.Medication)
-                .Include(m => m.Caregiver)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<List<MedicationPlan>> GetByPatientIdAsync(int patientId)
         {
             return await _context.MedicationPlans
-                .Include(m => m.Patient)
-                .Include(m => m.Medication)
-                .Include(m => m.Caregiver)
                 .Where(m => m.PatientId == patientId)
                 .OrderBy(m => m.ValidFrom)
                 .ToListAsync();
@@ -47,22 +38,16 @@ namespace Persistence
         public async Task<List<MedicationPlan>> GetByMedicationIdAsync(int medicationId)
         {
             return await _context.MedicationPlans
-                .Include(m => m.Patient)
-                .Include(m => m.Medication)
-                .Include(m => m.Caregiver)
                 .Where(m => m.MedicationId == medicationId)
-                .OrderBy(m => m.Patient.Name)
+                .OrderBy(m => m.PatientId)
                 .ToListAsync();
         }
 
         public async Task<List<MedicationPlan>> GetByCaregiverIdAsync(int caregiverId)
         {
             return await _context.MedicationPlans
-                .Include(m => m.Patient)
-                .Include(m => m.Medication)
-                .Include(m => m.Caregiver)
                 .Where(m => m.CaregiverId == caregiverId)
-                .OrderBy(m => m.Patient.Name)
+                .OrderBy(m => m.PatientId)
                 .ToListAsync();
         }
 
@@ -70,25 +55,19 @@ namespace Persistence
         {
             var today = DateTime.Now.Date;
             return await _context.MedicationPlans
-                .Include(m => m.Patient)
-                .Include(m => m.Medication)
-                .Include(m => m.Caregiver)
                 .Where(m => m.IsActive && 
                            m.ValidFrom <= today && 
                            (m.ValidTo == null || m.ValidTo >= today))
-                .OrderBy(m => m.Patient.Name)
+                .OrderBy(m => m.PatientId)
                 .ToListAsync();
         }
 
         public async Task<List<MedicationPlan>> GetByDateRangeAsync(DateTime from, DateTime to)
         {
             return await _context.MedicationPlans
-                .Include(m => m.Patient)
-                .Include(m => m.Medication)
-                .Include(m => m.Caregiver)
                 .Where(m => m.ValidFrom <= to && 
                            (m.ValidTo == null || m.ValidTo >= from))
-                .OrderBy(m => m.Patient.Name)
+                .OrderBy(m => m.PatientId)
                 .ThenBy(m => m.ValidFrom)
                 .ToListAsync();
         }
