@@ -1,4 +1,56 @@
 
+# Exclude old backend completely
+backend_old/
+
+# .NET Core build outputs
+backend/**/bin/
+backend/**/obj/
+backend/**/out/
+
+# Build logs and temporary files
+backend/**/*_output.txt
+backend/**/build_output.txt
+
+# Visual Studio / Visual Studio Code
+backend/**/.vs/
+backend/**/.vscode/
+backend/**/*.user
+backend/**/*.userosscache
+backend/**/*.sln.docstates
+
+# Build results
+backend/**/[Dd]ebug/
+backend/**/[Dd]ebugPublic/
+backend/**/[Rr]elease/
+backend/**/[Rr]eleases/
+backend/**/x64/
+backend/**/x86/
+backend/**/[Bb]in/
+backend/**/[Oo]bj/
+
+# NuGet Packages
+backend/**/*.nupkg
+backend/**/*.snupkg
+backend/**/packages/
+backend/**/*.nuget.props
+backend/**/*.nuget.targets
+
+# Entity Framework Migrations (keep structure, exclude specific files if needed)
+# backend/**/Migrations/
+
+# Connection strings and sensitive config
+backend/**/appsettings.Development.json
+backend/**/appsettings.Production.json
+
+# Logs
+backend/**/*.log
+backend/**/logs/
+
+# Temporary files
+backend/**/*.tmp
+backend/**/*.temp
+backend/**/error_output.txt
+
 # Created by https://www.toptal.com/developers/gitignore/api/macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos
 

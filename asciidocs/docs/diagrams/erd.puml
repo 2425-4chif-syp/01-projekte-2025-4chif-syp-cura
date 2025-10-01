@@ -14,77 +14,77 @@ skinparam entity {
 ENTITY "RFID_CHIPS" as rfid {
     PK id : INTEGER
     chip_id : VARCHAR(50)
-    wochentag : VARCHAR(20)
-    aktiv : BOOLEAN
+    weekday : VARCHAR(20)
+    is_active : BOOLEAN
     --
-    CHECK: wochentag IN ('MONTAG'...'SONNTAG')
-    DEFAULT: aktiv = true
+    CHECK: weekday IN ('MONDAY'...'SUNDAY')
+    DEFAULT: is_active = true
 }
 
-ENTITY "ORTE" as orte {
+ENTITY "LOCATIONS" as locations {
     PK id : INTEGER
-    strasse : VARCHAR(255) <<NOT NULL>>
-    hausnummer : VARCHAR(10) <<NOT NULL>>
-    postleitzahl : VARCHAR(10) <<NOT NULL>>
-    stadt : VARCHAR(100) <<NOT NULL>>
-    stockwerk : VARCHAR(10)
+    street : VARCHAR(255) <<NOT NULL>>
+    house_number : VARCHAR(10) <<NOT NULL>>
+    postal_code : VARCHAR(10) <<NOT NULL>>
+    city : VARCHAR(100) <<NOT NULL>>
+    floor : VARCHAR(10)
 }
 
-ENTITY "MEDIKAMENTE" as medikamente {
-    PK id : INTEGER
-    name : VARCHAR(255) <<NOT NULL>>
-    wirkstoff : VARCHAR(255)
-}
-
-ENTITY "PFLEGER" as pfleger {
+ENTITY "MEDICATIONS" as medications {
     PK id : INTEGER
     name : VARCHAR(255) <<NOT NULL>>
-    telefonnummer : VARCHAR(50)
+    active_ingredient : VARCHAR(255)
+}
+
+ENTITY "CAREGIVERS" as caregivers {
+    PK id : INTEGER
+    name : VARCHAR(255) <<NOT NULL>>
+    phone_number : VARCHAR(50)
     email : VARCHAR(255)
-    FK ort_id : INTEGER
+    FK location_id : INTEGER
 }
 
-ENTITY "PATIENTEN" as patienten {
+ENTITY "PATIENTS" as patients {
     PK id : INTEGER
     name : VARCHAR(255) <<NOT NULL>>
-    alter : INTEGER
-    FK ort_id : INTEGER
-    telefonnummer : VARCHAR(50)
+    age : INTEGER
+    FK location_id : INTEGER
+    phone_number : VARCHAR(50)
     email : VARCHAR(255)
     --
-    CHECK: 0 < alter < 150
+    CHECK: 0 < age < 150
 }
 
-ENTITY "MEDIKAMENTENPLAENE" as medplan {
+ENTITY "MEDICATION_PLANS" as medplan {
     PK id : INTEGER
     FK patient_id : INTEGER <<NOT NULL>>
-    FK medikament_id : INTEGER <<NOT NULL>>
-    FK pfleger_id : INTEGER
-    wochentage_flags : INTEGER
-    tageszeiten_flags : INTEGER
-    stueckzahl : INTEGER
-    gueltig_von : DATE <<NOT NULL>>
-    gueltig_bis : DATE
-    notizen : TEXT
-    aktiv : BOOLEAN
+    FK medication_id : INTEGER <<NOT NULL>>
+    FK caregiver_id : INTEGER
+    weekday_flags : INTEGER
+    day_time_flags : INTEGER
+    quantity : INTEGER
+    valid_from : DATE <<NOT NULL>>
+    valid_to : DATE
+    notes : TEXT
+    is_active : BOOLEAN
     --
-    CHECK: wochentage_flags 0-127
-    CHECK: tageszeiten_flags 0-15
-    CHECK: stueckzahl > 0
-    DEFAULT: aktiv = true
+    CHECK: weekday_flags 0-127
+    CHECK: day_time_flags 0-15
+    CHECK: quantity > 0
+    DEFAULT: is_active = true
 }
 
 ' Relationships (1:N)
-orte ||--o{ pfleger : "arbeitet_an"
-orte ||--o{ patienten : "wohnt_in"
-patienten ||--o{ medplan : "hat"
-medikamente ||--o{ medplan : "verwendet_in"
-pfleger ||--o{ medplan : "betreut"
+locations ||--o{ caregivers : "works_at"
+locations ||--o{ patients : "lives_in"
+patients ||--o{ medplan : "has"
+medications ||--o{ medplan : "used_in"
+caregivers ||--o{ medplan : "manages"
 
-note top of rfid : RFID für\nWochentag-Erkennung
+note top of rfid : RFID for\nWeekday Detection
 
-note right of medplan : **Binäre Flags System:**\n• **Wochentage (0-127):**\n  So=1, Mo=2, Di=4, Mi=8,\n  Do=16, Fr=32, Sa=64\n• **Tageszeiten (0-15):**\n  Morgens=1, Mittags=2,\n  Nachmittags=4, Abends=8\n\n**Beispiele:**\n• Täglich: 127\n• Werktags: 62\n• Mo+Mi+Fr: 42\n• Morgens+Abends: 9
+note right of medplan : **Binary Flags System:**\n• **Weekdays (0-127):**\n  Sun=1, Mon=2, Tue=4, Wed=8,\n  Thu=16, Fri=32, Sat=64\n• **Day Times (0-15):**\n  Morning=1, Noon=2,\n  Afternoon=4, Evening=8\n\n**Examples:**\n• Daily: 127\n• Weekdays: 62\n• Mon+Wed+Fri: 42\n• Morning+Evening: 9
 
-note bottom of orte : Adressen für\nPatienten & Pfleger
+note bottom of locations : Addresses for\nPatients & Caregivers
 
 @enduml

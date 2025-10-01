@@ -1,29 +1,29 @@
-# 🏥 CURA - Medikamentenverwaltungs-System
+# 🏥 CURA - Medication Management System
 
-Ein hochmodernes PostgreSQL-basiertes System zur Verwaltung von Medikamentenplänen mit **binären Flags** für optimale Performance und RFID-Integration.
+A modern PostgreSQL-based system for managing medication plans with **binary flags** for optimal performance and RFID integration.
 
-## 🚀 System-Übersicht
+## 🚀 System Overview
 
-Das System verwaltet:
-- **Patienten** mit Adressdaten und Kontaktinformationen
-- **Pfleger** mit Zuständigkeitsbereichen
-- **RFID-Chips** für automatische Wochentag-Erkennung
-- **Medikamente** mit Wirkstoff-Informationen
-- **Optimierte Medikamentenpläne** mit binären Zeit-Flags
-- **Flexible Einnahmezeiten** (Morgens, Mittags, Nachmittags, Abends)
+The system manages:
+- **Patients** with address data and contact information
+- **Caregivers** with responsibility areas
+- **RFID chips** for automatic weekday detection
+- **Medications** with active ingredient information
+- **Optimized medication plans** with binary time flags
+- **Flexible intake times** (Morning, Noon, Afternoon, Evening)
 
-## Schnellstart
+## Quick Start
 
-### 1. Datenbank starten
+### 1. Start Database
 ```bash
 docker-compose up -d
 ```
 
-Das startet:
-- PostgreSQL auf Port `5434`
-- pgAdmin auf Port `8080` (optional für Web-Interface)
+This starts:
+- PostgreSQL on port `5434`
+- pgAdmin on port `8080` (optional for web interface)
 
-### 2. Verbindung zur Datenbank
+### 2. Database Connection
 ```
 Host: localhost
 Port: 5434
@@ -32,203 +32,203 @@ User: admin
 Password: passme
 ```
 
-### 3. pgAdmin (Web-Interface)
+### 3. pgAdmin (Web Interface)
 - URL: http://localhost:8080
 - Email: admin@cura.at
 - Password: passme
 
-## 📊 Datenbank-Schema (Optimiert)
+## 📊 Database Schema (Optimized)
 
-### Haupttabellen
+### Main Tables
 
-1. **`rfid_chips`** - RFID-Chips mit Wochentag-Zuordnung
-2. **`orte`** - Adressen für Patienten und Pfleger
-3. **`medikamente`** - Medikamentenstammdaten (Name, Wirkstoff)
-4. **`pfleger`** - Pflegerdaten mit Kontaktinformationen
-5. **`patienten`** - Patientendaten mit Adress-Referenz
-6. **`medikamentenplaene`** - **Zentrale Tabelle** mit binären Zeit-Flags
+1. **`rfid_chips`** - RFID chips with weekday assignment
+2. **`locations`** - Addresses for patients and caregivers
+3. **`medications`** - Medication master data (name, active ingredient)
+4. **`caregivers`** - Caregiver data with contact information
+5. **`patients`** - Patient data with address reference
+6. **`medication_plans`** - **Central table** with binary time flags
 
-### 🔥 Binäres Flags System
+### 🔥 Binary Flags System
 
-**Wochentage** (`wochentage_flags`, 0-127):
-- Sonntag = 1, Montag = 2, Dienstag = 4, Mittwoch = 8
-- Donnerstag = 16, Freitag = 32, Samstag = 64
-- **Beispiele**: Täglich = 127, Werktags = 62, Mo+Mi+Fr = 42
+**Weekdays** (`weekdays_flags`, 0-127):
+- Sunday = 1, Monday = 2, Tuesday = 4, Wednesday = 8
+- Thursday = 16, Friday = 32, Saturday = 64
+- **Examples**: Daily = 127, Weekdays = 62, Mon+Wed+Fri = 42
 
-**Tageszeiten** (`tageszeiten_flags`, 0-15):
-- Morgens = 1, Mittags = 2, Nachmittags = 4, Abends = 8
-- **Beispiele**: Morgens+Abends = 9, 3x täglich = 13
+**Day Times** (`day_times_flags`, 0-15):
+- Morning = 1, Noon = 2, Afternoon = 4, Evening = 8
+- **Examples**: Morning+Evening = 9, 3x daily = 13
 
-### 🏷️ RFID-Chips Standard-Zuordnung
+### 🏷️ RFID Chips Standard Assignment
 
-| Wochentag | Chip-ID | Beispiel-UID |
-|-----------|---------|--------------|
-| Montag | CHIP_MONTAG_001 | A1B2C3D4E5F6 |
-| Dienstag | CHIP_DIENSTAG_001 | B2C3D4E5F6A1 |
-| Mittwoch | CHIP_MITTWOCH_001 | C3D4E5F6A1B2 |
-| Donnerstag | CHIP_DONNERSTAG_001 | D4E5F6A1B2C3 |
-| Freitag | CHIP_FREITAG_001 | E5F6A1B2C3D4 |
-| Samstag | CHIP_SAMSTAG_001 | F6A1B2C3D4E5 |
-| Sonntag | CHIP_SONNTAG_001 | A1B2C3D4E5F7 |
+| Weekday | Chip-ID | Example-UID |
+|---------|---------|-------------|
+| Monday | CHIP_MONDAY_001 | A1B2C3D4E5F6 |
+| Tuesday | CHIP_TUESDAY_001 | B2C3D4E5F6A1 |
+| Wednesday | CHIP_WEDNESDAY_001 | C3D4E5F6A1B2 |
+| Thursday | CHIP_THURSDAY_001 | D4E5F6A1B2C3 |
+| Friday | CHIP_FRIDAY_001 | E5F6A1B2C3D4 |
+| Saturday | CHIP_SATURDAY_001 | F6A1B2C3D4E5 |
+| Sunday | CHIP_SUNDAY_001 | A1B2C3D4E5F7 |
 
-## 🔍 Wichtige Views & Hilfsfunktionen
+## 🔍 Important Views & Helper Functions
 
-### Lesbare Medikamentenpläne
+### Readable Medication Plans
 ```sql
-SELECT * FROM v_medikamentenplan_readable WHERE patient_name = 'Johann Meier';
+SELECT * FROM v_medication_plan_readable WHERE patient_name = 'John Doe';
 ```
 
-### Binäre Flags umwandeln
+### Convert Binary Flags
 ```sql
--- Wochentag zu Flag: 'MONTAG' → 2
-SELECT wochentag_zu_flag('MONTAG');
+-- Weekday to Flag: 'MONDAY' → 2
+SELECT weekday_to_flag('MONDAY');
 
--- Flag zu Wochentagen: 42 → ['MONTAG', 'MITTWOCH', 'FREITAG']
-SELECT flag_zu_wochentage(42);
+-- Flag to Weekdays: 42 → ['MONDAY', 'WEDNESDAY', 'FRIDAY']
+SELECT flag_to_weekdays(42);
 
--- Tageszeit zu Flag: 'MORGENS' → 1  
-SELECT tageszeit_zu_flag('MORGENS');
+-- Day time to Flag: 'MORNING' → 1  
+SELECT day_time_to_flag('MORNING');
 
--- Flag zu Tageszeiten: 9 → ['MORGENS', 'ABENDS']
-SELECT flag_zu_tageszeiten(9);
+-- Flag to Day times: 9 → ['MORNING', 'EVENING']
+SELECT flag_to_day_times(9);
 ```
 
-## 🎯 Beispiel-Abfragen
+## 🎯 Example Queries
 
-### Medikamentenplan für heute (Montag)
+### Medication plan for today (Monday)
 ```sql
 SELECT 
     p.name as patient,
-    m.name as medikament,
-    mp.stueckzahl,
-    flag_zu_tageszeiten(mp.tageszeiten_flags) as tageszeiten,
-    mp.notizen
-FROM medikamentenplaene mp
-JOIN patienten p ON mp.patient_id = p.id
-JOIN medikamente m ON mp.medikament_id = m.id
-WHERE (mp.wochentage_flags & wochentag_zu_flag('MONTAG')) > 0
-  AND mp.aktiv = true
-  AND CURRENT_DATE BETWEEN mp.gueltig_von AND COALESCE(mp.gueltig_bis, '2099-12-31')
+    m.name as medication,
+    mp.quantity,
+    flag_to_day_times(mp.day_times_flags) as day_times,
+    mp.notes
+FROM medication_plans mp
+JOIN patients p ON mp.patient_id = p.id
+JOIN medications m ON mp.medication_id = m.id
+WHERE (mp.weekdays_flags & weekday_to_flag('MONDAY')) > 0
+  AND mp.active = true
+  AND CURRENT_DATE BETWEEN mp.valid_from AND COALESCE(mp.valid_until, '2099-12-31')
 ORDER BY p.name;
 ```
 
-### RFID-Chip scannen für aktuellen Wochentag
+### RFID chip scan for current weekday
 ```sql
 SELECT 
     p.name as patient,
-    m.name as medikament,
-    mp.stueckzahl,
-    flag_zu_tageszeiten(mp.tageszeiten_flags) as einnahmezeiten,
-    mp.notizen
+    m.name as medication,
+    mp.quantity,
+    flag_to_day_times(mp.day_times_flags) as intake_times,
+    mp.notes
 FROM rfid_chips r
-JOIN medikamentenplaene mp ON (mp.wochentage_flags & wochentag_zu_flag(r.wochentag)) > 0
-JOIN patienten p ON mp.patient_id = p.id
-JOIN medikamente m ON mp.medikament_id = m.id
-WHERE r.chip_id = 'CHIP_MONTAG_001' -- Von RFID-Scanner
-  AND mp.aktiv = true
-  AND CURRENT_DATE BETWEEN mp.gueltig_von AND COALESCE(mp.gueltig_bis, '2099-12-31')
+JOIN medication_plans mp ON (mp.weekdays_flags & weekday_to_flag(r.weekday)) > 0
+JOIN patients p ON mp.patient_id = p.id
+JOIN medications m ON mp.medication_id = m.id
+WHERE r.chip_id = 'CHIP_MONDAY_001' -- From RFID scanner
+  AND mp.active = true
+  AND CURRENT_DATE BETWEEN mp.valid_from AND COALESCE(mp.valid_until, '2099-12-31')
 ORDER BY p.name;
 ```
 
-### Neuen Medikamentenplan erstellen
+### Create new medication plan
 ```sql
-INSERT INTO medikamentenplaene (
-    patient_id, medikament_id, pfleger_id,
-    wochentage_flags, tageszeiten_flags, stueckzahl,
-    gueltig_von, notizen
+INSERT INTO medication_plans (
+    patient_id, medication_id, caregiver_id,
+    weekdays_flags, day_times_flags, quantity,
+    valid_from, notes
 ) VALUES (
     1, 4, 1,
-    127, -- Täglich (So=1 + Mo=2 + ... + Sa=64 = 127)
-    1,   -- Morgens (Morgens=1)
-    1,   -- 1 Stück
+    127, -- Daily (Sun=1 + Mon=2 + ... + Sat=64 = 127)
+    1,   -- Morning (Morning=1)
+    1,   -- 1 piece
     '2024-01-01',
-    'Nüchtern einnehmen'
+    'Take on empty stomach'
 );
 ```
 
-## 🔧 Erweiterte Features
+## 🔧 Advanced Features
 
-### Komplexe Einnahmezeiten mit binären Flags
+### Complex intake times with binary flags
 ```sql
--- Nur Werktage, morgens und abends (Mo-Fr = 2+4+8+16+32 = 62, Morgens+Abends = 1+8 = 9)
-INSERT INTO medikamentenplaene (patient_id, medikament_id, wochentage_flags, tageszeiten_flags, stueckzahl, gueltig_von)
+-- Only weekdays, morning and evening (Mon-Fri = 2+4+8+16+32 = 62, Morning+Evening = 1+8 = 9)
+INSERT INTO medication_plans (patient_id, medication_id, weekdays_flags, day_times_flags, quantity, valid_from)
 VALUES (1, 2, 62, 9, 1, '2024-01-01');
 
--- Montag, Mittwoch, Freitag zur Mittagszeit (Mo+Mi+Fr = 2+8+32 = 42, Mittags = 2)
-INSERT INTO medikamentenplaene (patient_id, medikament_id, wochentage_flags, tageszeiten_flags, stueckzahl, gueltig_von)
+-- Monday, Wednesday, Friday at noon (Mon+Wed+Fri = 2+8+32 = 42, Noon = 2)
+INSERT INTO medication_plans (patient_id, medication_id, weekdays_flags, day_times_flags, quantity, valid_from)
 VALUES (1, 3, 42, 2, 2, '2024-01-01');
 ```
 
-### Medikamentenplan beenden/pausieren
+### End/pause medication plan
 ```sql
-UPDATE medikamentenplaene 
-SET aktiv = FALSE, gueltig_bis = CURRENT_DATE 
+UPDATE medication_plans 
+SET active = FALSE, valid_until = CURRENT_DATE 
 WHERE id = 1;
 ```
 
-### Performance-optimierte Abfragen
+### Performance-optimized queries
 ```sql
--- Index-optimierte Suche nach Patienten-Medikamentenplänen
-SELECT * FROM medikamentenplaene 
-WHERE patient_id = 1 AND aktiv = true
-  AND CURRENT_DATE BETWEEN gueltig_von AND COALESCE(gueltig_bis, '2099-12-31');
+-- Index-optimized search for patient medication plans
+SELECT * FROM medication_plans 
+WHERE patient_id = 1 AND active = true
+  AND CURRENT_DATE BETWEEN valid_from AND COALESCE(valid_until, '2099-12-31');
 ```
 
-## Wartung
+## Maintenance
 
-### Backup erstellen
+### Create backup
 ```bash
 docker exec cura_postgres pg_dump -U admin cura > backup_$(date +%Y%m%d).sql
 ```
 
-### Backup wiederherstellen
+### Restore backup
 ```bash
 docker exec -i cura_postgres psql -U admin cura < backup_20240922.sql
 ```
 
-### Logs anzeigen
+### Show logs
 ```bash
 docker-compose logs postgres
 ```
 
-## Entwicklung
+## Development
 
-### Neue Spalte hinzufügen
+### Add new column
 ```sql
 ALTER TABLE patients ADD COLUMN insurance_number VARCHAR(50);
 ```
 
-### Index hinzufügen für Performance
+### Add index for performance
 ```sql
 CREATE INDEX idx_custom_name ON table_name(column_name);
 ```
 
 ## Troubleshooting
 
-### Container neustarten
+### Restart container
 ```bash
 docker-compose restart
 ```
 
-### Datenbank zurücksetzen
+### Reset database
 ```bash
 docker-compose down -v
 docker-compose up -d
 ```
 
-### Verbindung testen
+### Test connection
 ```bash
-docker exec -it cura_postgres psql -U admin -d cura -c "SELECT COUNT(*) FROM patienten;"
+docker exec -it cura_postgres psql -U admin -d cura -c "SELECT COUNT(*) FROM patients;"
 ```
 
-## 📈 ERD & Dokumentation
+## 📈 ERD & Documentation
 
-- **PlantUML ERD**: `CURA_ERD.puml` - Detailliertes Entity-Relationship-Diagram
-- **Markdown Docs**: `ERD_CURA_System.md` - Vollständige Systemdokumentation
+- **PlantUML ERD**: `CURA_ERD.puml` - Detailed Entity-Relationship-Diagram
+- **Markdown Docs**: `ERD_CURA_System.md` - Complete system documentation
 
 ## 🚀 Performance Features
 
-- **Binäre Flags** statt separater Tabellen → 90% weniger JOINs
-- **Optimierte Indizes** für häufige Abfragen
-- **Minimales Schema** mit maximaler Flexibilität
-- **PostgreSQL 16** mit modernsten Features
+- **Binary flags** instead of separate tables → 90% fewer JOINs
+- **Optimized indexes** for frequent queries
+- **Minimal schema** with maximum flexibility
+- **PostgreSQL 16** with latest features
