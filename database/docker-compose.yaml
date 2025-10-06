@@ -19,6 +19,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    networks:
+      - cura-network
 
   # Optional: pgAdmin für Web-basierte Datenbank-Verwaltung
   pgadmin:
@@ -36,7 +38,31 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - cura-network
+
+  # CURA Backend API
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: cura_backend
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "5257:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cura-network
 
 volumes:
   postgres_data:
   pgadmin_data:
+
+networks:
+  cura-network:
+    driver: bridge
