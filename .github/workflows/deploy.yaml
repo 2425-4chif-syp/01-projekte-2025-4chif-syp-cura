@@ -10,9 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  depl            echo "🌟 Services available at:"
-            echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:8081"
-            echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:8081/swagger/index.html"full-stack:
+  deploy-full-stack:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Full Stack via SSH
