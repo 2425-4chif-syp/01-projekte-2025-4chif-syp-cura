@@ -1,6 +1,7 @@
 using Core.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Add MQTT Service
+builder.Services.AddSingleton<IMqttService, MqttService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,5 +54,9 @@ if (!app.Environment.EnvironmentName.Equals("Docker"))
 app.UseCors("AllowAngular");
 app.UseAuthorization();
 app.MapControllers();
+
+// Start MQTT Service
+var mqttService = app.Services.GetRequiredService<IMqttService>();
+await mqttService.StartAsync();
 
 app.Run();
