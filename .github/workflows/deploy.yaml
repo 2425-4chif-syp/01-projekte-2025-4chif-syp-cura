@@ -1,4 +1,4 @@
-name: Deploy Database to VM12
+name: Deploy Full Stack to VM12
 
 on:
   push:
@@ -6,13 +6,14 @@ on:
       - main
     paths:
       - 'database/**'
+      - 'backend/**'
   workflow_dispatch:
 
 jobs:
-  deploy-db:
+  deploy-full-stack:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Database via SSH
+      - name: Deploy Full Stack via SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.VM12_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -20,7 +21,7 @@ jobs:
           ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
           
           ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
-            echo "🗄️ Starting database deployment..."
+            echo "� Starting full stack deployment (Database + Backend + pgAdmin)..."
             
             cd ~/cura-project
             
@@ -34,33 +35,70 @@ jobs:
             
             cd database
             
-            # Docker installieren falls noch nicht da
+            # Docker installieren falls nicht vorhanden
             if ! command -v docker &> /dev/null; then
               echo "🐳 Installing Docker..."
               curl -fsSL https://get.docker.com -o get-docker.sh
               sudo sh get-docker.sh
               sudo usermod -aG docker curaadm
+              echo "🔄 Please log out and back in for Docker group changes to take effect"
+            fi
+            
+            # Ensure we can pull .NET 8 images
+            echo "📦 Pre-pulling required Docker images..."
+            docker pull mcr.microsoft.com/dotnet/sdk:8.0 || echo "Failed to pull .NET SDK image"
+            docker pull mcr.microsoft.com/dotnet/aspnet:8.0 || echo "Failed to pull .NET runtime image"
+
+            # Docker Compose Plugin sicherstellen
+            if ! docker compose version &> /dev/null; then
+              echo "🔧 Installing Docker Compose plugin..."
+              sudo apt-get update
+              sudo apt-get install -y docker-compose-plugin
             fi
             
             # Container starten/neustarten
-            echo "🚀 Starting PostgreSQL container..."
+            echo "🚀 Starting containers (PostgreSQL + pgAdmin + Backend)..."
             docker compose down || true
-            docker compose up -d
+            docker compose up -d --build
+            
+            echo "📋 Starting containers:"
+            docker compose ps
             
             # Warten bis PostgreSQL ready ist
             echo "⏳ Waiting for database..."
             for i in {1..30}; do
-              if docker compose exec -T postgres pg_isready -U cura_user -d cura_db > /dev/null 2>&1; then
+              if docker compose exec -T postgres pg_isready -U admin -d cura > /dev/null 2>&1; then
                 echo "✅ Database is ready!"
                 break
               fi
               sleep 2
             done
             
-            echo "✅ Database deployment completed!"
-            echo "📋 Container status:"
+            echo "✅ Deployment completed!"
+            echo "📋 Final container status:"
             docker compose ps
             
-            echo "📊 Database tables:"
-            docker compose exec -T postgres psql -U cura_user -d cura_db -c "\dt" 2>/dev/null || echo "Database not ready yet"
+            echo "� Services available at:"
+            echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:5257"
+            echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:5257/swagger/index.html"
+            echo "  🔧 pgAdmin: http://vm12.htl-leonding.ac.at:8080"
+            echo "  🗄️ PostgreSQL: vm12.htl-leonding.ac.at:5434"
+            
+            echo "�📊 Database tables:"
+            docker compose exec -T postgres psql -U admin -d cura -c "\dt" 2>/dev/null || echo "Database not ready yet"
+            
+            echo "🩺 Backend health check with retries:"
+            for i in {1..6}; do
+              if curl -f http://localhost:5257/api/Medications &> /dev/null; then
+                echo "✅ Backend API is healthy!"
+                break
+              else
+                echo "⏳ Backend not ready yet, waiting... (attempt $i/6)"
+                sleep 10
+              fi
+              if [ $i -eq 6 ]; then
+                echo "❌ Backend health check failed! Showing logs:"
+                docker compose logs cura_backend
+              fi
+            done
           EOF
