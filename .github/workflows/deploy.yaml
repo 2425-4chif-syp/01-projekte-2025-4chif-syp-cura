@@ -10,24 +10,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  depl            echo "🌐 Testing external connectivity..."
-            echo "🔍 Testing Backend from external:"
-            timeout 10 curl -f http://vm12.htl-leonding.ac.at:5257/swagger/index.html && echo "✅ Backend externally accessible" || echo "❌ Backend not externally accessible"
-            
-            echo "🔍 Testing Backend from localhost:"
-            timeout 10 curl -f http://localhost:5257/swagger/index.html && echo "✅ Backend locally accessible" || echo "❌ Backend not locally accessible"
-            
-            echo "🔍 Testing pgAdmin:"
-            timeout 10 curl -f http://vm12.htl-leonding.ac.at:8080 && echo "✅ pgAdmin externally accessible" || echo "❌ pgAdmin not externally accessible"
-            
-            echo "🔍 Server network info:"
-            echo "  - Server IP: $(hostname -I | awk '{print $1}')"
-            echo "  - Listening ports: $(ss -tuln | grep -E ':(5257|8080|5434)' || echo 'None found')"
-            
-            echo "� Services available at:"
-            echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:5257"
-            echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:5257/swagger/index.html"
-            echo "  🔧 pgAdmin: http://vm12.htl-leonding.ac.at:8080"
+  deploy-full-stack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Full Stack via SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VM12_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
+          
+          ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
             echo "  🗄️ PostgreSQL: vm12.htl-leonding.ac.at:5434"ll-stack:
     runs-on: ubuntu-latest
     steps:
@@ -245,4 +238,18 @@ jobs:
             docker compose port postgres 5432 2>/dev/null || echo "PostgreSQL port not bound"
             docker compose port backend 8080 2>/dev/null || echo "Backend port not bound"
             docker compose port pgadmin 80 2>/dev/null || echo "pgAdmin port not bound"
+            
+            echo "🌐 Testing external connectivity..."
+            echo "🔍 Testing Backend from external:"
+            timeout 10 curl -f http://vm12.htl-leonding.ac.at:5257/swagger/index.html && echo "✅ Backend externally accessible" || echo "❌ Backend not externally accessible"
+            
+            echo "🔍 Testing Backend from localhost:"
+            timeout 10 curl -f http://localhost:5257/swagger/index.html && echo "✅ Backend locally accessible" || echo "❌ Backend not locally accessible"
+            
+            echo "🔍 Testing pgAdmin:"
+            timeout 10 curl -f http://vm12.htl-leonding.ac.at:8080 && echo "✅ pgAdmin externally accessible" || echo "❌ pgAdmin not externally accessible"
+            
+            echo "🔍 Server network info:"
+            echo "  - Server IP: $(hostname -I | awk '{print $1}')"
+            echo "  - Listening ports: $(ss -tuln | grep -E ':(5257|8080|5434)' || echo 'None found')"
           EOF
