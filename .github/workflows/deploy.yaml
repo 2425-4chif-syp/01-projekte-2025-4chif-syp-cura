@@ -21,17 +21,6 @@ jobs:
           ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
           
           ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
-            echo "  🗄️ PostgreSQL: vm12.htl-leonding.ac.at:5434"ll-stack:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy Full Stack via SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.VM12_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
-          
-          ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
             echo "� Starting full stack deployment (Database + Backend + pgAdmin)..."
             
             cd ~/cura-project
