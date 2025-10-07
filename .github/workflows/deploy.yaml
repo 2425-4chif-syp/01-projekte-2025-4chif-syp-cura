@@ -10,7 +10,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-full-stack:
+  depl            echo "🌟 Services available at:"
+            echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:8081"
+            echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:8081/swagger/index.html"full-stack:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Full Stack via SSH
@@ -186,14 +188,14 @@ jobs:
               echo "🔍 DEBUG: Testing backend endpoints..."
               
               # Test Swagger UI
-              if curl -f -s http://localhost:5257/swagger/index.html > /dev/null; then
+              if curl -f -s http://localhost:8081/swagger/index.html > /dev/null; then
                 echo "✅ Swagger UI is accessible"
               else
                 echo "❌ Swagger UI not accessible"
               fi
               
               # Test API endpoint
-              if curl -f -s http://localhost:5257/api/Medications > /dev/null; then
+              if curl -f -s http://localhost:8081/api/Medications > /dev/null; then
                 echo "✅ Backend API is healthy!"
                 break
               else
@@ -202,7 +204,7 @@ jobs:
                 # Show detailed curl response every 2nd attempt
                 if [ $((i % 2)) -eq 0 ]; then
                   echo "🔍 DEBUG: Detailed curl response:"
-                  curl -v http://localhost:5257/api/Medications 2>&1 | head -20 || echo "Curl failed"
+                  curl -v http://localhost:8081/api/Medications 2>&1 | head -20 || echo "Curl failed"
                 fi
               fi
               
@@ -230,15 +232,15 @@ jobs:
             
             echo "🌐 Testing external connectivity..."
             echo "🔍 Testing Backend from external:"
-            timeout 10 curl -f http://vm12.htl-leonding.ac.at:5257/swagger/index.html && echo "✅ Backend externally accessible" || echo "❌ Backend not externally accessible"
+            timeout 10 curl -f http://vm12.htl-leonding.ac.at:8081/swagger/index.html && echo "✅ Backend externally accessible" || echo "❌ Backend not externally accessible"
             
             echo "🔍 Testing Backend from localhost:"
-            timeout 10 curl -f http://localhost:5257/swagger/index.html && echo "✅ Backend locally accessible" || echo "❌ Backend not locally accessible"
+            timeout 10 curl -f http://localhost:8081/swagger/index.html && echo "✅ Backend locally accessible" || echo "❌ Backend not locally accessible"
             
             echo "🔍 Testing pgAdmin:"
             timeout 10 curl -f http://vm12.htl-leonding.ac.at:8080 && echo "✅ pgAdmin externally accessible" || echo "❌ pgAdmin not externally accessible"
             
             echo "🔍 Server network info:"
             echo "  - Server IP: $(hostname -I | awk '{print $1}')"
-            echo "  - Listening ports: $(ss -tuln | grep -E ':(5257|8080|5434)' || echo 'None found')"
+            echo "  - Listening ports: $(ss -tuln | grep -E ':(8081|8080|5434)' || echo 'None found')"
           EOF
