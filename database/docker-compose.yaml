@@ -41,6 +41,21 @@ services:
     networks:
       - cura-network
 
+  # MQTT Broker (Mosquitto)
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: cura_mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_logs:/mosquitto/log
+    networks:
+      - cura-network
+
   # CURA Backend API
   backend:
     build:
@@ -56,6 +71,7 @@ services:
       - "8081:8080"
     depends_on:
       - postgres
+      - mosquitto
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/swagger/index.html || exit 1"]
       interval: 30s
@@ -68,6 +84,8 @@ services:
 volumes:
   postgres_data:
   pgadmin_data:
+  mosquitto_data:
+  mosquitto_logs:
 
 networks:
   cura-network:
