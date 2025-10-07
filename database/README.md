@@ -232,3 +232,6 @@ docker exec -it cura_postgres psql -U admin -d cura -c "SELECT COUNT(*) FROM pat
 - **Optimized indexes** for frequent queries
 - **Minimal schema** with maximum flexibility
 - **PostgreSQL 16** with latest features
+
+
+test
