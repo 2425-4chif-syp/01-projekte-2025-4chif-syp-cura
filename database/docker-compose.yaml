@@ -50,7 +50,8 @@ services:
     restart: unless-stopped
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
     ports:
       - "5257:8080"
     depends_on:

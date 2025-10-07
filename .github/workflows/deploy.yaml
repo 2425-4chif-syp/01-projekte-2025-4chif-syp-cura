@@ -10,7 +10,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-full-stack:
+  depl            echo "🌐 Testing external connectivity..."
+            echo "🔍 Testing Backend from external:"
+            timeout 10 curl -f http://vm12.htl-leonding.ac.at:5257/swagger/index.html && echo "✅ Backend externally accessible" || echo "❌ Backend not externally accessible"
+            
+            echo "🔍 Testing Backend from localhost:"
+            timeout 10 curl -f http://localhost:5257/swagger/index.html && echo "✅ Backend locally accessible" || echo "❌ Backend not locally accessible"
+            
+            echo "🔍 Testing pgAdmin:"
+            timeout 10 curl -f http://vm12.htl-leonding.ac.at:8080 && echo "✅ pgAdmin externally accessible" || echo "❌ pgAdmin not externally accessible"
+            
+            echo "🔍 Server network info:"
+            echo "  - Server IP: $(hostname -I | awk '{print $1}')"
+            echo "  - Listening ports: $(ss -tuln | grep -E ':(5257|8080|5434)' || echo 'None found')"
+            
+            echo "� Services available at:"
+            echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:5257"
+            echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:5257/swagger/index.html"
+            echo "  🔧 pgAdmin: http://vm12.htl-leonding.ac.at:8080"
+            echo "  🗄️ PostgreSQL: vm12.htl-leonding.ac.at:5434"ll-stack:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Full Stack via SSH
