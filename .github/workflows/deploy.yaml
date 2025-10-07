@@ -97,6 +97,19 @@ jobs:
             echo "⬇️ Stopping existing containers..."
             docker compose down || true
             
+            # 🔧 Fix PostgreSQL version incompatibility
+            echo "🔧 Checking for PostgreSQL version conflicts..."
+            if docker volume ls | grep -q "database_postgres_data"; then
+              echo "⚠️ Found existing PostgreSQL data volume - checking compatibility..."
+              # Try to detect version mismatch from previous logs
+              if docker compose logs postgres 2>/dev/null | grep -q "incompatible with server"; then
+                echo "🚨 PostgreSQL version incompatibility detected!"
+                echo "💥 Removing incompatible database volume..."
+                docker volume rm database_postgres_data || echo "Volume removal failed or doesn't exist"
+                echo "✅ Volume removed - PostgreSQL will initialize fresh database"
+              fi
+            fi
+            
             # 🔍 DEBUG: Show docker-compose.yaml
             echo "🔍 DEBUG: Docker Compose configuration:"
             cat docker-compose.yaml | head -20
