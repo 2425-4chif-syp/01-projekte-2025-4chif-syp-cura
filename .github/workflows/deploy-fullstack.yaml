@@ -1,4 +1,4 @@
-name: Deploy Full Stack to VM12
+name: 🚀 Deploy Full Stack (Backend + Database)
 
 on:
   push:
