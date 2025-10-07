@@ -14,11 +14,11 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql
       - ./testdata.sql:/docker-entrypoint-initdb.d/02-testdata.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d cura"]
-      interval: 15s
+      test: ["CMD-SHELL", "pg_isready || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 60s
     networks:
       - cura-network
 
@@ -54,8 +54,7 @@ services:
     ports:
       - "5257:8080"
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/swagger/index.html || exit 1"]
       interval: 30s

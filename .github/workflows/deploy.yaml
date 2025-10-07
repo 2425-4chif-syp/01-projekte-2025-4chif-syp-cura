@@ -28,10 +28,26 @@ jobs:
             # Fix ownership
             sudo chown -R curaadm:curaadm .
             
+            # 🔍 DEBUG: Show current state before changes
+            echo "🔍 DEBUG: Current directory: $(pwd)"
+            echo "🔍 DEBUG: Current user: $(whoami)"
+            echo "🔍 DEBUG: Git status before pull:"
+            git status --porcelain || echo "Git status failed"
+            echo "🔍 DEBUG: Current git commit:"
+            git log --oneline -1 || echo "Git log failed"
+            
             # Force pull (überschreibt lokale Änderungen)
+            echo "🔄 Resetting git state..."
             git reset --hard HEAD
             git clean -fd
+            echo "📥 Pulling latest changes..."
             git pull origin main
+            
+            # 🔍 DEBUG: Show state after pull
+            echo "🔍 DEBUG: Git status after pull:"
+            git status --porcelain || echo "Git status failed"
+            echo "🔍 DEBUG: New git commit:"
+            git log --oneline -1 || echo "Git log failed"
             
             cd database
             
@@ -44,10 +60,22 @@ jobs:
               echo "🔄 Please log out and back in for Docker group changes to take effect"
             fi
             
+            # 🔍 DEBUG: System information
+            echo "🔍 DEBUG: System info:"
+            echo "  - OS: $(lsb_release -d -s 2>/dev/null || echo 'Unknown')"
+            echo "  - Docker version: $(docker --version 2>/dev/null || echo 'Not installed')"
+            echo "  - Docker Compose version: $(docker compose version 2>/dev/null || echo 'Not installed')"
+            echo "  - Available memory: $(free -h | grep Mem: || echo 'Unknown')"
+            echo "  - Available disk: $(df -h . | tail -1 || echo 'Unknown')"
+            
             # Ensure we can pull .NET 8 images
             echo "📦 Pre-pulling required Docker images..."
-            docker pull mcr.microsoft.com/dotnet/sdk:8.0 || echo "Failed to pull .NET SDK image"
-            docker pull mcr.microsoft.com/dotnet/aspnet:8.0 || echo "Failed to pull .NET runtime image"
+            docker pull mcr.microsoft.com/dotnet/sdk:8.0 || echo "❌ Failed to pull .NET SDK image"
+            docker pull mcr.microsoft.com/dotnet/aspnet:8.0 || echo "❌ Failed to pull .NET runtime image"
+            
+            # 🔍 DEBUG: Show docker images
+            echo "🔍 DEBUG: Available Docker images:"
+            docker images | head -10
 
             # Docker Compose Plugin sicherstellen
             if ! docker compose version &> /dev/null; then
@@ -56,20 +84,66 @@ jobs:
               sudo apt-get install -y docker-compose-plugin
             fi
             
+            # 🔍 DEBUG: Show current docker state before changes
+            echo "🔍 DEBUG: Current Docker containers:"
+            docker ps -a || echo "No containers"
+            echo "🔍 DEBUG: Docker networks:"
+            docker network ls || echo "No networks"
+            echo "🔍 DEBUG: Docker volumes:"
+            docker volume ls || echo "No volumes"
+            
             # Container starten/neustarten
             echo "🚀 Starting containers (PostgreSQL + pgAdmin + Backend)..."
+            echo "⬇️ Stopping existing containers..."
             docker compose down || true
+            
+            # 🔍 DEBUG: Show docker-compose.yaml
+            echo "🔍 DEBUG: Docker Compose configuration:"
+            cat docker-compose.yaml | head -20
+            echo "... (truncated for brevity)"
+            
+            echo "🏗️ Building and starting containers..."
             docker compose up -d --build
             
-            echo "📋 Starting containers:"
+            echo "📋 Container status after startup:"
             docker compose ps
             
+            # 🔍 DEBUG: Show detailed container information
+            echo "🔍 DEBUG: Container details:"
+            for container in cura_postgres cura_backend cura_pgadmin; do
+              echo "  📦 $container:"
+              if docker inspect $container > /dev/null 2>&1; then
+                echo "    - Status: $(docker inspect --format='{{.State.Status}}' $container 2>/dev/null || echo 'Unknown')"
+                echo "    - Health: $(docker inspect --format='{{.State.Health.Status}}' $container 2>/dev/null || echo 'No health check')"
+                echo "    - Restart Count: $(docker inspect --format='{{.RestartCount}}' $container 2>/dev/null || echo 'Unknown')"
+              else
+                echo "    - Container not found!"
+              fi
+            done
+            
             # Warten bis PostgreSQL ready ist
-            echo "⏳ Waiting for database..."
+            echo "⏳ Waiting for database (with detailed debugging)..."
             for i in {1..30}; do
-              if docker compose exec -T postgres pg_isready -U admin -d cura > /dev/null 2>&1; then
+              echo "🔍 DEBUG: Database check attempt $i/30"
+              
+              # Check if container is running
+              if ! docker compose ps postgres | grep -q "Up"; then
+                echo "❌ PostgreSQL container is not running!"
+                docker compose logs postgres | tail -20
+                sleep 2
+                continue
+              fi
+              
+              # Check if database is ready
+              if docker compose exec -T postgres pg_isready > /dev/null 2>&1; then
                 echo "✅ Database is ready!"
                 break
+              else
+                echo "⏳ Database not ready yet... (attempt $i/30)"
+                if [ $((i % 5)) -eq 0 ]; then
+                  echo "🔍 DEBUG: PostgreSQL logs (last 10 lines):"
+                  docker compose logs postgres | tail -10
+                fi
               fi
               sleep 2
             done
@@ -87,18 +161,64 @@ jobs:
             echo "�📊 Database tables:"
             docker compose exec -T postgres psql -U admin -d cura -c "\dt" 2>/dev/null || echo "Database not ready yet"
             
-            echo "🩺 Backend health check with retries:"
+            echo "🩺 Backend health check with detailed debugging:"
             for i in {1..6}; do
-              if curl -f http://localhost:5257/api/Medications &> /dev/null; then
+              echo "🔍 DEBUG: Backend check attempt $i/6"
+              
+              # Check if backend container is running
+              if ! docker compose ps backend | grep -q "Up"; then
+                echo "❌ Backend container is not running!"
+                echo "🔍 DEBUG: Backend container status:"
+                docker compose ps backend
+                echo "🔍 DEBUG: Backend logs (last 20 lines):"
+                docker compose logs backend | tail -20 || echo "No backend logs available"
+                sleep 10
+                continue
+              fi
+              
+              # Check specific endpoints
+              echo "🔍 DEBUG: Testing backend endpoints..."
+              
+              # Test Swagger UI
+              if curl -f -s http://localhost:5257/swagger/index.html > /dev/null; then
+                echo "✅ Swagger UI is accessible"
+              else
+                echo "❌ Swagger UI not accessible"
+              fi
+              
+              # Test API endpoint
+              if curl -f -s http://localhost:5257/api/Medications > /dev/null; then
                 echo "✅ Backend API is healthy!"
                 break
               else
-                echo "⏳ Backend not ready yet, waiting... (attempt $i/6)"
-                sleep 10
+                echo "⏳ Backend API not ready yet... (attempt $i/6)"
+                
+                # Show detailed curl response every 2nd attempt
+                if [ $((i % 2)) -eq 0 ]; then
+                  echo "🔍 DEBUG: Detailed curl response:"
+                  curl -v http://localhost:5257/api/Medications 2>&1 | head -20 || echo "Curl failed"
+                fi
               fi
+              
+              sleep 10
+              
               if [ $i -eq 6 ]; then
-                echo "❌ Backend health check failed! Showing logs:"
-                docker compose logs cura_backend
+                echo "❌ Backend health check failed! Final debugging:"
+                echo "🔍 DEBUG: All container statuses:"
+                docker compose ps
+                echo "🔍 DEBUG: Backend logs (last 50 lines):"
+                docker compose logs backend | tail -50 || echo "No backend logs available"
+                echo "🔍 DEBUG: Network connectivity test:"
+                docker compose exec -T postgres ping -c 3 backend || echo "Network ping failed"
               fi
             done
+            
+            # 🔍 DEBUG: Final system state
+            echo "🔍 DEBUG: Final deployment state:"
+            echo "  📊 Container statuses:"
+            docker compose ps
+            echo "  🔗 Port bindings:"
+            docker compose port postgres 5432 2>/dev/null || echo "PostgreSQL port not bound"
+            docker compose port backend 8080 2>/dev/null || echo "Backend port not bound"
+            docker compose port pgadmin 80 2>/dev/null || echo "pgAdmin port not bound"
           EOF
