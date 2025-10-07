@@ -1,0 +1,54 @@
+name: Deploy Database to VM12
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'database/**'
+  workflow_dispatch:
+
+jobs:
+  deploy-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Database via SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VM12_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
+          
+          ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
+            echo "🗄️ Starting database deployment..."
+            
+            cd ~/cura-project
+            
+            # Fix ownership for git
+            sudo chown -R curaadm:curaadm .git/
+            sudo chown -R curaadm:curaadm .
+            
+            # Pull latest changes
+            git reset --hard HEAD
+            git clean -fd
+            git pull origin main
+            
+            # Deploy database
+            cd database
+            
+            # Start/restart PostgreSQL container
+            docker compose down || true
+            docker compose up -d
+            
+            # Wait for database to be ready
+            echo "⏳ Waiting for database..."
+            sleep 10
+            
+            # Verify database is running
+            docker compose ps
+            
+            echo "✅ Database deployment completed!"
+            echo "🗄️ PostgreSQL available at: localhost:5432"
+            echo "📊 Database: cura_db"
+            echo "👤 User: cura_user"
+          EOF
