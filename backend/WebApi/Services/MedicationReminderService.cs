@@ -12,8 +12,8 @@ public class MedicationReminderService : BackgroundService
     // Definierte Zeiten für die day_time_flags
     private readonly Dictionary<int, TimeSpan> _dayTimes = new()
     {
-        { 1, new TimeSpan(8, 0, 0) },   // Morning = 08:00
-        { 2, new TimeSpan(12, 4, 0) },  // Noon = 12:03
+        { 1, new TimeSpan(10, 14, 0) },   // Morning = 10:14 
+        { 2, new TimeSpan(12, 0, 0) },  // Noon = 12:00
         { 4, new TimeSpan(16, 0, 0) },  // Afternoon = 16:00
         { 8, new TimeSpan(20, 0, 0) }   // Evening = 20:00
     };
@@ -72,8 +72,13 @@ public class MedicationReminderService : BackgroundService
             var currentWeekday = now.DayOfWeek;
             var currentWeekdayFlag = _weekdays[currentWeekday];
 
+            _logger.LogInformation("Medication Check - Current Time: {Time}, Weekday: {Weekday}, Flag: {Flag}", 
+                currentTime.ToString(@"hh\:mm\:ss"), currentWeekday, currentWeekdayFlag);
+
             // Hole alle aktiven Medikamentenpläne
             var activePlans = await unitOfWork.MedicationPlans.GetActiveAsync();
+            
+            _logger.LogInformation("Found {Count} active medication plans", activePlans.Count);
 
             foreach (var plan in activePlans)
             {
