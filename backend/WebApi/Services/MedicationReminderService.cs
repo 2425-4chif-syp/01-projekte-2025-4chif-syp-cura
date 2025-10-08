@@ -12,8 +12,8 @@ public class MedicationReminderService : BackgroundService
     // Definierte Zeiten für die day_time_flags
     private readonly Dictionary<int, TimeSpan> _dayTimes = new()
     {
-        { 1, new TimeSpan(10, 14, 0) },   // Morning = 10:14 
-        { 2, new TimeSpan(12, 0, 0) },  // Noon = 12:00
+        { 1, new TimeSpan(10, 20, 0) },   // Morning = 10:14 
+        { 2, new TimeSpan(12, 20, 0) },  // Noon = 12:00
         { 4, new TimeSpan(16, 0, 0) },  // Afternoon = 16:00
         { 8, new TimeSpan(20, 0, 0) }   // Evening = 20:00
     };
