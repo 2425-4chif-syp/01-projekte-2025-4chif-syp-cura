@@ -146,12 +146,7 @@ public class MqttService : IMqttService, IDisposable
                 
                 // Forward to internal CURA topic for further processing
                 var curaRfidTopic = _configuration["Mqtt:Topics:RfidScanned"] ?? "cura/rfid/scanned";
-                var forwardMessage = System.Text.Json.JsonSerializer.Serialize(new
-                {
-                    rfidTag = message.Trim(),
-                    source = "ESP32-RC522",
-                    timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
-                });
+                var forwardMessage = message.Trim();
                 
                 _ = Task.Run(async () =>
                 {
