@@ -42,7 +42,7 @@ INSERT INTO patients (name, age, location_id, phone_number, email) VALUES
 
 -- Patient 1: Johann Meier - Blood pressure medication daily in morning (Mon-Sun = 2+4+8+16+32+64+1 = 127)
 INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_flags, day_time_flags, quantity, valid_from, valid_to, notes) VALUES
-(1, 4, 1, 127, 1, 1, '2024-01-01', '2024-12-31', 'Take on empty stomach'),
+(1, 4, 1, 127, 15, 1, '2024-01-01', '2024-12-31', 'Take on empty stomach'),
 -- Heart medication daily in morning  
 (1, 7, 1, 127, 1, 1, '2024-01-01', '2024-12-31', 'After breakfast'),
 -- Aspirin only weekdays at noon (Mon-Fri = 2+4+8+16+32 = 62)
