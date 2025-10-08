@@ -94,10 +94,10 @@ public class MedicationReminderService : BackgroundService
 
                     var targetTime = _dayTimes[dayTimeFlag];
                     
-                    // Prüfe ob die aktuelle Zeit der Zielzeit entspricht (±2 Minuten Toleranz)
-                    var timeDifference = Math.Abs((currentTime - targetTime).TotalMinutes);
+                    // Prüfe ob die aktuelle Zeit exakt der Zielzeit entspricht (auf die Minute genau)
+                    var currentMinute = new TimeSpan(currentTime.Hours, currentTime.Minutes, 0);
                     
-                    if (timeDifference <= 2)
+                    if (currentMinute == targetTime)
                     {
                         var reminderKey = $"{plan.Id}_{now:yyyy-MM-dd}_{dayTimeFlag}";
                         
