@@ -37,6 +37,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Add MQTT Service
 builder.Services.AddSingleton<IMqttService, MqttService>();
 
+// Add Medication Reminder Background Service
+builder.Services.AddHostedService<MedicationReminderService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
