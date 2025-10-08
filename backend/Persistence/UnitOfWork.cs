@@ -23,6 +23,7 @@ namespace Persistence
         public ICaregiverRepository CaregiverRepository { get; }
         public IPatientRepository PatientRepository { get; }
         public IMedicationPlanRepository MedicationPlanRepository { get; }
+        public IMedicationPlanRepository MedicationPlans => MedicationPlanRepository;
 
         public async Task<int> SaveChangesAsync()
         {

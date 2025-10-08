@@ -1,4 +1,5 @@
 using Core.Contracts;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -142,7 +143,7 @@ public class MedicationReminderController : ControllerBase
         return times;
     }
 
-    private List<string> GetNextReminders(Core.Entities.MedicationPlan plan, DateTime now)
+    private List<string> GetNextReminders(MedicationPlan plan, DateTime now)
     {
         var reminders = new List<string>();
         var dayTimes = new Dictionary<int, TimeSpan>
