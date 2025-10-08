@@ -138,6 +138,35 @@ public class MqttService : IMqttService, IDisposable
             
             _logger.LogInformation("Received message from topic '{Topic}': {Message}", topic, message);
             
+            // Special handling for RC522 RFID tag messages from ESP32
+            var rc522Topic = _configuration["Mqtt:Topics:Rc522Tag"] ?? "rc522/tag";
+            if (topic == rc522Topic)
+            {
+                _logger.LogInformation("🏷️ ESP32 RFID Tag detected: {RfidTag}", message);
+                
+                // Forward to internal CURA topic for further processing
+                var curaRfidTopic = _configuration["Mqtt:Topics:RfidScanned"] ?? "cura/rfid/scanned";
+                var forwardMessage = System.Text.Json.JsonSerializer.Serialize(new
+                {
+                    rfidTag = message.Trim(),
+                    source = "ESP32-RC522",
+                    timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                });
+                
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await PublishAsync(curaRfidTopic, forwardMessage);
+                        _logger.LogInformation("Forwarded ESP32 RFID tag to internal topic: {Topic}", curaRfidTopic);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to forward ESP32 RFID tag");
+                    }
+                });
+            }
+            
             // Fire the event for subscribers
             MessageReceived?.Invoke(this, (topic, message));
         }
@@ -152,6 +181,22 @@ public class MqttService : IMqttService, IDisposable
     private Task OnConnected(MqttClientConnectedEventArgs e)
     {
         _logger.LogInformation("MQTT client connected successfully");
+        
+        // Auto-subscribe to ESP32 RC522 RFID tag topic after connection
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var rc522Topic = _configuration["Mqtt:Topics:Rc522Tag"] ?? "rc522/tag";
+                await SubscribeAsync(rc522Topic);
+                _logger.LogInformation("🏷️ Auto-subscribed to ESP32 RFID topic: {Topic}", rc522Topic);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to auto-subscribe to ESP32 RFID topic");
+            }
+        });
+        
         return Task.CompletedTask;
     }
 
