@@ -13,7 +13,7 @@ public class MedicationReminderService : BackgroundService
     private readonly Dictionary<int, TimeSpan> _dayTimes = new()
     {
         { 1, new TimeSpan(8, 0, 0) },   // Morning = 08:00
-        { 2, new TimeSpan(11, 0, 0) },  // Noon = 11:00
+        { 2, new TimeSpan(11, 44, 0) },  // Noon = 11:44
         { 4, new TimeSpan(16, 0, 0) },  // Afternoon = 16:00
         { 8, new TimeSpan(20, 0, 0) }   // Evening = 20:00
     };
@@ -134,7 +134,11 @@ public class MedicationReminderService : BackgroundService
             var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
             
             var displayTopic = configuration["Mqtt:Topics:DisplayMessage"] ?? "display/message";
-            var message = $"Bitte Medikamente einnehmen: {plan.Medication?.Name} ({plan.Quantity}x) für {plan.Patient?.Name}";
+            
+            // Fallback auf IDs falls Navigation Properties nicht geladen
+            var medicationName = plan.Medication?.Name ?? $"Medikament-ID {plan.MedicationId}";
+            var patientName = plan.Patient?.Name ?? $"Patient-ID {plan.PatientId}";
+            var message = $"Bitte Medikamente einnehmen: {medicationName} ({plan.Quantity}x) für {patientName}";
             
             await mqttService.PublishAsync(displayTopic, message);
             
