@@ -13,7 +13,7 @@ public class MedicationReminderService : BackgroundService
     private readonly Dictionary<int, TimeSpan> _dayTimes = new()
     {
         { 1, new TimeSpan(8, 0, 0) },   // Morning = 08:00
-        { 2, new TimeSpan(9, 49, 0) },  // Noon = 11:48
+        { 2, new TimeSpan(10, 0, 0) },  // Noon = 11:48
         { 4, new TimeSpan(16, 0, 0) },  // Afternoon = 16:00
         { 8, new TimeSpan(20, 0, 0) }   // Evening = 20:00
     };
