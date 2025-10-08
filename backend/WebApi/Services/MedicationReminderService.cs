@@ -31,6 +31,7 @@ public class MedicationReminderService : BackgroundService
     };
 
     private readonly HashSet<string> _sentReminders = new(); // Cache für bereits gesendete Erinnerungen
+    private readonly HashSet<string> _acknowledgedReminders = new(); // Cache für quittierte Erinnerungen (Tag_Datum_Zeit)
 
     public MedicationReminderService(
         IServiceProvider serviceProvider,
@@ -43,6 +44,9 @@ public class MedicationReminderService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("MedicationReminderService gestartet");
+
+        // MQTT-Service für RFID-Scan-Events abonnieren
+        await SetupMqttListener();
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -57,6 +61,106 @@ public class MedicationReminderService : BackgroundService
 
             await Task.Delay(_checkInterval, stoppingToken);
         }
+    }
+
+    private async Task SetupMqttListener()
+    {
+        try
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var mqttService = scope.ServiceProvider.GetRequiredService<IMqttService>();
+            
+            // Event-Handler für MQTT-Nachrichten registrieren
+            mqttService.MessageReceived += OnMqttMessageReceived;
+            
+            _logger.LogInformation("MQTT-Listener für RFID-Scans eingerichtet");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Fehler beim Einrichten des MQTT-Listeners");
+        }
+    }
+
+    private void OnMqttMessageReceived(object? sender, (string Topic, string Message) eventArgs)
+    {
+        var (topic, message) = eventArgs;
+        
+        // Prüfe ob es ein RFID-Scan vom rc522/tag Topic ist
+        if (topic == "rc522/tag" && !string.IsNullOrWhiteSpace(message))
+        {
+            _ = Task.Run(async () => await HandleRfidScan(message.Trim()));
+        }
+    }
+
+    private async Task HandleRfidScan(string rfidTag)
+    {
+        try
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            var mqttService = scope.ServiceProvider.GetRequiredService<IMqttService>();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var now = DateTime.Now;
+            var currentTime = now.TimeOfDay;
+            var today = now.ToString("yyyy-MM-dd");
+
+            // Finde die nächstliegende Einnahmezeit die gerade aktiv sein könnte
+            var closestTimeFlag = FindClosestActiveTimeFlag(currentTime);
+            
+            if (closestTimeFlag.HasValue)
+            {
+                // VEREINFACHT: Da wir keine direkte Patient-RFID Zuordnung haben,
+                // quittieren wir alle Patienten für diese Zeit
+                // In einer echten App würdest du hier die RFID->Patient Zuordnung auflösen
+                
+                var allActivePlans = await unitOfWork.MedicationPlans.GetActiveAsync();
+                var patientsWithMedication = allActivePlans
+                    .Where(p => (p.DayTimeFlags & closestTimeFlag.Value) != 0)
+                    .Select(p => p.PatientId)
+                    .Distinct()
+                    .ToList();
+
+                foreach (var patientId in patientsWithMedication)
+                {
+                    var ackKey = $"PATIENT_{patientId}_{today}_{closestTimeFlag}";
+                    _acknowledgedReminders.Add(ackKey);
+                }
+                
+                // Sende leere Nachricht an Display um es zu löschen
+                var displayTopic = configuration["Mqtt:Topics:DisplayMessage"] ?? "display/message";
+                await mqttService.PublishAsync(displayTopic, "");
+                
+                var timeString = _dayTimes[closestTimeFlag.Value].ToString(@"hh\:mm");
+                _logger.LogInformation("RFID-Tag {RfidTag} gescannt - Erinnerungen für {Time} quittiert ({Count} Patienten)", 
+                    rfidTag, timeString, patientsWithMedication.Count);
+            }
+            else
+            {
+                _logger.LogInformation("RFID-Tag {RfidTag} gescannt, aber keine aktive Einnahmezeit gefunden", rfidTag);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Fehler beim Verarbeiten des RFID-Scans: {RfidTag}", rfidTag);
+        }
+    }
+
+    private int? FindClosestActiveTimeFlag(TimeSpan currentTime)
+    {
+        // Suche die nächstliegende Einnahmezeit (±30 Minuten Toleranz)
+        var tolerance = TimeSpan.FromMinutes(30);
+        
+        foreach (var kvp in _dayTimes)
+        {
+            var timeDiff = Math.Abs((currentTime - kvp.Value).TotalMinutes);
+            if (timeDiff <= tolerance.TotalMinutes)
+            {
+                return kvp.Key;
+            }
+        }
+        
+        return null; // Keine Einnahmezeit in der Nähe
     }
 
     private async Task CheckMedicationReminders()
@@ -109,14 +213,26 @@ public class MedicationReminderService : BackgroundService
                         // Prüfe ob bereits eine Erinnerung für heute und diese Zeit gesendet wurde
                         if (!_sentReminders.Contains(reminderKey))
                         {
-                            await SendMedicationReminder(mqttService, plan, targetTime);
-                            _sentReminders.Add(reminderKey);
+                            // Prüfe ob diese Erinnerung bereits quittiert wurde (über Patienten-RFID)
+                            var patientAckKey = $"PATIENT_{plan.PatientId}_{now:yyyy-MM-dd}_{dayTimeFlag}";
                             
-                            _logger.LogInformation(
-                                "Medikamenten-Erinnerung gesendet für Patient: {PatientName}, Medikament: {MedicationName}, Zeit: {Time}",
-                                plan.Patient?.Name ?? "Unbekannt",
-                                plan.Medication?.Name ?? "Unbekannt",
-                                targetTime.ToString(@"hh\:mm"));
+                            if (!_acknowledgedReminders.Contains(patientAckKey))
+                            {
+                                await SendMedicationReminder(mqttService, plan, targetTime);
+                                _sentReminders.Add(reminderKey);
+                                
+                                _logger.LogInformation(
+                                    "Medikamenten-Erinnerung gesendet für Patient: {PatientName}, Medikament: {MedicationName}, Zeit: {Time}",
+                                    plan.Patient?.Name ?? "Unbekannt",
+                                    plan.Medication?.Name ?? "Unbekannt",
+                                    targetTime.ToString(@"hh\:mm"));
+                            }
+                            else
+                            {
+                                _logger.LogDebug(
+                                    "Erinnerung für Patient {PatientId} um {Time} bereits quittiert", 
+                                    plan.PatientId, targetTime.ToString(@"hh\:mm"));
+                            }
                         }
                     }
                 }
@@ -124,6 +240,7 @@ public class MedicationReminderService : BackgroundService
 
             // Bereinige alte Erinnerungen (älter als heute)
             CleanupOldReminders(now);
+            CleanupOldScans(now);
         }
         catch (Exception ex)
         {
@@ -174,6 +291,24 @@ public class MedicationReminderService : BackgroundService
         if (toRemove.Count > 0)
         {
             _logger.LogDebug("Bereinigt {Count} alte Erinnerungen", toRemove.Count);
+        }
+    }
+
+    private void CleanupOldScans(DateTime currentDate)
+    {
+        var currentDateKey = currentDate.ToString("yyyy-MM-dd");
+        var toRemove = _acknowledgedReminders
+            .Where(key => !key.Contains(currentDateKey))
+            .ToList();
+
+        foreach (var key in toRemove)
+        {
+            _acknowledgedReminders.Remove(key);
+        }
+
+        if (toRemove.Count > 0)
+        {
+            _logger.LogDebug("Bereinigt {Count} alte Quittierungen", toRemove.Count);
         }
     }
 
