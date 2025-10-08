@@ -143,23 +143,6 @@ public class MqttService : IMqttService, IDisposable
             if (topic == rc522Topic)
             {
                 _logger.LogInformation("🏷️ ESP32 RFID Tag detected: {RfidTag}", message);
-                
-                // Forward to internal CURA topic for further processing
-                var curaRfidTopic = _configuration["Mqtt:Topics:RfidScanned"] ?? "cura/rfid/scanned";
-                var forwardMessage = message.Trim();
-                
-                _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        await PublishAsync(curaRfidTopic, forwardMessage);
-                        _logger.LogInformation("Forwarded ESP32 RFID tag to internal topic: {Topic}", curaRfidTopic);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Failed to forward ESP32 RFID tag");
-                    }
-                });
             }
             
             // Fire the event for subscribers
