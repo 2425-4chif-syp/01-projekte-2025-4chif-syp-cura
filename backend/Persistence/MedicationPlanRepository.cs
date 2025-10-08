@@ -53,7 +53,7 @@ namespace Persistence
 
         public async Task<List<MedicationPlan>> GetActiveAsync()
         {
-            var today = DateTime.Now.Date;
+            var today = DateTime.UtcNow.Date;
             return await _context.MedicationPlans
                 .Include(m => m.Patient)
                 .Include(m => m.Medication)
