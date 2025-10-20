@@ -1,4 +1,4 @@
-name: Deploy to VM12
+name: 🌐 Deploy Frontend (Web)
 
 on:
   push:

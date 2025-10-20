@@ -8,6 +8,7 @@ namespace Core.Contracts
         ICaregiverRepository CaregiverRepository { get; }
         IPatientRepository PatientRepository { get; }
         IMedicationPlanRepository MedicationPlanRepository { get; }
+        IMedicationPlanRepository MedicationPlans { get; }
 
         Task<int> SaveChangesAsync();
     }

@@ -42,33 +42,33 @@ INSERT INTO patients (name, age, location_id, phone_number, email) VALUES
 
 -- Patient 1: Johann Meier - Blood pressure medication daily in morning (Mon-Sun = 2+4+8+16+32+64+1 = 127)
 INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_flags, day_time_flags, quantity, valid_from, valid_to, notes) VALUES
-(1, 4, 1, 127, 1, 1, '2024-01-01', '2024-12-31', 'Take on empty stomach'),
+(1, 4, 1, 127, 15, 1, '2024-01-01', '2025-12-31', 'Take on empty stomach'),
 -- Heart medication daily in morning  
-(1, 7, 1, 127, 1, 1, '2024-01-01', '2024-12-31', 'After breakfast'),
+(1, 7, 1, 127, 1, 1, '2024-01-01', '2025-12-31', 'After breakfast'),
 -- Aspirin only weekdays at noon (Mon-Fri = 2+4+8+16+32 = 62)
-(1, 1, 1, 62, 2, 1, '2024-01-01', '2024-12-31', 'As needed'),
+(1, 1, 1, 62, 2, 1, '2024-01-01', '2025-12-31', 'As needed'),
 -- Vitamin D3 daily in evening
-(1, 6, 1, 127, 8, 5, '2024-01-01', '2024-12-31', 'Dissolve in water');
+(1, 6, 1, 127, 8, 5, '2024-01-01', '2025-12-31', 'Dissolve in water');
 
 -- Patient 2: Elisabeth Gruber - Metformin morning and noon daily
 INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_flags, day_time_flags, quantity, valid_from, valid_to, notes) VALUES
-(2, 5, 2, 127, 1, 2, '2024-01-01', '2024-12-31', 'Morning 2 pieces with meals'),
-(2, 5, 2, 127, 2, 1, '2024-01-01', '2024-12-31', 'Noon 1 piece with meals'),
+(2, 5, 2, 127, 1, 2, '2024-01-01', '2025-12-31', 'Morning 2 pieces with meals'),
+(2, 5, 2, 127, 2, 1, '2024-01-01', '2025-12-31', 'Noon 1 piece with meals'),
 -- Stomach protection daily in morning
-(2, 8, 2, 127, 1, 1, '2024-01-01', '2024-12-31', 'Before eating'),
+(2, 8, 2, 127, 1, 1, '2024-01-01', '2025-12-31', 'Before eating'),
 -- Paracetamol only as needed in evening
-(2, 3, 2, 127, 8, 1, '2024-01-01', '2024-12-31', 'For pain');
+(2, 3, 2, 127, 8, 1, '2024-01-01', '2025-12-31', 'For pain');
 
 -- Patient 3: Franz Wagner - Heart patient, various times
 INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_flags, day_time_flags, quantity, valid_from, valid_to, notes) VALUES
 -- Heart medication daily in morning
-(3, 7, 3, 127, 1, 1, '2024-01-01', '2024-12-31', 'Check pulse before taking'),
+(3, 7, 3, 127, 1, 1, '2024-01-01', '2025-12-31', 'Check pulse before taking'),
 -- Blood pressure medication daily in morning
-(3, 4, 3, 127, 1, 1, '2024-01-01', '2024-12-31', 'On empty stomach'),
+(3, 4, 3, 127, 1, 1, '2024-01-01', '2025-12-31', 'On empty stomach'),
 -- Aspirin only weekdays in afternoon
-(3, 1, 3, 62, 4, 1, '2024-01-01', '2024-12-31', 'As needed'),
+(3, 1, 3, 62, 4, 1, '2024-01-01', '2025-12-31', 'As needed'),
 -- Vitamin D3 daily in evening
-(3, 6, 3, 127, 8, 5, '2024-01-01', '2024-12-31', 'Drops in juice');
+(3, 6, 3, 127, 8, 5, '2024-01-01', '2025-12-31', 'Drops in juice');
 
 -- Patient 4: Margarete Koch - Paracetamol 3x daily (Morning, Afternoon, Evening = 1+4+8 = 13)
 INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_flags, day_time_flags, quantity, valid_from, valid_to, notes) VALUES
@@ -95,10 +95,10 @@ INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_f
 
 -- Additional RFID chips for multiple sets
 INSERT INTO rfid_chips (chip_id, weekday) VALUES
-('CHIP_MONDAY_002', 'MONDAY'),
-('CHIP_TUESDAY_002', 'TUESDAY'),
-('CHIP_WEDNESDAY_002', 'WEDNESDAY'),
-('CHIP_THURSDAY_002', 'THURSDAY'),
-('CHIP_FRIDAY_002', 'FRIDAY'),
-('CHIP_SATURDAY_002', 'SATURDAY'),
-('CHIP_SUNDAY_002', 'SUNDAY');
+('0441AB6EBA2A81', 'MONDAY'),
+('04E7AE6EBA2A81', 'TUESDAY'),
+('04E6AE6EBA2A81', 'WEDNESDAY'),
+('04E5AE6EBA2A81', 'THURSDAY'),
+('04E4AE6EBA2A81', 'FRIDAY'),
+('04DFAE6EBA2A81', 'SATURDAY'),
+('04DDAE6EBA2A81', 'SUNDAY');

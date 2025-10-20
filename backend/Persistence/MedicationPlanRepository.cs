@@ -53,11 +53,13 @@ namespace Persistence
 
         public async Task<List<MedicationPlan>> GetActiveAsync()
         {
+            // Temporärer Fix: Verwende lokale Zeit für Vergleich
             var today = DateTime.Now.Date;
             return await _context.MedicationPlans
-                .Where(m => m.IsActive && 
-                           m.ValidFrom <= today && 
-                           (m.ValidTo == null || m.ValidTo >= today))
+                .Include(m => m.Patient)
+                .Include(m => m.Medication)
+                .Include(m => m.Caregiver)
+                .Where(m => m.IsActive == true)  // Erstmal nur IsActive prüfen
                 .OrderBy(m => m.PatientId)
                 .ToListAsync();
         }
