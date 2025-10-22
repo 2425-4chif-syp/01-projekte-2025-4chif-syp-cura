@@ -1,11 +1,11 @@
-name: 🌐 Deploy Frontend (Web)
+name: 🌐 Deploy Frontend
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'web/**'
+      - 'web/cura-frontend/**'
   workflow_dispatch:
 
 jobs:
@@ -20,19 +20,12 @@ jobs:
           ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
           
           ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
-            echo "🚀 Starting robust deployment..."
-            
             cd ~/cura-project
-            
-            # Fix ownership
             sudo chown -R curaadm:curaadm .
-            
-            # Force pull (overwrites local changes)
             git reset --hard HEAD
-            git clean -fd
             git pull origin main
-            
-            echo "✅ Deployment completed!"
-            echo "📄 Current version:"
-            grep "HTL Leonding" web/index.html
+            cd web/cura-frontend
+            npm ci
+            npm run build
+            sudo chown -R www-data:www-data dist/
           EOF
