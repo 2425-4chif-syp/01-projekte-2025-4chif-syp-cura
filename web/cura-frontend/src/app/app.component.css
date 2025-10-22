@@ -1,5 +1,5 @@
 header {
-  padding: var(--space-lg) var(--space-xl);
+  padding: var(--space-md) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,7 +9,7 @@ header {
 header h1 {
   font-family: var(--font-heading);
   color: var(--text-primary);
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl);
   font-weight: var(--weight-semibold);
   margin: 0;
 }
@@ -34,39 +34,43 @@ header h1 {
 
 main {
   display: flex;
-  gap: var(--space-xl);
-  padding: var(--space-xl);
-  max-width: 1400px;
-  margin: 0 auto;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  padding-bottom: var(--space-3xl);
+  max-width: 100vw;
+  height: calc(100vh - 100px);
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .calendar-card {
-  flex: 0 0 30%;
+  flex: 0 0 28%;
   background: var(--bg-card);
   border: 2px solid var(--primary-pink);
   border-radius: var(--radius-lg);
-  padding: var(--space-xl);
+  padding: var(--space-lg);
+  overflow-y: auto;
 }
 
 .calendar-card h2 {
   font-family: var(--font-heading);
   color: var(--text-primary);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: var(--weight-semibold);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 .weekdays span {
   text-align: center;
   font-family: var(--font-heading);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
 }
@@ -74,8 +78,8 @@ main {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: var(--space-sm);
-  margin-bottom: var(--space-xl);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
 }
 
 .day {
@@ -85,7 +89,7 @@ main {
   justify-content: center;
   position: relative;
   border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--text-primary);
 }
 
@@ -126,19 +130,19 @@ main {
 }
 
 .income-quote {
-  margin-top: var(--space-xl);
+  margin-top: var(--space-lg);
 }
 
 .income-quote h3 {
   font-family: var(--font-heading);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
 .progress-bar {
-  height: 24px;
+  height: 20px;
   background: var(--bg-hover);
   border-radius: var(--radius-full);
   overflow: hidden;
@@ -151,44 +155,48 @@ main {
 }
 
 .medication-card {
-  flex: 0 0 calc(70% - var(--space-xl));
+  flex: 0 0 calc(72% - var(--space-lg));
   background: var(--bg-card);
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-lg);
-  padding: var(--space-xl);
+  padding: var(--space-lg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .medication-card h2 {
   font-family: var(--font-heading);
   color: var(--text-primary);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: var(--weight-semibold);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .medication-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
+  flex: 1;
 }
 
 .medication-table th {
   font-family: var(--font-heading);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
-  padding: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
   text-align: center;
   border-bottom: 2px solid var(--primary-teal);
 }
 
 .medication-table th.time-label {
   text-align: left;
-  min-width: 120px;
+  min-width: 100px;
 }
 
 .medication-table td {
-  padding: var(--space-lg) var(--space-md);
+  padding: var(--space-md) var(--space-sm);
   text-align: center;
   font-size: var(--text-sm);
   color: var(--text-primary);
@@ -200,7 +208,7 @@ main {
   font-family: var(--font-heading);
   font-weight: var(--weight-semibold);
   color: var(--primary-teal);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
 }
 
 .medication-table tr:last-child td {
@@ -214,11 +222,11 @@ main {
 }
 
 .btn-primary, .btn-secondary {
-  padding: var(--space-sm) var(--space-xl);
+  padding: var(--space-sm) var(--space-lg);
   border: none;
   border-radius: var(--radius-md);
   font-family: var(--font-heading);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
   transition: all var(--transition-fast);
