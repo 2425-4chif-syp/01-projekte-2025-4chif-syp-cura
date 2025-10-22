@@ -5,3 +5,72 @@
     <span>Pali, {{ currentDate }}</span>
   </div>
 </header>
+
+<main>
+  <aside class="calendar-card">
+    <h2>{{ currentMonth }}</h2>
+    <div class="weekdays">
+      <span>Mo</span>
+      <span>Di</span>
+      <span>Mi</span>
+      <span>Do</span>
+      <span>Fr</span>
+      <span>Sa</span>
+      <span>So</span>
+    </div>
+    <div class="calendar-grid">
+      @for (day of calendarDays; track day.date) {
+        <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed">
+          <span>{{ day.day }}</span>
+          @if (day.checked) {
+            <i class="fa-solid fa-check"></i>
+          }
+          @if (day.partial) {
+            <i class="fa-solid fa-xmark"></i>
+          }
+          @if (day.missed) {
+            <i class="fa-solid fa-circle"></i>
+          }
+        </div>
+      }
+    </div>
+    <div class="income-quote">
+      <h3>Einnahme quote {{ currentMonth }}</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="intakeQuote"></div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="medication-card">
+    <h2>Medikamentenplan 1</h2>
+    <table class="medication-table">
+      <thead>
+        <tr>
+          <th class="time-label"></th>
+          <th>Mo</th>
+          <th>Di</th>
+          <th>Mi</th>
+          <th>Do</th>
+          <th>Fr</th>
+          <th>Sa</th>
+          <th>So</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of medicationRows; track $index) {
+          <tr>
+            <td class="time-label">{{ row.timeLabel }}</td>
+            @for (cell of row.days; track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="action-buttons">
+      <button class="btn-primary">ändern</button>
+      <button class="btn-secondary">exportieren</button>
+    </div>
+  </section>
+</main>

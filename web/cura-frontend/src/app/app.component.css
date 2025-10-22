@@ -9,8 +9,8 @@ header {
 header h1 {
   font-family: var(--font-heading);
   color: var(--text-primary);
-  font-size: var(--text-3xl);
-  font-weight: var(--weight-bold);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-semibold);
   margin: 0;
 }
 
@@ -30,4 +30,217 @@ header h1 {
   color: var(--text-secondary);
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
+}
+
+main {
+  display: flex;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.calendar-card {
+  flex: 0 0 30%;
+  background: var(--bg-card);
+  border: 2px solid var(--primary-pink);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.calendar-card h2 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-lg);
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.weekdays span {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.day.checked {
+  background: var(--primary-green);
+  color: white;
+}
+
+.day.checked i {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+}
+
+.day.partial {
+  background: var(--warning);
+  color: white;
+}
+
+.day.partial i {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+}
+
+.day.missed {
+  background: transparent;
+}
+
+.day.missed i {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 8px;
+  color: var(--text-muted);
+}
+
+.income-quote {
+  margin-top: var(--space-xl);
+}
+
+.income-quote h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.progress-bar {
+  height: 24px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-green) 0%, var(--primary-teal) 100%);
+  transition: width var(--transition-base);
+}
+
+.medication-card {
+  flex: 0 0 calc(70% - var(--space-xl));
+  background: var(--bg-card);
+  border: 2px solid var(--primary-teal);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.medication-card h2 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-lg);
+}
+
+.medication-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-xl);
+}
+
+.medication-table th {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  padding: var(--space-md);
+  text-align: center;
+  border-bottom: 2px solid var(--primary-teal);
+}
+
+.medication-table th.time-label {
+  text-align: left;
+  min-width: 120px;
+}
+
+.medication-table td {
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--bg-hover);
+}
+
+.medication-table td.time-label {
+  text-align: left;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  color: var(--primary-teal);
+  font-size: var(--text-base);
+}
+
+.medication-table tr:last-child td {
+  border-bottom: none;
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-start;
+}
+
+.btn-primary, .btn-secondary {
+  padding: var(--space-sm) var(--space-xl);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary {
+  background: var(--primary-teal);
+  color: white;
+  border: 2px solid var(--primary-teal);
+}
+
+.btn-primary:hover {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary-teal);
+  border: 2px solid var(--primary-teal);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover);
 }
