@@ -2,6 +2,7 @@
 -- Drops and recreates all tables
 
 -- Drop tables in reverse order (due to Foreign Key Constraints)
+DROP TABLE IF EXISTS medication_intakes CASCADE;
 DROP TABLE IF EXISTS medication_plans CASCADE;
 DROP TABLE IF EXISTS patients CASCADE;
 DROP TABLE IF EXISTS caregivers CASCADE;
@@ -75,6 +76,20 @@ CREATE TABLE medication_plans (
     is_active BOOLEAN DEFAULT true
 );
 
+-- 7. Medication Intakes Table (logs when medications were actually taken)
+CREATE TABLE medication_intakes (
+    id SERIAL PRIMARY KEY,
+    patient_id INTEGER NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+    medication_plan_id INTEGER NOT NULL REFERENCES medication_plans(id) ON DELETE CASCADE,
+    intake_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    notes TEXT,
+    rfid_tag VARCHAR(50),
+    
+    -- Ensure we can quickly query by patient and date
+    CONSTRAINT unique_intake_per_plan_per_time UNIQUE (patient_id, medication_plan_id, intake_time)
+);
+
 -- Indexes for better performance
 CREATE INDEX idx_rfid_chips_weekday ON rfid_chips(weekday);
 CREATE INDEX idx_rfid_chips_chip_id ON rfid_chips(chip_id);
@@ -82,6 +97,13 @@ CREATE INDEX idx_patients_name ON patients(name);
 CREATE INDEX idx_medication_plans_patient ON medication_plans(patient_id);
 CREATE INDEX idx_medication_plans_medication ON medication_plans(medication_id);
 CREATE INDEX idx_medications_name ON medications(name);
+
+-- Indexes for medication_intakes (critical for calendar queries)
+CREATE INDEX idx_medication_intakes_patient ON medication_intakes(patient_id);
+CREATE INDEX idx_medication_intakes_intake_time ON medication_intakes(intake_time);
+CREATE INDEX idx_medication_intakes_patient_date ON medication_intakes(patient_id, DATE(intake_time));
+CREATE INDEX idx_medication_intakes_plan ON medication_intakes(medication_plan_id);
+CREATE INDEX idx_medication_intakes_rfid ON medication_intakes(rfid_tag) WHERE rfid_tag IS NOT NULL;
 
 
 
