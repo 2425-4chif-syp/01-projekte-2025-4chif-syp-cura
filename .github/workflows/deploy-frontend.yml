@@ -21,11 +21,9 @@ jobs:
           
           ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
             cd ~/cura-project
-            sudo chown -R curaadm:curaadm .
             git reset --hard HEAD
             git pull origin main
             cd web/cura-frontend
             npm ci
             npm run build
-            sudo chown -R www-data:www-data dist/
           EOF
