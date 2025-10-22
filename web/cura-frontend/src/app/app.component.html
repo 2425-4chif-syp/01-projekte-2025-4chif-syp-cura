@@ -7,40 +7,43 @@
 </header>
 
 <main>
-  <aside class="calendar-card">
-    <h2>{{ currentMonth }}</h2>
-    <div class="weekdays">
-      <span>Mo</span>
-      <span>Di</span>
-      <span>Mi</span>
-      <span>Do</span>
-      <span>Fr</span>
-      <span>Sa</span>
-      <span>So</span>
-    </div>
-    <div class="calendar-grid">
-      @for (day of calendarDays; track day.date) {
-        <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed">
-          <span>{{ day.day }}</span>
-          @if (day.checked) {
-            <i class="fa-solid fa-check"></i>
-          }
-          @if (day.partial) {
-            <i class="fa-solid fa-xmark"></i>
-          }
-          @if (day.missed) {
-            <i class="fa-solid fa-circle"></i>
-          }
-        </div>
-      }
-    </div>
+  <div class="left-column">
+    <aside class="calendar-card">
+      <h2>{{ currentMonth }}</h2>
+      <div class="weekdays">
+        <span>Mo</span>
+        <span>Di</span>
+        <span>Mi</span>
+        <span>Do</span>
+        <span>Fr</span>
+        <span>Sa</span>
+        <span>So</span>
+      </div>
+      <div class="calendar-grid">
+        @for (day of calendarDays; track day.date) {
+          <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed">
+            <span>{{ day.day }}</span>
+            @if (day.checked) {
+              <i class="fa-solid fa-check"></i>
+            }
+            @if (day.partial) {
+              <i class="fa-solid fa-xmark"></i>
+            }
+            @if (day.missed) {
+              <i class="fa-solid fa-circle"></i>
+            }
+          </div>
+        }
+      </div>
+    </aside>
+
     <div class="income-quote">
       <h3>Einnahme quote {{ currentMonth }}</h3>
       <div class="progress-bar">
         <div class="progress-fill" [style.width.%]="intakeQuote"></div>
       </div>
     </div>
-  </aside>
+  </div>
 
   <section class="medication-card">
     <h2>Medikamentenplan 1</h2>
