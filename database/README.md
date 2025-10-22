@@ -47,6 +47,7 @@ Password: passme
 4. **`caregivers`** - Caregiver data with contact information
 5. **`patients`** - Patient data with address reference
 6. **`medication_plans`** - **Central table** with binary time flags
+7. **`medication_intakes`** - **Log table** for actual medication intake tracking
 
 ### 🔥 Binary Flags System
 
@@ -232,5 +233,70 @@ docker exec -it cura_postgres psql -U admin -d cura -c "SELECT COUNT(*) FROM pat
 - **Optimized indexes** for frequent queries
 - **Minimal schema** with maximum flexibility
 - **PostgreSQL 16** with latest features
+- **Composite indexes** for calendar queries (patient_id + date)
+- **Partial indexes** for RFID tracking
+
+## 📅 Medication Intake Tracking
+
+### `medication_intakes` Table
+
+Logs when medications were **actually taken** by patients:
+
+```sql
+CREATE TABLE medication_intakes (
+    id SERIAL PRIMARY KEY,
+    patient_id INTEGER NOT NULL,
+    medication_plan_id INTEGER NOT NULL,
+    intake_time TIMESTAMP NOT NULL,
+    quantity INTEGER NOT NULL,
+    notes TEXT,
+    rfid_tag VARCHAR(50)
+);
+```
+
+### Key Features:
+- **Timestamps**: Exact time when medication was taken
+- **RFID Integration**: Optional RFID tag for automatic logging
+- **Flexible Notes**: Additional information per intake
+- **Performance Indexes**: 
+  - `idx_medication_intakes_patient_date` - Fast calendar queries
+  - `idx_medication_intakes_rfid` - Quick RFID lookups
+
+### Calendar API Usage:
+
+#### Get Monthly Overview:
+```bash
+GET /api/MedicationCalendar/month/{patientId}/{year}/{month}
+```
+Returns all days with status: ✅ All taken / ❌ Some missing
+
+#### Get Day Details:
+```bash
+GET /api/MedicationCalendar/day/{patientId}/{date}
+```
+Returns detailed intake information with exact times
+
+#### Log Intake:
+```bash
+POST /api/MedicationCalendar/log-intake
+{
+  "patientId": 1,
+  "medicationPlanId": 1,
+  "intakeTime": "2025-10-22T08:30:00Z",
+  "quantity": 1,
+  "rfidTag": "E200 1041 8064..."
+}
+```
+
+### Test Data:
+
+Patient 1 (Johann Meier) October 2025:
+- ✅ Mon 2025-10-20: All medications taken
+- ❌ Tue 2025-10-21: Partially taken (missing lunch)
+- ✅ Wed 2025-10-22: All medications taken
+- ❌ Thu 2025-10-23: Nothing taken
+- ✅ Fri 2025-10-24: All medications taken
+- ❌ Sat 2025-10-25: Partially taken
+- ✅ Sun 2025-10-26: All medications taken
 
 test

@@ -15,6 +15,7 @@ namespace Persistence
             CaregiverRepository = new CaregiverRepository(_context);
             PatientRepository = new PatientRepository(_context);
             MedicationPlanRepository = new MedicationPlanRepository(_context);
+            MedicationIntakeRepository = new MedicationIntakeRepository(_context);
         }
 
         public IRfidChipRepository RfidChipRepository { get; }
@@ -24,6 +25,7 @@ namespace Persistence
         public IPatientRepository PatientRepository { get; }
         public IMedicationPlanRepository MedicationPlanRepository { get; }
         public IMedicationPlanRepository MedicationPlans => MedicationPlanRepository;
+        public IMedicationIntakeRepository MedicationIntakeRepository { get; }
 
         public async Task<int> SaveChangesAsync()
         {

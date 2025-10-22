@@ -15,6 +15,7 @@ namespace Persistence
         public DbSet<Caregiver> Caregivers { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<MedicationPlan> MedicationPlans { get; set; }
+        public DbSet<MedicationIntake> MedicationIntakes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -118,6 +119,31 @@ namespace Persistence
                     .WithMany(c => c.MedicationPlans)
                     .HasForeignKey(e => e.CaregiverId)
                     .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // MedicationIntake Configuration
+            modelBuilder.Entity<MedicationIntake>(entity =>
+            {
+                entity.ToTable("medication_intakes");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.PatientId).HasColumnName("patient_id").IsRequired();
+                entity.Property(e => e.MedicationPlanId).HasColumnName("medication_plan_id").IsRequired();
+                entity.Property(e => e.IntakeTime).HasColumnName("intake_time").IsRequired();
+                entity.Property(e => e.Quantity).HasColumnName("quantity").IsRequired();
+                entity.Property(e => e.Notes).HasColumnName("notes");
+                entity.Property(e => e.RfidTag).HasColumnName("rfid_tag").HasMaxLength(50);
+
+                entity.HasOne(e => e.Patient)
+                    .WithMany()
+                    .HasForeignKey(e => e.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.MedicationPlan)
+                    .WithMany()
+                    .HasForeignKey(e => e.MedicationPlanId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                entity.HasIndex(e => new { e.PatientId, e.IntakeTime });
             });
         }
     }
