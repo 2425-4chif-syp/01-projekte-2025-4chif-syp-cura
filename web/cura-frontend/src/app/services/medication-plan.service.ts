@@ -8,7 +8,7 @@ import { Medication } from '../models/medication.model';
   providedIn: 'root'
 })
 export class MedicationPlanService {
-  private readonly API_URL = '/api/';
+  private readonly API_URL = '/api';
   private medicationCache = new Map<number, string>();
 
   constructor(private http: HttpClient) {}
