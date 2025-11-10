@@ -114,7 +114,7 @@ main {
 }
 
 .day.partial {
-  background: var(--warning);
+  background: var(--error);
   color: white;
 }
 
@@ -127,7 +127,7 @@ main {
 }
 
 .day.missed {
-  background: var(--error);
+  background: var(--warning);
   color: white;
 }
 
