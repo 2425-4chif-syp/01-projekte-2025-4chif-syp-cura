@@ -34,10 +34,19 @@ docker compose logs -f keycloak
 
 ### **2. Keycloak Admin Console öffnen**
 
+**⚠️ Wichtig:** Keycloak läuft intern auf Port 8180, ist aber von außen nur über Nginx erreichbar!
+
 ```
-URL: http://vm12.htl-leonding.ac.at:8180
+Intern (auf Server): http://localhost:8180
+Extern (im Browser): http://vm12.htl-leonding.ac.at/auth
+
+Admin Console: http://vm12.htl-leonding.ac.at/auth
 Login: admin / admin
 ```
+
+**Falls "Resource not found" erscheint:**
+- Checke ob Nginx Proxy korrekt konfiguriert ist (siehe Schritt 14)
+- Container neu starten: `docker compose restart keycloak`
 
 ---
 
@@ -63,11 +72,22 @@ Login: admin / admin
    http://localhost:4200/*
    http://vm12.htl-leonding.ac.at/*
    ```
+   
+   **⚠️ HTTPS beachten:**
+   - Wenn du HTTPS nutzt (z.B. Let's Encrypt): `https://vm12.htl-leonding.ac.at/*`
+   - Für HTTP (Development): `http://vm12.htl-leonding.ac.at/*`
+   - URLs müssen **exakt** mit deiner Environment Config übereinstimmen!
+
 9. **Web origins**:
    ```
    http://localhost:4200
    http://vm12.htl-leonding.ac.at
    ```
+   
+   **⚠️ HTTPS beachten:**
+   - Mit HTTPS: `https://vm12.htl-leonding.ac.at`
+   - Mit HTTP: `http://vm12.htl-leonding.ac.at`
+
 10. **Save** klicken
 
 ---
@@ -281,6 +301,8 @@ Füge in `src/app/app.component.css` hinzu:
 
 ### **14. Nginx Proxy für Keycloak (auf Server)**
 
+**⚠️ Wichtig:** Port 8180 ist von außen nicht erreichbar - Nginx Proxy ist PFLICHT!
+
 ````bash
 ssh curaadm@vm12.htl-leonding.ac.at
 
@@ -297,6 +319,7 @@ Füge nach dem `/api/` Block hinzu:
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
         proxy_buffer_size 128k;
         proxy_buffers 4 256k;
         proxy_busy_buffers_size 256k;
@@ -304,10 +327,17 @@ Füge nach dem `/api/` Block hinzu:
 ````
 
 ````bash
-# Nginx neu laden
+# Nginx testen
 sudo nginx -t
+
+# Nginx neu laden
 sudo systemctl reload nginx
+
+# Testen ob Keycloak erreichbar ist
+curl -I http://vm12.htl-leonding.ac.at/auth
 ````
+
+**Sollte zeigen:** `HTTP/1.1 200 OK` oder `HTTP/1.1 303 See Other`
 
 ---
 
@@ -411,9 +441,70 @@ Realm "cura" → Realm Settings → Themes → Login Theme: cura
 
 Jetzt hast du:
 - ✅ Keycloak läuft im Docker Container
+- ✅ Nginx Proxy leitet `/auth` zu Keycloak weiter
 - ✅ Angular redirected zu Keycloak Login
 - ✅ User-Info wird angezeigt
 - ✅ Logout funktioniert
 - ✅ Optional: Custom Theme mit deinen Farben
+
+---
+
+## 🔒 HTTPS Setup (Optional aber empfohlen)
+
+Keycloak bevorzugt HTTPS für Production. Zwei Optionen:
+
+### **Option 1: Development Mode (HTTP erlauben)**
+
+In `docker-compose.yaml` bereits konfiguriert:
+```yaml
+KC_HOSTNAME_STRICT_HTTPS: false
+```
+
+### **Option 2: Let's Encrypt SSL (Production)**
+
+````bash
+# Certbot installieren
+sudo apt update
+sudo apt install certbot python3-certbot-nginx
+
+# SSL Zertifikat holen
+sudo certbot --nginx -d vm12.htl-leonding.ac.at
+
+# Folge den Prompts
+````
+
+**Dann Environment anpassen:**
+```typescript
+// environment.prod.ts
+apiUrl: 'https://vm12.htl-leonding.ac.at/api',
+keycloak: {
+  url: 'https://vm12.htl-leonding.ac.at/auth',
+  // ...
+}
+```
+
+**Und Keycloak Client URLs auf HTTPS ändern:**
+```
+Valid Redirect URIs: https://vm12.htl-leonding.ac.at/*
+Web Origins: https://vm12.htl-leonding.ac.at
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### **Problem: "Resource not found"**
+- ✅ Checke Nginx Config: `sudo nginx -t`
+- ✅ Restart Keycloak: `docker compose restart keycloak`
+- ✅ Logs checken: `docker compose logs keycloak`
+
+### **Problem: HTTPS Required**
+- ✅ Option 1: Development Mode in docker-compose.yaml aktivieren
+- ✅ Option 2: Let's Encrypt SSL einrichten (siehe oben)
+
+### **Problem: Redirect funktioniert nicht**
+- ✅ Checke URLs in Keycloak Client Settings
+- ✅ HTTP vs HTTPS muss überall gleich sein
+- ✅ Environment Files müssen mit Keycloak URLs matchen
 
 Bei Fragen: Frag mich! 🚀
