@@ -100,21 +100,43 @@ main {
   color: var(--text-primary);
 }
 
-/* Status-Icon Farben */
-.day.status-checked {
-  color: var(--success);
+.day.checked {
+  background: var(--primary-green);
+  color: white;
 }
 
-.day.status-partial {
-  color: var(--warning);
+.day.checked i {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  color: white;
 }
 
-.day.status-missed {
-  color: var(--error);
+.day.partial {
+  background: var(--warning);
+  color: white;
 }
 
-.day.status-empty {
-  color: var(--text-muted);
+.day.partial i {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  color: white;
+}
+
+.day.missed {
+  background: var(--error);
+  color: white;
+}
+
+.day.missed i {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  color: white;
 }
 
 .income-quote {
