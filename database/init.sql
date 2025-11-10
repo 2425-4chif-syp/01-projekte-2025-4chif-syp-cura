@@ -105,6 +105,8 @@ CREATE INDEX idx_medication_intakes_patient_date ON medication_intakes(patient_i
 CREATE INDEX idx_medication_intakes_plan ON medication_intakes(medication_plan_id);
 CREATE INDEX idx_medication_intakes_rfid ON medication_intakes(rfid_tag) WHERE rfid_tag IS NOT NULL;
 
+-- Create Keycloak Database
+CREATE DATABASE keycloak;
 
 
 

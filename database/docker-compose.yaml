@@ -83,6 +83,34 @@ services:
     networks:
       - cura-network
 
+  # Keycloak Authentication Server
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: cura_keycloak
+    restart: unless-stopped
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: passme
+      KC_HOSTNAME: vm12.htl-leonding.ac.at
+      KC_HOSTNAME_PORT: 8180
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KC_PROXY: edge
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8180:8080"
+    volumes:
+      - ../keycloak-themes:/opt/keycloak/themes
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: start-dev
+    networks:
+      - cura-network
+
 volumes:
   postgres_data:
   pgadmin_data:
