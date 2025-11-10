@@ -1,5 +1,5 @@
 header {
-  padding: 0 var(--space-lg);
+  padding: var(--space-sm) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
