@@ -3,7 +3,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 3px double var(--primary-green);
+  /*border-bottom: 3px double var(--primary-green);*/
 }
 
 header h1 {
