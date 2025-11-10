@@ -96,43 +96,24 @@ main {
   justify-content: center;
   position: relative;
   border-radius: var(--radius-sm);
-  font-size: var(--text-xs);
-  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
 }
 
-.day.checked {
-  background: var(--primary-green);
-  color: white;
+/* Status-Icon Farben */
+.day.status-checked {
+  color: var(--success);
 }
 
-.day.checked i {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
+.day.status-partial {
+  color: var(--warning);
 }
 
-.day.partial {
-  background: var(--warning);
-  color: white;
+.day.status-missed {
+  color: var(--error);
 }
 
-.day.partial i {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
-}
-
-.day.missed {
-  background: transparent;
-}
-
-.day.missed i {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 8px;
+.day.status-empty {
   color: var(--text-muted);
 }
 
