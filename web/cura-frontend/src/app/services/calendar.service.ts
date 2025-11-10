@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { CalendarDay } from '../models/calendar-day.model';
 import { DailyStatus } from '../models/daily-status.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarService {
-  private readonly API_URL = 'http://localhost:5257/api';
+  private readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

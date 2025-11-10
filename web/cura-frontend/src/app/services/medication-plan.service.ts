@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, map, of } from 'rxjs';
 import { MedicationPlan } from '../models/medication-plan.model';
 import { Medication } from '../models/medication.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedicationPlanService {
-  private readonly API_URL = 'http://localhost:5257/api';
+  private readonly API_URL = environment.apiUrl;
   private medicationCache = new Map<number, string>();
 
   constructor(private http: HttpClient) {}
