@@ -28,8 +28,25 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.currentMonth = this.calendarService.getCurrentMonth();
-    this.calendarDays = this.calendarService.generateCalendar();
+    this.loadCalendar();
     this.loadMedicationPlans();
+  }
+
+  loadCalendar() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+
+    this.calendarService.getDailyStatus(1, year, month).subscribe({
+      next: (statusData) => {
+        this.calendarDays = this.calendarService.generateCalendarFromStatus(statusData);
+        this.intakeQuote = this.calendarService.calculateIntakeQuote(statusData);
+      },
+      error: () => {
+        this.calendarDays = this.calendarService.generateEmptyCalendar();
+        this.intakeQuote = 0;
+      }
+    });
   }
 
   loadMedicationPlans() {
