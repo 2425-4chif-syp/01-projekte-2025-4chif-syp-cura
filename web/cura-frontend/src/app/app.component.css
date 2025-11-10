@@ -1,5 +1,5 @@
 header {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,7 +9,7 @@ header {
 header h1 {
   font-family: var(--font-heading);
   color: var(--text-primary);
-  font-size: calc(var(--text-4xl)*1.5);
+  font-size: calc(var(--text-4xl)*2);
   font-weight: var(--weight-semibold);
   margin: 0;
 }
