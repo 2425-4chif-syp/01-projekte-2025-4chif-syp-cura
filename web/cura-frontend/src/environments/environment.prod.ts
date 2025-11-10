@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://vm12.htl-leonding.ac.at:8081/api'
+  apiUrl: 'http://vm12.htl-leonding.ac.at/api'
 };
