@@ -20,6 +20,9 @@ export class AppComponent implements OnInit {
   medicationPlans: MedicationPlan[] = [];
   medicationRows: { timeLabel: string; days: string[] }[] = [];
   intakeQuote = 85;
+  checkedPercentage = 0;
+  partialPercentage = 0;
+  missedPercentage = 0;
 
   constructor(
     private calendarService: CalendarService,
@@ -41,10 +44,14 @@ export class AppComponent implements OnInit {
       next: (statusData) => {
         this.calendarDays = this.calendarService.generateCalendarFromStatus(statusData);
         this.intakeQuote = this.calendarService.calculateIntakeQuote(statusData);
+        this.calculateStatusPercentages();
       },
       error: () => {
         this.calendarDays = this.calendarService.generateEmptyCalendar();
         this.intakeQuote = 0;
+        this.checkedPercentage = 0;
+        this.partialPercentage = 0;
+        this.missedPercentage = 0;
       }
     });
   }
@@ -86,5 +93,23 @@ export class AppComponent implements OnInit {
         }
       });
     });
+  }
+
+  calculateStatusPercentages() {
+    const totalDays = this.calendarDays.filter(d => d.day > 0).length;
+    if (totalDays === 0) {
+      this.checkedPercentage = 0;
+      this.partialPercentage = 0;
+      this.missedPercentage = 0;
+      return;
+    }
+
+    const checkedDays = this.calendarDays.filter(d => d.checked).length;
+    const partialDays = this.calendarDays.filter(d => d.partial).length;
+    const missedDays = this.calendarDays.filter(d => d.missed).length;
+
+    this.checkedPercentage = Math.round((checkedDays / totalDays) * 100);
+    this.partialPercentage = Math.round((partialDays / totalDays) * 100);
+    this.missedPercentage = Math.round((missedDays / totalDays) * 100);
   }
 }

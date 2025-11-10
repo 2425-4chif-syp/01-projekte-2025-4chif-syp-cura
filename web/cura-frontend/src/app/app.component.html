@@ -39,8 +39,21 @@
 
     <div class="income-quote">
       <h3>Einnahme quote {{ currentMonth }}</h3>
+      <div class="status-labels">
+        <span class="status-label">
+          <span class="status-dot checked"></span> Eingenommen: {{ checkedPercentage }}%
+        </span>
+        <span class="status-label">
+          <span class="status-dot partial"></span> Teilweise: {{ partialPercentage }}%
+        </span>
+        <span class="status-label">
+          <span class="status-dot missed"></span> Verpasst: {{ missedPercentage }}%
+        </span>
+      </div>
       <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="intakeQuote"></div>
+        <div class="progress-segment checked" [style.width.%]="checkedPercentage"></div>
+        <div class="progress-segment partial" [style.width.%]="partialPercentage"></div>
+        <div class="progress-segment missed" [style.width.%]="missedPercentage"></div>
       </div>
     </div>
   </div>
