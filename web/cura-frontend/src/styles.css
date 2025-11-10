@@ -103,7 +103,7 @@ body {
   font-weight: var(--weight-normal);
   line-height: var(--leading-normal);
   color: var(--text-primary);
-  background: var(--bg-light);
+  background: var(--bg-card);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
