@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5257/api',
+  apiUrl: 'http://vm12.htl-leonding.ac.at/api',     // ✅ Backend auf Server
   keycloak: {
-    url: 'http://localhost:8180',
+    url: 'http://vm12.htl-leonding.ac.at/auth',    // ✅ Keycloak auf Server
     realm: 'cura',
     clientId: 'cura-frontend'
   }

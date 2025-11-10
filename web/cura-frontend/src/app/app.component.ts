@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { KeycloakService } from 'keycloak-angular';
 import { CalendarDay } from './models/calendar-day.model';
 import { MedicationPlan } from './models/medication-plan.model';
 import { CalendarService } from './services/calendar.service';
@@ -15,6 +16,8 @@ export class AppComponent implements OnInit {
   title = 'cura-frontend';
   currentDate = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' });
   currentMonth = '';
+  userName: string = 'User';
+  userRoles: string[] = [];
   
   calendarDays: CalendarDay[] = [];
   medicationPlans: MedicationPlan[] = [];
@@ -25,14 +28,29 @@ export class AppComponent implements OnInit {
   missedPercentage = 0;
 
   constructor(
+    private keycloak: KeycloakService,
     private calendarService: CalendarService,
     private medicationPlanService: MedicationPlanService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    // User-Info von Keycloak laden
+    try {
+      const profile = await this.keycloak.loadUserProfile();
+      this.userName = profile.firstName || 'User';
+      this.userRoles = this.keycloak.getUserRoles();
+    } catch (error) {
+      console.error('Fehler beim Laden des User-Profils:', error);
+    }
+
+    // Rest des Codes
     this.currentMonth = this.calendarService.getCurrentMonth();
     this.loadCalendar();
     this.loadMedicationPlans();
+  }
+
+  logout() {
+    this.keycloak.logout(window.location.origin);
   }
 
   loadCalendar() {

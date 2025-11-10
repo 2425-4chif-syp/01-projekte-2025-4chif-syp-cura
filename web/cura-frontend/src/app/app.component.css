@@ -34,6 +34,24 @@ header h1 {
   font-weight: var(--weight-medium);
 }
 
+.btn-logout {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  margin-left: var(--space-sm);
+  font-size: var(--text-lg);
+}
+
+.btn-logout:hover {
+  background: var(--bg-hover);
+  color: var(--primary-green);
+  transform: scale(1.1);
+}
+
 main {
   display: flex;
   gap: var(--space-lg);
