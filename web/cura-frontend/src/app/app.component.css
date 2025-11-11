@@ -255,15 +255,15 @@ main {
 }
 
 .status-dot.checked {
-  background: var(--success);
+  background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
 .status-dot.partial {
-  background: var(--warning);
+  background: linear-gradient(90deg, #f2e8cf 0%, #fff4db 100%);
 }
 
 .status-dot.missed {
-  background: var(--error);
+  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .progress-bar {
