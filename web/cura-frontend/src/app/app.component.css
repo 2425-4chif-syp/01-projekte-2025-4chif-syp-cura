@@ -340,6 +340,35 @@ main {
 
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
+  /* Mobile Header Styling */
+  header {
+    padding: var(--space-xs) var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  header h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+  }
+
+  .user-info {
+    gap: var(--space-xs);
+  }
+
+  .user-info i {
+    font-size: var(--text-base);
+  }
+
+  .user-info span {
+    font-size: var(--text-sm);
+  }
+
+  .btn-logout {
+    padding: var(--space-xs) var(--space-sm);
+    margin-left: var(--space-xs);
+    font-size: var(--text-base);
+  }
+
   /* Desktop Medication Plan ausblenden */
   .desktop-medication {
     display: none;
