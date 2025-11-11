@@ -55,10 +55,15 @@
   /* --error: #EF5350; */
   /* --info: #42A5F5; */
   
-  /* Neu - angepasst an Palette: */
-  --success: #b0c4b1ff;           /* Ash Gray */
-  --warning: #edafb8ff;           /* Cherry Blossom Pink */
-  --error: #edafb8ff;             /* Cherry Blossom Pink */
+  /* Status-Palette: */
+  --yellow-green: #a7c957ff;
+  --parchment: #f2e8cfff;
+  --bittersweet-shimmer: #bc4749ff;
+  
+  /* Neu - gemapped: */
+  --success: #a7c957ff;           /* Yellow Green */
+  --warning: #f2e8cfff;           /* Parchment */
+  --error: #bc4749ff;             /* Bittersweet Shimmer */
   --info: #b0c4b1ff;              /* Ash Gray */
   
   /* ===== SCHRIFTARTEN ===== */
