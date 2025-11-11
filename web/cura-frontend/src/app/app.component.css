@@ -434,6 +434,7 @@ main {
     order: 1;
     height: auto;
     overflow-y: visible;
+    flex: none;
   }
 
   .calendar-card,
@@ -463,8 +464,9 @@ main {
   }
 
   /* Adjust medication table for mobile */
-  .medication-table {
+  .mobile-medication .medication-table {
     font-size: var(--text-xs);
+    flex: none;
   }
 
   .medication-table td,
