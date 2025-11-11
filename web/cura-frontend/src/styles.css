@@ -1,7 +1,11 @@
 /* ===== CURA MEDICATION SYSTEM - GLOBAL DESIGN TOKENS ===== */
 
 /* === GOOGLE FONTS === */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+/* Alte Fonts: */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap'); */
+
+/* Neue Fonts - Outfit + Inter: */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* ===== HAUPTFARBEN ===== */
@@ -26,15 +30,19 @@
   --info: #42A5F5;
   
   /* ===== SCHRIFTARTEN ===== */
-  --font-heading: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Alte Schriften (auskommentiert): */
+  /* --font-heading: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif; */
+  /* --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; */
+  
+  /* Neue Schriften - Outfit (rund, modern) + Inter (lesbar): */
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'SF Mono', 'Consolas', 'Monaco', monospace;
   
-  /* Alternative Schriften (auskommentiert): */
+  /* Alternative Schriften: */
   /* Space Mono + Lora: */
   /* --font-heading: 'Space Mono', 'Courier New', monospace; */
   /* --font-body: 'Lora', 'Georgia', serif; */
-  /* --font-mono: 'Space Mono', 'SF Mono', 'Consolas', 'Monaco', monospace; */
   
   /* ===== SCHRIFTGRÖSSẸN ===== */
   --text-xs: 0.75rem;
