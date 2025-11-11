@@ -398,12 +398,21 @@ main {
   .main-layout {
     flex-direction: column;
     gap: var(--space-lg);
+    align-items: center;
   }
 
   .left-column {
     width: 100%;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
+  }
+
+  .mobile-medication,
+  .calendar-card,
+  .income-quote {
+    width: 100%;
+    max-width: 600px;
   }
 
   /* Reihenfolge für Mobile: 1. Medikamentenplan, 2. Kalender, 3. Einnahmequote */
