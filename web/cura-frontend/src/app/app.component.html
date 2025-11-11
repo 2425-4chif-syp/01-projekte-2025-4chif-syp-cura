@@ -15,114 +15,117 @@
 </header>
 
 <main>
-  <!-- Medikamentenplan - Desktop Version (alle Tage) -->
-  <section class="medication-card desktop-medication">
-    <h2>Medikamentenplan 1</h2>
-    <table class="medication-table">
-      <thead>
-        <tr>
-          <th class="time-label"></th>
-          <th>Mo</th>
-          <th>Di</th>
-          <th>Mi</th>
-          <th>Do</th>
-          <th>Fr</th>
-          <th>Sa</th>
-          <th>So</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of medicationRows; track $index) {
+  <div class="main-layout">
+    <!-- Left Column: Kalender und Einnahmequote -->
+    <div class="left-column">
+      <aside class="calendar-card">
+        <h2>{{ currentMonth }}</h2>
+        <div class="weekdays">
+          <span>Mo</span>
+          <span>Di</span>
+          <span>Mi</span>
+          <span>Do</span>
+          <span>Fr</span>
+          <span>Sa</span>
+          <span>So</span>
+        </div>
+        <div class="calendar-grid">
+          @for (day of calendarDays; track day.date) {
+            <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed">
+              <span>{{ day.day }}</span>
+              @if (day.checked) {
+                <i class="fa-solid fa-check"></i>
+              }
+              @if (day.partial) {
+                <i class="fa-solid fa-circle"></i>
+              }
+              @if (day.missed) {
+                <i class="fa-solid fa-xmark"></i>
+              }
+            </div>
+          }
+        </div>
+      </aside>
+
+      <div class="income-quote">
+        <h3>Einnahme quote {{ currentMonth }}</h3>
+
+        <div class="progress-bar">
+          <div class="progress-segment checked" [style.width.%]="checkedPercentage"></div>
+          <div class="progress-segment partial" [style.width.%]="partialPercentage"></div>
+          <div class="progress-segment missed" [style.width.%]="missedPercentage"></div>
+        </div>
+        <p></p>
+        <div class="status-labels">
+          <span class="status-label">
+            <span class="status-dot checked"></span> Eingenommen: {{ checkedPercentage }}%
+          </span>
+          <span class="status-label">
+            <span class="status-dot partial"></span> Teilweise: {{ partialPercentage }}%
+          </span>
+          <span class="status-label">
+            <span class="status-dot missed"></span> Verpasst: {{ missedPercentage }}%
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medikamentenplan - Desktop Version (alle Tage) -->
+    <section class="medication-card desktop-medication">
+      <h2>Medikamentenplan 1</h2>
+      <table class="medication-table">
+        <thead>
           <tr>
-            <td class="time-label">{{ row.timeLabel }}</td>
-            @for (cell of row.days; track $index) {
-              <td>{{ cell }}</td>
-            }
+            <th class="time-label"></th>
+            <th>Mo</th>
+            <th>Di</th>
+            <th>Mi</th>
+            <th>Do</th>
+            <th>Fr</th>
+            <th>Sa</th>
+            <th>So</th>
           </tr>
-        }
-      </tbody>
-    </table>
-    <div class="action-buttons">
-      <button class="btn-primary">ändern</button>
-      <button class="btn-secondary">exportieren</button>
-    </div>
-  </section>
+        </thead>
+        <tbody>
+          @for (row of medicationRows; track $index) {
+            <tr>
+              <td class="time-label">{{ row.timeLabel }}</td>
+              @for (cell of row.days; track $index) {
+                <td>{{ cell }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="action-buttons">
+        <button class="btn-primary">ändern</button>
+        <button class="btn-secondary">exportieren</button>
+      </div>
+    </section>
 
-  <!-- Medikamentenplan - Mobile Version (nur aktueller Tag) -->
-  <section class="medication-card mobile-medication">
-    <h2>Medikamentenplan 1 - {{ currentDayName }}</h2>
-    <table class="medication-table">
-      <thead>
-        <tr>
-          <th class="time-label">Uhrzeit</th>
-          <th>Medikament</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of medicationRows; track $index) {
+    <!-- Medikamentenplan - Mobile Version (nur aktueller Tag) -->
+    <section class="medication-card mobile-medication">
+      <h2>Medikamentenplan 1 - {{ currentDayName }}</h2>
+      <table class="medication-table">
+        <thead>
           <tr>
-            <td class="time-label">{{ row.timeLabel }}</td>
-            <td>{{ row.days[currentDayIndex] }}</td>
+            <th class="time-label">Uhrzeit</th>
+            <th>Medikament</th>
           </tr>
-        }
-      </tbody>
-    </table>
-    <div class="action-buttons">
-      <button class="btn-primary">ändern</button>
-      <button class="btn-secondary">exportieren</button>
-    </div>
-  </section>
-
-  <div class="left-column">
-    <aside class="calendar-card">
-      <h2>{{ currentMonth }}</h2>
-      <div class="weekdays">
-        <span>Mo</span>
-        <span>Di</span>
-        <span>Mi</span>
-        <span>Do</span>
-        <span>Fr</span>
-        <span>Sa</span>
-        <span>So</span>
+        </thead>
+        <tbody>
+          @for (row of medicationRows; track $index) {
+            <tr>
+              <td class="time-label">{{ row.timeLabel }}</td>
+              <td>{{ row.days[currentDayIndex] }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="action-buttons">
+        <button class="btn-primary">ändern</button>
+        <button class="btn-secondary">exportieren</button>
       </div>
-      <div class="calendar-grid">
-        @for (day of calendarDays; track day.date) {
-          <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed">
-            <span>{{ day.day }}</span>
-            @if (day.checked) {
-              <i class="fa-solid fa-check"></i>
-            }
-            @if (day.partial) {
-              <i class="fa-solid fa-circle"></i>
-            }
-            @if (day.missed) {
-              <i class="fa-solid fa-xmark"></i>
-            }
-          </div>
-        }
-      </div>
-    </aside>
-
-    <div class="income-quote">
-      <h3>Einnahme quote {{ currentMonth }}</h3>
-
-      <div class="progress-bar">
-        <div class="progress-segment checked" [style.width.%]="checkedPercentage"></div>
-        <div class="progress-segment partial" [style.width.%]="partialPercentage"></div>
-        <div class="progress-segment missed" [style.width.%]="missedPercentage"></div>
-      </div>
-      <p></p>
-      <div class="status-labels">
-        <span class="status-label">
-          <span class="status-dot checked"></span> Eingenommen: {{ checkedPercentage }}%
-        </span>
-        <span class="status-label">
-          <span class="status-dot partial"></span> Teilweise: {{ partialPercentage }}%
-        </span>
-        <span class="status-label">
-          <span class="status-dot missed"></span> Verpasst: {{ missedPercentage }}%
-        </span>
-      </div>
-    </div>
+    </section>
   </div>
 </main>
