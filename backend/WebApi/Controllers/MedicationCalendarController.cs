@@ -1,11 +1,14 @@
 using Core.Contracts;
 using Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Services;
 
 namespace WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize] // Require authentication for all endpoints
 public class MedicationCalendarController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -29,6 +32,16 @@ public class MedicationCalendarController : ControllerBase
     {
         try
         {
+            // Security: Check if user is authorized to access this patient's data
+            var tokenPatientId = TokenHelper.GetPatientId(User);
+            var isCaregiver = TokenHelper.HasRole(User, "caregiver");
+            var isAdmin = TokenHelper.HasRole(User, "admin");
+            
+            // Patients can only see their own data, caregivers and admins can see all
+            if (!isCaregiver && !isAdmin && tokenPatientId != patientId)
+            {
+                return Forbid(); // User is not authorized to access this patient's data
+            }
             if (month < 1 || month > 12)
                 return BadRequest("Month must be between 1 and 12");
 
