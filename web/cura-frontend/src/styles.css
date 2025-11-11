@@ -9,25 +9,57 @@
 
 :root {
   /* ===== HAUPTFARBEN ===== */
-  --primary-green: #4CAF93;
-  --primary-pink: #F48FB1;
-  --primary-teal: #26A69A;
+  /* Alte Farben (auskommentiert): */
+  /* --primary-green: #4CAF93; */
+  /* --primary-pink: #F48FB1; */
+  /* --primary-teal: #26A69A; */
+  
+  /* Neue Farbpalette - Cherry Blossom Theme: */
+  --cherry-blossom-pink: #edafb8ff;
+  --champagne-pink: #f7e1d7ff;
+  --timberwolf: #dedbd2ff;
+  --ash-gray: #b0c4b1ff;
+  --outer-space: #4a5759ff;
+  
+  /* Mapped zu alten Variablen für Kompatibilität: */
+  --primary-pink: #edafb8ff;      /* Cherry Blossom Pink */
+  --primary-teal: #b0c4b1ff;      /* Ash Gray */
+  --primary-green: #b0c4b1ff;     /* Ash Gray */
   
   /* ===== HINTERGRÜNDE ===== */
-  --bg-light: #D1EDE7;
+  /* Alt: */
+  /* --bg-light: #D1EDE7; */
+  /* --bg-card: #FFFFFF; */
+  /* --bg-hover: #E8F5F3; */
+  
+  /* Neu: */
+  --bg-light: #f7e1d7ff;          /* Champagne Pink */
   --bg-card: #FFFFFF;
-  --bg-hover: #E8F5F3;
+  --bg-hover: #dedbd2ff;          /* Timberwolf */
   
   /* ===== TEXT ===== */
-  --text-primary: #2C3E50;
-  --text-secondary: #546E7A;
-  --text-muted: #90A4AE;
+  /* Alt: */
+  /* --text-primary: #2C3E50; */
+  /* --text-secondary: #546E7A; */
+  /* --text-muted: #90A4AE; */
+  
+  /* Neu: */
+  --text-primary: #4a5759ff;      /* Outer Space */
+  --text-secondary: #4a5759ff;    /* Outer Space */
+  --text-muted: #b0c4b1ff;        /* Ash Gray */
   
   /* ===== STATUS-FARBEN ===== */
-  --success: #66BB6A;
-  --warning: #FFA726;
-  --error: #EF5350;
-  --info: #42A5F5;
+  /* Alt: */
+  /* --success: #66BB6A; */
+  /* --warning: #FFA726; */
+  /* --error: #EF5350; */
+  /* --info: #42A5F5; */
+  
+  /* Neu - angepasst an Palette: */
+  --success: #b0c4b1ff;           /* Ash Gray */
+  --warning: #edafb8ff;           /* Cherry Blossom Pink */
+  --error: #edafb8ff;             /* Cherry Blossom Pink */
+  --info: #b0c4b1ff;              /* Ash Gray */
   
   /* ===== SCHRIFTARTEN ===== */
   /* Alte Schriften (auskommentiert): */
