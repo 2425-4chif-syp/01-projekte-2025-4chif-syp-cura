@@ -328,3 +328,74 @@ main {
 .btn-secondary:hover {
   background: var(--bg-hover);
 }
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .left-column {
+    width: 100%;
+    order: 2; /* Calendar and Intake Quote come after Medication Plan */
+  }
+
+  .medication-plan {
+    order: 1; /* Medication Plan (Tagesplan) first */
+  }
+
+  .calendar-card {
+    order: 2; /* Calendar second */
+  }
+
+  .income-quote {
+    order: 3; /* Intake Quote (Einnahme-Quote) third */
+  }
+
+  /* Adjust calendar grid for mobile */
+  .calendar-grid {
+    font-size: var(--text-xs);
+  }
+
+  .day {
+    min-width: 35px;
+    min-height: 35px;
+    font-size: 0.75rem;
+  }
+
+  /* Adjust medication table for mobile */
+  .medication-table {
+    font-size: var(--text-xs);
+  }
+
+  .medication-table td,
+  .medication-table th {
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  /* Stack action buttons on mobile */
+  .action-buttons {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+  }
+
+  /* Adjust progress bar for mobile */
+  .progress-container {
+    margin-top: var(--space-md);
+  }
+
+  .progress-bar {
+    height: 20px;
+  }
+
+  .status-labels {
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    font-size: var(--text-xs);
+  }
+}
