@@ -498,6 +498,15 @@ main {
     gap: var(--space-xs);
     font-size: var(--text-xs);
   }
+
+  /* Abstand zum Ende der Seite */
+  main {
+    padding-bottom: var(--space-3xl);
+  }
+
+  .income-quote {
+    margin-bottom: var(--space-xl);
+  }
 }
 
 /* Desktop: Mobile Medication Plan ausblenden */
