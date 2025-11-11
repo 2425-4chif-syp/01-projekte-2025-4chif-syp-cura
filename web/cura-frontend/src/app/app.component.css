@@ -106,11 +106,20 @@ main {
 }
 
 .calendar-card {
-  background: rgba(237, 175, 184, 0.5); /* primary-pink mit 50% Opacity */
+  background: linear-gradient(135deg, 
+    rgba(237, 175, 184, 0.4) 0%, 
+    rgba(247, 225, 215, 0.6) 100%);
   border: 2px solid var(--primary-pink);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
   overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.calendar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(74, 87, 89, 0.12);
 }
 
 .calendar-card h2 {
@@ -151,6 +160,14 @@ main {
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.day:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
 }
 
 .day.checked {
@@ -193,10 +210,19 @@ main {
 }
 
 .income-quote {
-  background: rgba(176, 196, 177, 0.5); /* primary-green (ash-gray) mit 50% Opacity */
+  background: linear-gradient(135deg, 
+    rgba(176, 196, 177, 0.3) 0%, 
+    rgba(237, 175, 184, 0.3) 100%);
   border: 2px solid var(--primary-green);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
+  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.income-quote:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(74, 87, 89, 0.12);
 }
 
 .income-quote h3 {
@@ -251,24 +277,33 @@ main {
 .progress-segment {
   height: 100%;
   transition: width var(--transition-base);
+  animation: fillProgress 1s ease-out;
+}
+
+@keyframes fillProgress {
+  from {
+    width: 0;
+  }
 }
 
 .progress-segment.checked {
-  background: var(--success);
+  background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
 .progress-segment.partial {
-  background: var(--warning);
+  background: linear-gradient(90deg, #f2e8cf 0%, #fff4db 100%);
 }
 
 .progress-segment.missed {
-  background: var(--error);
+  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .medication-card {
   flex: 0 0 calc(72% - var(--space-lg));
   order: 2; /* Medikamentenplan rechts */
-  background: rgba(176, 196, 177, 0.5); /* primary-teal (ash-gray) mit 50% Opacity */
+  background: linear-gradient(135deg, 
+    rgba(176, 196, 177, 0.4) 0%, 
+    rgba(222, 219, 210, 0.5) 100%);
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
@@ -277,6 +312,13 @@ main {
   flex-direction: column;
   height: fit-content; /* Höhe passt sich dem Inhalt an */
   max-height: calc(100vh - 150px); /* Maximale Höhe für Scrolling */
+  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.medication-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(74, 87, 89, 0.12);
 }
 
 .medication-card h2 {
@@ -355,6 +397,13 @@ main {
 .btn-primary:hover {
   background: var(--primary-green);
   border-color: var(--primary-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(176, 196, 177, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
@@ -365,6 +414,12 @@ main {
 
 .btn-secondary:hover {
   background: var(--bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(176, 196, 177, 0.2);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
 }
 
 /* Mobile Responsive Design */
