@@ -426,12 +426,13 @@ main {
     max-width: 600px;
     display: flex;
     flex-direction: column;
+    order: 2; /* Left column (Kalender + Quote) nach dem Medikamentenplan */
   }
 
   .mobile-medication {
     width: 100%;
     max-width: 600px;
-    order: 1;
+    order: 1; /* Medikamentenplan ganz oben */
     height: auto;
     overflow-y: visible;
     flex: none;
