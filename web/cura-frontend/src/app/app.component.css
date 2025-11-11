@@ -1,9 +1,22 @@
+/* === ANIMATIONEN === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 header {
   padding: var(--space-sm) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: -20px;
+  animation: fadeInUp 0.6s ease-out;
 
   /*border-bottom: 3px double var(--primary-green);*/
 }
