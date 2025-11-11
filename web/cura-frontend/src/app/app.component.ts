@@ -16,6 +16,8 @@ export class AppComponent implements OnInit {
   title = 'cura-frontend';
   currentDate = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' });
   currentMonth = '';
+  currentDayName = ''; // Für mobile Ansicht (z.B. "Montag")
+  currentDayIndex = 0; // Index für aktuellen Wochentag (0=Mo, 6=So)
   userName: string = 'User';
   userRoles: string[] = [];
   
@@ -34,6 +36,14 @@ export class AppComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    // Aktuellen Wochentag berechnen
+    const now = new Date();
+    const dayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    const dayIndex = now.getDay(); // 0=Sonntag, 1=Montag, ..., 6=Samstag
+    // Konvertiere zu Mo=0, Di=1, ..., So=6
+    this.currentDayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
+    this.currentDayName = dayNames[this.currentDayIndex];
+
     // User-Info von Keycloak laden
     try {
       const profile = await this.keycloak.loadUserProfile();

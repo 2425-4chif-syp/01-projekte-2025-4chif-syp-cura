@@ -54,6 +54,7 @@ header h1 {
 
 main {
   display: flex;
+  flex-wrap: wrap; /* Ermöglicht Umbruch für mobile Ansicht */
   gap: var(--space-lg);
   padding: var(--space-lg);
   padding-bottom: var(--space-3xl);
@@ -61,6 +62,14 @@ main {
   height: calc(100vh - 100px);
   margin: 0;
   box-sizing: border-box;
+}
+
+.desktop-medication {
+  display: block; /* Desktop: anzeigen */
+}
+
+.mobile-medication {
+  display: none; /* Desktop: ausblenden */
 }
 
 .left-column {
@@ -331,6 +340,16 @@ main {
 
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
+  /* Desktop Medication Plan ausblenden */
+  .desktop-medication {
+    display: none;
+  }
+
+  /* Mobile Medication Plan anzeigen */
+  .mobile-medication {
+    display: block;
+  }
+
   .main-layout {
     flex-direction: column;
     gap: var(--space-lg);
@@ -338,19 +357,21 @@ main {
 
   .left-column {
     width: 100%;
-    order: 2; /* Calendar and Intake Quote come after Medication Plan */
+    display: flex;
+    flex-direction: column;
   }
 
-  .medication-plan {
-    order: 1; /* Medication Plan (Tagesplan) first */
+  /* Reihenfolge für Mobile: 1. Medikamentenplan, 2. Kalender, 3. Einnahmequote */
+  .mobile-medication {
+    order: 1;
   }
 
   .calendar-card {
-    order: 2; /* Calendar second */
+    order: 2;
   }
 
   .income-quote {
-    order: 3; /* Intake Quote (Einnahme-Quote) third */
+    order: 3;
   }
 
   /* Adjust calendar grid for mobile */
@@ -397,5 +418,16 @@ main {
     flex-wrap: wrap;
     gap: var(--space-xs);
     font-size: var(--text-xs);
+  }
+}
+
+/* Desktop: Mobile Medication Plan ausblenden */
+@media (min-width: 769px) {
+  .mobile-medication {
+    display: none;
+  }
+
+  .desktop-medication {
+    display: block;
   }
 }
