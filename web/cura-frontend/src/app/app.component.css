@@ -347,8 +347,8 @@ main {
   }
 
   header h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-semibold);
   }
 
   .user-info {
