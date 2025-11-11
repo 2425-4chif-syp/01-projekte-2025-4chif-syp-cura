@@ -275,6 +275,8 @@ main {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  height: fit-content; /* Höhe passt sich dem Inhalt an */
+  max-height: calc(100vh - 150px); /* Maximale Höhe für Scrolling */
 }
 
 .medication-card h2 {
@@ -289,7 +291,7 @@ main {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: var(--space-lg);
-  flex: 1;
+  flex: none; /* Keine Dehnung mehr */
 }
 
 .medication-table th {
