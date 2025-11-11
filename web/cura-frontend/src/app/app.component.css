@@ -106,7 +106,7 @@ main {
 }
 
 .calendar-card {
-  background: var(--primary-pink); /* Gleiche Farbe wie Border */
+  background: rgba(237, 175, 184, 0.5); /* primary-pink mit 50% Opacity */
   border: 2px solid var(--primary-pink);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
@@ -193,7 +193,7 @@ main {
 }
 
 .income-quote {
-  background: var(--primary-green); /* Gleiche Farbe wie Border */
+  background: rgba(176, 196, 177, 0.5); /* primary-green (ash-gray) mit 50% Opacity */
   border: 2px solid var(--primary-green);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
@@ -268,7 +268,7 @@ main {
 .medication-card {
   flex: 0 0 calc(72% - var(--space-lg));
   order: 2; /* Medikamentenplan rechts */
-  background: var(--primary-teal); /* Gleiche Farbe wie Border */
+  background: rgba(176, 196, 177, 0.5); /* primary-teal (ash-gray) mit 50% Opacity */
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
