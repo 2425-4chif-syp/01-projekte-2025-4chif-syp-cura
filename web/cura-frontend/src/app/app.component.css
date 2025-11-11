@@ -429,9 +429,11 @@ main {
   }
 
   .mobile-medication {
-    width: 95%;
-    max-width: 95%;
+    width: 100%;
+    max-width: 600px;
     order: 1;
+    height: auto;
+    overflow-y: visible;
   }
 
   .calendar-card,
