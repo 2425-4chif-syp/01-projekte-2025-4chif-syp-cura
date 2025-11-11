@@ -496,9 +496,24 @@ main {
   }
 
   .calendar-card,
-  .income-quote {
+  .income-quote,
+  .mobile-medication {
     width: 100%;
     max-width: 600px;
+  }
+
+  /* Komponenten-Hover-Effekte deaktivieren auf Mobile */
+  .calendar-card:hover,
+  .income-quote:hover,
+  .mobile-medication:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
+  }
+
+  /* Kalender-Tage Hover deaktivieren auf Mobile */
+  .day:hover {
+    transform: none;
+    box-shadow: none;
   }
 
   /* Reihenfolge für Mobile: 1. Medikamentenplan, 2. Kalender, 3. Einnahmequote */
