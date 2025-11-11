@@ -1,11 +1,16 @@
 <header>
   <h1>CURA</h1>
   <div class="user-info">
-    <i class="fa-solid fa-user"></i>
-    <span>{{ userName }}, {{ currentDate }}</span>
-    <button (click)="logout()" class="btn-logout" title="Abmelden">
-      <i class="fa-solid fa-right-from-bracket"></i>
-    </button>
+    <div class="user-line">
+      <i class="fa-solid fa-user"></i>
+      <span class="user-name">{{ userName }}</span>
+    </div>
+    <div class="date-line">
+      <span class="user-date">{{ currentDate }}</span>
+      <button (click)="logout()" class="btn-logout" title="Abmelden">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
   </div>
 </header>
 
