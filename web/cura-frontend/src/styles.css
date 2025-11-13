@@ -60,11 +60,11 @@
   --parchment: #f2e8cfff;
   --bittersweet-shimmer: #bc4749ff;
   
-  /* Neu - gemapped: */
-  --success: #b0c4b1ff;           /* Ash Gray (aus Cherry Blossom Palette) */
-  --warning: #f2e8cfff;           /* Parchment */
-  --error: #bc4749ff;             /* Bittersweet Shimmer */
-  --info: #b0c4b1ff;              /* Ash Gray */
+  /* Neu - gemapped mit knalligeren Farben: */
+  --success: #4CAF50;           /* Kräftiges Grün für rechtzeitige Einnahme */
+  --warning: #FFC107;           /* Knalliges Gelb für Warnung */
+  --error: #F44336;             /* Kräftiges Rot für verpasste Einnahme */
+  --info: #2196F3;              /* Knalliges Blau */
   
   /* ===== SCHRIFTARTEN ===== */
   /* Alte Schriften (auskommentiert): */

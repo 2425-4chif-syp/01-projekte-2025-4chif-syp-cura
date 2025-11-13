@@ -191,17 +191,29 @@ main {
 }
 
 .day.checked {
-  background: var(--primary-green);
+  background: #4CAF50;
   color: white;
 }
 
 .day.partial {
+<<<<<<< HEAD
   background: var(--error);
+=======
+  background: #F44336;
+  color: white;
+}
+
+.day.partial i {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+>>>>>>> 009b279 (feat: new colors for frontend)
   color: white;
 }
 
 .day.missed {
-  background: var(--error);
+  background: #F44336;
   color: white;
 }
 
@@ -321,12 +333,19 @@ main {
 }
 
 .status-dot.checked {
-  background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
+  background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%);
 }
 
+<<<<<<< HEAD
 .status-dot.partial,
+=======
+.status-dot.partial {
+  background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
+}
+
+>>>>>>> 009b279 (feat: new colors for frontend)
 .status-dot.missed {
-  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
+  background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
 }
 
 .progress-bar {
@@ -342,12 +361,19 @@ main {
 }
 
 .progress-segment.checked {
-  background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
+  background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%);
 }
 
+<<<<<<< HEAD
 .progress-segment.partial,
+=======
+.progress-segment.partial {
+  background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
+}
+
+>>>>>>> 009b279 (feat: new colors for frontend)
 .progress-segment.missed {
-  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
+  background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
 }
 
 .medication-card {
