@@ -189,24 +189,8 @@ main {
   color: white;
 }
 
-.day.checked i {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
-  color: white;
-}
-
 .day.partial {
   background: var(--error);
-  color: white;
-}
-
-.day.partial i {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
   color: white;
 }
 
@@ -215,11 +199,8 @@ main {
   color: white;
 }
 
-.day.missed i {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
+.day.no-data {
+  background: var(--text-muted);
   color: white;
 }
 
