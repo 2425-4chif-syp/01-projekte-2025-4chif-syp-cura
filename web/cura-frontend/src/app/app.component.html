@@ -31,17 +31,8 @@
         </div>
         <div class="calendar-grid">
           @for (day of calendarDays; track day.date) {
-            <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed">
+            <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed" [class.no-data]="!day.checked && !day.partial && !day.missed && day.day > 0">
               <span>{{ day.day }}</span>
-              @if (day.checked) {
-                <i class="fa-solid fa-check"></i>
-              }
-              @if (day.partial) {
-                <i class="fa-solid fa-circle"></i>
-              }
-              @if (day.missed) {
-                <i class="fa-solid fa-xmark"></i>
-              }
             </div>
           }
         </div>
