@@ -198,7 +198,7 @@ main {
 }
 
 .day.partial {
-  background: var(--warning);
+  background: var(--error);
   color: white;
 }
 
@@ -274,7 +274,7 @@ main {
 }
 
 .status-dot.partial {
-  background: linear-gradient(90deg, #f2e8cf 0%, #fff4db 100%);
+  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .status-dot.missed {
@@ -306,7 +306,7 @@ main {
 }
 
 .progress-segment.partial {
-  background: linear-gradient(90deg, #f2e8cf 0%, #fff4db 100%);
+  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .progress-segment.missed {
