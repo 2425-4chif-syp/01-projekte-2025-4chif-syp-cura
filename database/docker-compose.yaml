@@ -101,6 +101,7 @@ services:
       
       # HTTP Settings
       KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: "/auth"
       
       # Hostname Configuration
       KC_HOSTNAME: vm12.htl-leonding.ac.at
