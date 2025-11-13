@@ -185,7 +185,7 @@ main {
 }
 
 .day.checked {
-  background: #22c55e;
+  background: var(--primary-green);
   color: white;
 }
 
@@ -198,7 +198,7 @@ main {
 }
 
 .day.partial {
-  background: #ef4444;
+  background: var(--warning);
   color: white;
 }
 
@@ -211,7 +211,7 @@ main {
 }
 
 .day.missed {
-  background: #ef4444;
+  background: var(--error);
   color: white;
 }
 
@@ -259,9 +259,8 @@ main {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  font-size: var(--text-sm);
-  color: #1f2937;
-  font-weight: 500;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
 
 .status-dot {
@@ -271,15 +270,15 @@ main {
 }
 
 .status-dot.checked {
-  background: linear-gradient(90deg, #22c55e 0%, #4ade80 100%);
+  background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
 .status-dot.partial {
-  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+  background: linear-gradient(90deg, #f2e8cf 0%, #fff4db 100%);
 }
 
 .status-dot.missed {
-  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .progress-bar {
@@ -303,15 +302,15 @@ main {
 }
 
 .progress-segment.checked {
-  background: linear-gradient(90deg, #22c55e 0%, #4ade80 100%);
+  background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
 .progress-segment.partial {
-  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+  background: linear-gradient(90deg, #f2e8cf 0%, #fff4db 100%);
 }
 
 .progress-segment.missed {
-  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .medication-card {
