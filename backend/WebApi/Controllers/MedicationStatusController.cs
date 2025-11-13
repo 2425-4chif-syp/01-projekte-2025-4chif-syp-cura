@@ -62,7 +62,6 @@ namespace WebApi.Controllers
 
                 var status = scheduledCount == 0 ? "empty" 
                            : takenCount >= scheduledCount ? "checked"
-                           : takenCount > 0 ? "partial"
                            : "missed";
 
                 result.Add(new DailyStatusDto
