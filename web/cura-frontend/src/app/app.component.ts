@@ -137,7 +137,6 @@ export class AppComponent implements OnInit {
     const missedDays = this.calendarDays.filter(d => d.missed).length;
 
     this.checkedPercentage = Math.round((checkedDays / totalDays) * 100);
-    this.partialPercentage = Math.round((partialDays / totalDays) * 100);
-    this.missedPercentage = Math.round((missedDays / totalDays) * 100);
+    this.missedPercentage = Math.round((missedDays / totalDays) * 100) + Math.round((partialDays / totalDays) * 100);
   }
 }
