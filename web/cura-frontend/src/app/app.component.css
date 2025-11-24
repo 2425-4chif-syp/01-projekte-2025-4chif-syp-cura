@@ -288,10 +288,12 @@ main {
 .medication-item {
   background: white;
   border-radius: var(--radius-md);
-  padding: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
   border-left: 4px solid var(--text-muted);
   transition: all var(--transition-fast);
 }
@@ -327,10 +329,13 @@ main {
   color: var(--text-secondary);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
+  min-width: 90px;
+  flex-shrink: 0;
 }
 
 .medication-time i {
   color: var(--primary-pink);
+  margin-right: var(--space-xs);
 }
 
 .medication-name {
@@ -338,10 +343,8 @@ main {
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
   font-family: var(--font-heading);
-}
-
-.medication-name i {
-  color: var(--primary-teal);
+  flex: 1;
+  text-align: left;
 }
 
 .medication-status {
