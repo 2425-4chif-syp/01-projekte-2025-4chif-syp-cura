@@ -150,18 +150,18 @@ main {
   width: 100%;
   min-height: fit-content;
   backface-visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   padding: var(--space-md);
 }
 
 .calendar-front {
   z-index: 2;
-  transform: rotateY(0deg);
 }
 
 .calendar-back {
+  position: absolute;
+  top: 0;
+  left: 0;
   transform: rotateY(180deg);
 }
 
