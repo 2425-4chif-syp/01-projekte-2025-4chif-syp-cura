@@ -28,6 +28,11 @@ export class AppComponent implements OnInit {
   checkedPercentage = 0;
   partialPercentage = 0;
   missedPercentage = 0;
+  
+  // Day Detail View
+  showDayDetail = false;
+  selectedDay: CalendarDay | null = null;
+  selectedDayMedications: { timeLabel: string; medication: string; status: 'taken' | 'missed' | 'unknown' }[] = [];
 
   constructor(
     private keycloak: KeycloakService,
@@ -138,5 +143,57 @@ export class AppComponent implements OnInit {
 
     this.checkedPercentage = Math.round((checkedDays / totalDays) * 100);
     this.missedPercentage = Math.round((missedDays / totalDays) * 100) + Math.round((partialDays / totalDays) * 100);
+  }
+
+  openDayDetail(day: CalendarDay) {
+    if (day.day === 0) return;
+    
+    this.selectedDay = day;
+    this.showDayDetail = true;
+    this.loadDayMedications(day.date);
+  }
+
+  closeDayDetail() {
+    this.showDayDetail = false;
+    this.selectedDay = null;
+    this.selectedDayMedications = [];
+  }
+
+  loadDayMedications(date: string) {
+    const dayOfWeek = new Date(date).getDay();
+    const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    
+    this.selectedDayMedications = [];
+    
+    for (const row of this.medicationRows) {
+      const medication = row.days[dayIndex];
+      
+      if (medication) {
+        let status: 'taken' | 'missed' | 'unknown' = 'unknown';
+        
+        if (this.selectedDay?.checked) {
+          status = 'taken';
+        } else if (this.selectedDay?.partial) {
+          status = Math.random() > 0.5 ? 'taken' : 'missed';
+        } else if (this.selectedDay?.missed) {
+          status = 'missed';
+        }
+        
+        this.selectedDayMedications.push({
+          timeLabel: row.timeLabel,
+          medication: medication,
+          status: status
+        });
+      }
+    }
+  }
+
+  getFormattedDate(date: string): string {
+    return new Date(date).toLocaleDateString('de-DE', { 
+      weekday: 'long', 
+      day: '2-digit', 
+      month: 'long', 
+      year: 'numeric' 
+    });
   }
 }

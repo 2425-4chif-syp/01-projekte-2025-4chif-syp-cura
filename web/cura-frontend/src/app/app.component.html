@@ -18,23 +18,74 @@
   <div class="main-layout">
     <!-- Left Column: Kalender und Einnahmequote -->
     <div class="left-column">
-      <aside class="calendar-card">
-        <h2>{{ currentMonth }}</h2>
-        <div class="weekdays">
-          <span>Mo</span>
-          <span>Di</span>
-          <span>Mi</span>
-          <span>Do</span>
-          <span>Fr</span>
-          <span>Sa</span>
-          <span>So</span>
-        </div>
-        <div class="calendar-grid">
-          @for (day of calendarDays; track day.date) {
-            <div class="day" [class.checked]="day.checked" [class.partial]="day.partial" [class.missed]="day.missed" [class.no-data]="!day.checked && !day.partial && !day.missed && day.day > 0">
-              <span>{{ day.day }}</span>
+      <aside class="calendar-card" [class.flipped]="showDayDetail">
+        <div class="calendar-inner">
+          <!-- Calendar Front -->
+          <div class="calendar-front">
+            <h2>{{ currentMonth }}</h2>
+            <div class="weekdays">
+              <span>Mo</span>
+              <span>Di</span>
+              <span>Mi</span>
+              <span>Do</span>
+              <span>Fr</span>
+              <span>Sa</span>
+              <span>So</span>
             </div>
-          }
+            <div class="calendar-grid">
+              @for (day of calendarDays; track day.date) {
+                <div class="day" 
+                     [class.checked]="day.checked" 
+                     [class.partial]="day.partial" 
+                     [class.missed]="day.missed" 
+                     [class.no-data]="!day.checked && !day.partial && !day.missed && day.day > 0"
+                     (click)="openDayDetail(day)">
+                  <span>{{ day.day }}</span>
+                </div>
+              }
+            </div>
+          </div>
+          
+          <!-- Day Detail Back -->
+          <div class="calendar-back">
+            <div class="day-detail-header">
+              <h2>{{ selectedDay ? getFormattedDate(selectedDay.date) : '' }}</h2>
+              <button class="btn-close" (click)="closeDayDetail()">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            
+            <div class="day-detail-content">
+              @if (selectedDayMedications.length === 0) {
+                <p class="no-medications">Keine Medikamente für diesen Tag geplant</p>
+              } @else {
+                @for (med of selectedDayMedications; track $index) {
+                  <div class="medication-item" [class.taken]="med.status === 'taken'" [class.missed]="med.status === 'missed'">
+                    <div class="medication-time">
+                      <i class="fa-solid fa-clock"></i>
+                      <span>{{ med.timeLabel }}</span>
+                    </div>
+                    <div class="medication-name">
+                      <i class="fa-solid fa-pills"></i>
+                      <span>{{ med.medication }}</span>
+                    </div>
+                    <div class="medication-status">
+                      @if (med.status === 'taken') {
+                        <i class="fa-solid fa-check"></i>
+                        <span>Eingenommen</span>
+                      } @else if (med.status === 'missed') {
+                        <i class="fa-solid fa-xmark"></i>
+                        <span>Verpasst</span>
+                      } @else {
+                        <i class="fa-solid fa-question"></i>
+                        <span>Keine Daten</span>
+                      }
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </div>
         </div>
       </aside>
 
