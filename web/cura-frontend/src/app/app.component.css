@@ -136,7 +136,7 @@ main {
 .calendar-card .calendar-inner {
   position: relative;
   width: 100%;
-  min-height: 400px;
+  min-height: 350px;
   transform-style: preserve-3d;
   transition: transform 0.6s;
 }
@@ -148,12 +148,12 @@ main {
 .calendar-front,
 .calendar-back {
   width: 100%;
-  min-height: 400px;
+  min-height: 350px;
   backface-visibility: hidden;
   position: absolute;
   top: 0;
   left: 0;
-  padding: var(--space-lg);
+  padding: var(--space-md);
 }
 
 .calendar-front {
@@ -273,8 +273,8 @@ main {
 .day-detail-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-  max-height: 400px;
+  gap: var(--space-sm);
+  max-height: 280px;
   overflow-y: auto;
 }
 
@@ -288,10 +288,10 @@ main {
 .medication-item {
   background: white;
   border-radius: var(--radius-md);
-  padding: var(--space-md);
+  padding: var(--space-sm);
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   border-left: 4px solid var(--text-muted);
   transition: all var(--transition-fast);
 }

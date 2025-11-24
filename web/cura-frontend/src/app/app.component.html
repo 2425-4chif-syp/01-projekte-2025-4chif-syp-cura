@@ -69,18 +69,6 @@
                       <i class="fa-solid fa-pills"></i>
                       <span>{{ med.medication }}</span>
                     </div>
-                    <div class="medication-status">
-                      @if (med.status === 'taken') {
-                        <i class="fa-solid fa-check"></i>
-                        <span>Eingenommen</span>
-                      } @else if (med.status === 'missed') {
-                        <i class="fa-solid fa-xmark"></i>
-                        <span>Verpasst</span>
-                      } @else {
-                        <i class="fa-solid fa-question"></i>
-                        <span>Keine Daten</span>
-                      }
-                    </div>
                   </div>
                 }
               }
