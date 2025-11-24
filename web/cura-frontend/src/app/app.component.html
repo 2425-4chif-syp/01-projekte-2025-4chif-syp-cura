@@ -40,7 +40,9 @@
                      [class.missed]="day.missed" 
                      [class.no-data]="!day.checked && !day.partial && !day.missed && day.day > 0"
                      (click)="openDayDetail(day)">
-                  <span>{{ day.day }}</span>
+                  @if (day.day > 0) {
+                    <span>{{ day.day }}</span>
+                  }
                 </div>
               }
             </div>
