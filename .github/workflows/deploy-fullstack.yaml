@@ -97,11 +97,9 @@ jobs:
             echo "⬇️ Stopping existing containers..."
             docker compose down || true
             
-            # 🔧 Force clean PostgreSQL 16 installation  
-            echo "🔧 Forcing clean PostgreSQL 16 installation..."
-            echo "💥 Removing any existing PostgreSQL data to avoid version conflicts..."
-            docker volume rm database_postgres_data || echo "Volume doesn't exist or already removed"
-            echo "✅ Fresh volume ready for PostgreSQL 16 with init.sql"
+            # 🔧 NOTE: We do NOT delete volumes to preserve Keycloak realm data!
+            # Only delete volume if you explicitly need a fresh database:
+            # docker volume rm database_postgres_data
             
             # 🔍 DEBUG: Show docker-compose.yaml
             echo "🔍 DEBUG: Docker Compose configuration:"
@@ -110,6 +108,17 @@ jobs:
             
             echo "🏗️ Building and starting containers..."
             docker compose up -d --build
+            
+            # ⏳ Wait for Keycloak to be ready
+            echo "⏳ Waiting for Keycloak to start (90 seconds)..."
+            sleep 90
+            
+            # 🔐 Import Keycloak realm if needed
+            echo "🔐 Checking and importing Keycloak realm..."
+            cd ../keycloak-config
+            chmod +x import-realm.sh
+            ./import-realm.sh || echo "⚠️ Keycloak realm import had issues (might already exist)"
+            cd ../database
             
             echo "📋 Container status after startup:"
             docker compose ps
