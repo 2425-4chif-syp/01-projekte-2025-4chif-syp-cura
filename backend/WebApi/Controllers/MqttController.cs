@@ -164,7 +164,7 @@ public class MqttController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending test MQTT message");
+            _logger.LogError(ex, "Error sending test MQTT messagee");
             return StatusCode(500, new { Error = ex.Message });
         }
     }
