@@ -123,6 +123,7 @@ services:
     volumes:
       - ../keycloak-themes:/opt/keycloak/themes
       - keycloak_data:/opt/keycloak/data
+      - ../keycloak-config:/opt/keycloak/data/import:ro
     
     depends_on:
       postgres:
