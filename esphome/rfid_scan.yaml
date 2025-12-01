@@ -1,5 +1,5 @@
 substitutions:
-  name: "rfid-scan-mqtt"
+  name: "rfid-scan-http"
 
 esphome:
   name: ${name}
@@ -16,35 +16,61 @@ wifi:
   ssid: !secret ssid
   password: !secret wifi_password
 
-mqtt:
-  broker: !secret mqtt_broker
-  port: 1883
+# HTTP Request Komponente statt MQTT
+http_request:
+  verify_ssl: false  # Auf true setzen wenn du ein gültiges SSL-Zertifikat hast
+  timeout: 10s
 
 spi:
   clk_pin: GPIO19
   miso_pin: GPIO23
   mosi_pin: GPIO21
 
-rc522_spi: # or rc522_i2c
+rc522_spi:
   cs_pin: GPIO22
   update_interval: 1s
 
   on_tag:
     then:
-      - mqtt.publish:
-          topic: rc522/tag
-          payload: !lambda |-
-            std::string tag = x;
-            tag.erase(std::remove(tag.begin(), tag.end(), '-'), tag.end());
-            return tag;
+      - logger.log:
+          format: "RFID Tag detected: %s"
+          args: ['x.c_str()']
+      - http_request.post:
+          url: https://vm12.htl-leonding.ac.at/api/RfidChips/scan
+          headers:
+            Content-Type: application/json
+          json:
+            chipId: !lambda |-
+              std::string tag = x;
+              tag.erase(std::remove(tag.begin(), tag.end(), '-'), tag.end());
+              return tag;
+            event: "scan"
+          on_response:
+            then:
+              - logger.log:
+                  format: "Response: %d"
+                  args: ['status_code']
+  
   on_tag_removed:
     then:
-      - mqtt.publish:
-          topic: rc522/tag_removed
-          payload: !lambda |-
-            std::string tag = x;
-            tag.erase(std::remove(tag.begin(), tag.end(), '-'), tag.end());
-            return tag;
+      - logger.log:
+          format: "RFID Tag removed: %s"
+          args: ['x.c_str()']
+      - http_request.post:
+          url: https://vm12.htl-leonding.ac.at/api/RfidChips/scan
+          headers:
+            Content-Type: application/json
+          json:
+            chipId: !lambda |-
+              std::string tag = x;
+              tag.erase(std::remove(tag.begin(), tag.end(), '-'), tag.end());
+              return tag;
+            event: "removed"
+          on_response:
+            then:
+              - logger.log:
+                  format: "Response: %d"
+                  args: ['status_code']
 
 
 binary_sensor:

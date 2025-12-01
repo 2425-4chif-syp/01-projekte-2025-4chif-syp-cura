@@ -122,5 +122,46 @@ namespace WebApi.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Registriert einen RFID-Scan vom ESP32.
+        /// </summary>
+        /// <param name="request">Scan-Daten mit ChipId und optional Event-Type</param>
+        /// <returns></returns>
+        [HttpPost("scan")]
+        public async Task<IActionResult> RegisterScan([FromBody] RfidScanRequest request)
+        {
+            if (string.IsNullOrEmpty(request.ChipId))
+                return BadRequest("ChipId is required");
+
+            var chip = await _unitOfWork.RfidChipRepository.GetByChipIdAsync(request.ChipId);
+            
+            // Log den Scan (kann später erweitert werden für weitere Logik)
+            Console.WriteLine($"RFID Scan registered: {request.ChipId} - Event: {request.Event} - Time: {DateTime.UtcNow}");
+            
+            if (chip == null)
+            {
+                return Ok(new { 
+                    Success = false, 
+                    Message = "RFID Chip not found in database",
+                    ChipId = request.ChipId,
+                    Event = request.Event
+                });
+            }
+
+            return Ok(new { 
+                Success = true, 
+                Message = "RFID Chip recognized",
+                Chip = chip,
+                Event = request.Event,
+                Timestamp = DateTime.UtcNow
+            });
+        }
     }
+}
+
+public class RfidScanRequest
+{
+    public string ChipId { get; set; } = string.Empty;
+    public string Event { get; set; } = "scan"; // "scan" oder "removed"
 }
