@@ -37,16 +37,8 @@
   "roles": {
     "realm": [
       {
-        "name": "user",
-        "description": "Standard user role"
-      },
-      {
-        "name": "caregiver",
-        "description": "Caregiver role for medical staff"
-      },
-      {
         "name": "patient",
-        "description": "Patient role"
+        "description": "Patient role with full access"
       }
     ]
   },
@@ -66,7 +58,6 @@
         }
       ],
       "realmRoles": [
-        "user",
         "patient"
       ]
     }
@@ -88,30 +79,6 @@
           "config": {
             "user.attribute": "patient_id",
             "claim.name": "patient_id",
-            "jsonType.label": "int",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "userinfo.token.claim": "true"
-          }
-        }
-      ]
-    },
-    {
-      "name": "caregiver_id",
-      "description": "Caregiver ID scope",
-      "protocol": "openid-connect",
-      "attributes": {
-        "include.in.token.scope": "true",
-        "display.on.consent.screen": "true"
-      },
-      "protocolMappers": [
-        {
-          "name": "caregiver-id-mapper",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-attribute-mapper",
-          "config": {
-            "user.attribute": "caregiver_id",
-            "claim.name": "caregiver_id",
             "jsonType.label": "int",
             "id.token.claim": "true",
             "access.token.claim": "true",
