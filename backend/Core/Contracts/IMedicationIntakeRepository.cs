@@ -20,6 +20,11 @@ namespace Core.Contracts
         Task<IEnumerable<MedicationIntake>> GetByPatientAndDateAsync(int patientId, DateTime date);
         
         /// <summary>
+        /// Checks if a medication plan was already taken today
+        /// </summary>
+        Task<bool> HasTakenTodayAsync(int patientId, int medicationPlanId, DateTime date);
+        
+        /// <summary>
         /// Creates a new medication intake log
         /// </summary>
         Task<MedicationIntake> CreateAsync(MedicationIntake intake);
