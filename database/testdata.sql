@@ -484,7 +484,7 @@ INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, qua
 (1, 1, '2025-12-02 08:10:00', 1, 'Regular routine', '04E7AE6EBA2A81'),
 (1, 2, '2025-12-02 08:25:00', 1, 'Morning', '04E7AE6EBA2A81'),
 (1, 3, '2025-12-02 12:40:00', 1, 'Midday', '04E7AE6EBA2A81'),
-(1, 4, '2025-12-02 19:55:00', 5, 'Evening', '04E7AE6EBA2A81');
+-- (1, 4, '2025-12-02 19:55:00', 5, 'Evening', '04E7AE6EBA2A81');
 
 -- Wednesday 2025-12-03 ✅
 INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
