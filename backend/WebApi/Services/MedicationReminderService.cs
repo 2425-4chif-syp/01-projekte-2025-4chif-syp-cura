@@ -15,7 +15,7 @@ public class MedicationReminderService : BackgroundService
         { 1, new TimeSpan(10, 20, 0) },   // Morning = 10:20
         { 2, new TimeSpan(15, 03, 0) },  // Noon = 14:55
         { 4, new TimeSpan(16, 0, 0) },  // Afternoon = 16:00
-        { 8, new TimeSpan(19, 10, 0) }   // Evening = 19:10
+        { 8, new TimeSpan(19, 20, 0) }   // Evening = 19:20
     };
 
     // Wochentage-Mapping für weekday_flags
