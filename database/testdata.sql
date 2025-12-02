@@ -94,14 +94,17 @@ INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_f
 (6, 1, 1, 127, 8, 1, '2024-01-01', '2024-12-31', 'As needed');
 
 -- Additional RFID chips for multiple sets
-INSERT INTO rfid_chips (chip_id, weekday) VALUES
-('0441AB6EBA2A81', 'MONDAY'),
-('04E7AE6EBA2A81', 'TUESDAY'),
-('04E6AE6EBA2A81', 'WEDNESDAY'),
-('04E5AE6EBA2A81', 'THURSDAY'),
-('04E4AE6EBA2A81', 'FRIDAY'),
-('04DFAE6EBA2A81', 'SATURDAY'),
-('04DDAE6EBA2A81', 'SUNDAY');
+-- Patient 1: Johann Meier
+INSERT INTO rfid_chips (chip_id, patient_id, weekday) VALUES
+('0441AB6EBA2A81', 1, 'MONDAY'),
+('04E7AE6EBA2A81', 1, 'TUESDAY'),
+('04E6AE6EBA2A81', 1, 'WEDNESDAY'),
+('04E5AE6EBA2A81', 1, 'THURSDAY'),
+('04E4AE6EBA2A81', 1, 'FRIDAY'),
+('04DFAE6EBA2A81', 1, 'SATURDAY'),
+('04DDAE6EBA2A81', 1, 'SUNDAY');
+
+
 
 -- Sample medication intake logs for testing calendar functionality
 -- Patient 1 (Johann Meier) has plans: 1, 2, 3, 4
