@@ -12,10 +12,10 @@ public class MedicationReminderService : BackgroundService
     // Definierte Zeiten für die day_time_flags
     private readonly Dictionary<int, TimeSpan> _dayTimes = new()
     {
-        { 1, new TimeSpan(20, 17, 0) },   // Morning = 20:12
-        { 2, new TimeSpan(20, 17, 0) },  // Noon = 14:55
-        { 4, new TimeSpan(20, 17, 0) },  // Afternoon = 16:00
-        { 8, new TimeSpan(20, 17, 0) }   // Evening = 19:20
+        { 1, new TimeSpan(21, 20, 0) },   // TEST: In 10 Minuten!
+        { 2, new TimeSpan(21, 20, 0) },   // TEST: Alle gleich
+        { 4, new TimeSpan(21, 20, 0) },   // TEST: Alle gleich
+        { 8, new TimeSpan(21, 20, 0) }    // TEST: Alle gleich
     };
 
     // Wochentage-Mapping für weekday_flags
@@ -35,7 +35,7 @@ public class MedicationReminderService : BackgroundService
     
     // Tracking für Missed Medication Alerts
     private readonly Dictionary<string, DateTime> _missedMedicationAlerts = new(); // Key: ReminderKey, Value: Zeit der Erinnerung
-    private readonly TimeSpan _alertDelay = TimeSpan.FromMinutes(2); // Warte 2 Minuten nach Erinnerung
+    private readonly TimeSpan _alertDelay = TimeSpan.FromMinutes(2); // TEST: Nur 2 Minuten warten!
 
     public MedicationReminderService(
         IServiceProvider serviceProvider,
@@ -223,11 +223,21 @@ public class MedicationReminderService : BackgroundService
                             
                             if (!_acknowledgedReminders.Contains(patientAckKey))
                             {
-                                await SendMedicationReminder(mqttService, plan, targetTime);
+                                // ✅ WICHTIG: ERST zur Liste hinzufügen (für Alert-Tracking)
                                 _sentReminders.Add(reminderKey);
                                 
+                                // Dann MQTT-Nachricht senden (kann fehlschlagen)
+                                try
+                                {
+                                    await SendMedicationReminder(mqttService, plan, targetTime);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogWarning(ex, "MQTT-Nachricht konnte nicht gesendet werden für Plan {PlanId}", plan.Id);
+                                }
+                                
                                 _logger.LogInformation(
-                                    "Medikamenten-Erinnerung gesendet für Patient: {PatientName}, Medikament: {MedicationName}, Zeit: {Time}",
+                                    "Medikamenten-Erinnerung getrackt für Patient: {PatientName}, Medikament: {MedicationName}, Zeit: {Time}",
                                     plan.Patient?.Name ?? "Unbekannt",
                                     plan.Medication?.Name ?? "Unbekannt",
                                     targetTime.ToString(@"hh\:mm"));
@@ -391,13 +401,12 @@ public class MedicationReminderService : BackgroundService
                 if (timeSinceReminder >= _alertDelay)
                 {
                     // Zeit ist abgelaufen - sende Alert-E-Mail
-                    var patient = plan.Patient;
+                    // ✅ Lade Patient explizit aus DB (Navigation Properties könnten NULL sein)
+                    var patient = await unitOfWork.PatientRepository.GetByIdAsync(plan.PatientId);
                     
-                    if (patient == null || string.IsNullOrEmpty(patient.Email))
+                    if (patient == null)
                     {
-                        _logger.LogWarning(
-                            "Kann keine Alert-E-Mail senden für Plan {PlanId} - Patient hat keine E-Mail",
-                            planId);
+                        _logger.LogWarning("Patient {PatientId} nicht gefunden", plan.PatientId);
                         _missedMedicationAlerts.Remove(reminderKey);
                         continue;
                     }
@@ -408,8 +417,8 @@ public class MedicationReminderService : BackgroundService
                     try
                     {
                         await emailService.SendMissedMedicationAlertAsync(
-                            "timon.schmalzer@gmail.com",//patient.Email,
-                            patient.Name,
+                            patient.Email ?? "timon.schmalzer@gmail.com",
+                            patient.Name ?? "Unbekannter Patient",
                             medicationName,
                             scheduledTime
                         );
