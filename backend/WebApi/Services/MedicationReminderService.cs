@@ -15,7 +15,7 @@ public class MedicationReminderService : BackgroundService
         { 1, new TimeSpan(10, 20, 0) },   // Morning = 10:20
         { 2, new TimeSpan(15, 03, 0) },  // Noon = 14:55
         { 4, new TimeSpan(16, 0, 0) },  // Afternoon = 16:00
-        { 8, new TimeSpan(20, 0, 0) }   // Evening = 20:00
+        { 8, new TimeSpan(19, 10, 0) }   // Evening = 19:10
     };
 
     // Wochentage-Mapping für weekday_flags
@@ -35,7 +35,7 @@ public class MedicationReminderService : BackgroundService
     
     // Tracking für Missed Medication Alerts
     private readonly Dictionary<string, DateTime> _missedMedicationAlerts = new(); // Key: ReminderKey, Value: Zeit der Erinnerung
-    private readonly TimeSpan _alertDelay = TimeSpan.FromMinutes(30); // Warte 30 Minuten nach Erinnerung
+    private readonly TimeSpan _alertDelay = TimeSpan.FromMinutes(2); // Warte 2 Minuten nach Erinnerung
 
     public MedicationReminderService(
         IServiceProvider serviceProvider,
