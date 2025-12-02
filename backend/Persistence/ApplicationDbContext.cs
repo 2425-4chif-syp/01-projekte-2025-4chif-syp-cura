@@ -27,8 +27,14 @@ namespace Persistence
                 entity.ToTable("rfid_chips");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.ChipId).HasColumnName("chip_id").IsRequired().HasMaxLength(50);
+                entity.Property(e => e.PatientId).HasColumnName("patient_id").IsRequired();
                 entity.Property(e => e.Weekday).HasColumnName("weekday").IsRequired().HasMaxLength(20);
                 entity.Property(e => e.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+                
+                entity.HasOne(e => e.Patient)
+                    .WithMany()
+                    .HasForeignKey(e => e.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
                 
                 entity.HasIndex(e => e.ChipId).IsUnique();
             });

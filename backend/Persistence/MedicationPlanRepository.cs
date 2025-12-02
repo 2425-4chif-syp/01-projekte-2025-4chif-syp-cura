@@ -74,6 +74,20 @@ namespace Persistence
                 .ToListAsync();
         }
 
+        public async Task<List<MedicationPlan>> GetByPatientWeekdayAndDayTimeAsync(int patientId, int weekdayFlag, int dayTimeFlag, DateTime date)
+        {
+            return await _context.MedicationPlans
+                .Include(m => m.Medication)
+                .Where(m => m.PatientId == patientId &&
+                           m.IsActive == true &&
+                           (m.WeekdayFlags & weekdayFlag) == weekdayFlag &&
+                           (m.DayTimeFlags & dayTimeFlag) == dayTimeFlag &&
+                           m.ValidFrom <= date &&
+                           (m.ValidTo == null || m.ValidTo >= date))
+                .OrderBy(m => m.MedicationId)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(MedicationPlan medicationPlan)
         {
             await _context.MedicationPlans.AddAsync(medicationPlan);

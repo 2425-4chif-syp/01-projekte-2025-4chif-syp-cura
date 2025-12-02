@@ -48,6 +48,14 @@ namespace Persistence
                 .ToListAsync();
         }
 
+        public async Task<bool> HasTakenTodayAsync(int patientId, int medicationPlanId, DateTime date)
+        {
+            return await _context.MedicationIntakes
+                .AnyAsync(mi => mi.PatientId == patientId &&
+                               mi.MedicationPlanId == medicationPlanId &&
+                               mi.IntakeTime.Date == date.Date);
+        }
+
         public async Task<MedicationIntake> CreateAsync(MedicationIntake intake)
         {
             _context.MedicationIntakes.Add(intake);
