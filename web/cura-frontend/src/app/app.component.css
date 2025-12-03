@@ -276,7 +276,7 @@ main {
   flex-direction: column;
   gap: var(--space-xs);
   overflow-y: auto;
-  max-height: 240px;
+  max-height: 260px;
   padding-right: var(--space-xs);
 }
 
@@ -289,14 +289,14 @@ main {
   border-radius: var(--radius-sm);
 }
 
-/*.day-detail-content::-webkit-scrollbar-thumb {
-  background: var(--primary-pink);
+.day-detail-content::-webkit-scrollbar-thumb {
+  background: grey;
   border-radius: var(--radius-sm);
 }
 
 .day-detail-content::-webkit-scrollbar-thumb:hover {
   background: var(--primary-green);
-}*/
+}
 
 .no-medications {
   text-align: center;
