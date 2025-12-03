@@ -611,9 +611,9 @@ main {
   .time-slide { width: 100%; min-height: 150px; }
   .time-group-mobile { border-radius: 12px; padding: 16px; border-left: 4px solid; }
   .time-group-mobile.all-taken { background: linear-gradient(to bottom, rgba(176,196,177,0.15), rgba(176,196,177,0.05)); border-left-color: var(--success-green); }
-  .time-group-mobile.has-missed { background: linear-gradient(to bottom, rgba(188,71,73,0.35), rgba(188,71,73,0.15)); border-left-color: #8b0000; }
+  .time-group-mobile.has-missed { background: linear-gradient(to bottom, rgba(188,71,73,0.22), rgba(188,71,73,0.08)); border-left-color: #8b0000; }
   .time-group-header-mobile { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.1rem; color: var(--neutral-900); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(74,87,89,0.1); }
-  .time-group-header-mobile i.fa-clock { color: var(--cherry-blossom-pink); font-size: 1.2rem; }
+  .time-group-header-mobile i.fa-clock { display: none; }
   .medication-list-mobile { display: flex; flex-direction: column; gap: 8px; }
   .carousel-dots { display: flex; justify-content: center; gap: 10px; padding: 12px 0; position: absolute; bottom: 8px; left: 0; right: 0; }
   .carousel-dots .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--neutral-300); background: white; cursor: pointer; transition: all 0.3s; padding: 0; }
