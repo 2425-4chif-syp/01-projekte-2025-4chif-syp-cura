@@ -14,7 +14,7 @@ public class MedicationReminderService : BackgroundService
     {
         { 1, new TimeSpan(9, 31, 0) },   // TEST: 09:20 CET
         { 2, new TimeSpan(9, 31, 0) },   // TEST: Alle gleich für Test
-        { 4, new TimeSpan(15, 45, 0) },   // TEST: Alle gleich für Test
+        { 4, new TimeSpan(16, 05, 0) },   // TEST: Alle gleich für Test
         { 8, new TimeSpan(9, 31, 0) }    // TEST: Alle gleich für Test
     };
 
@@ -424,7 +424,8 @@ public class MedicationReminderService : BackgroundService
                             patient.Email ?? "timon.schmalzer@gmail.com",
                             patient.Name ?? "Unbekannter Patient",
                             medicationName,
-                            scheduledTime
+                            scheduledTime,
+                            now
                         );
                         
                         _logger.LogWarning(

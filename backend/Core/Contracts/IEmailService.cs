@@ -17,5 +17,6 @@ public interface IEmailService
     /// <param name="patientName">Name des Patienten</param>
     /// <param name="medicationName">Name des Medikaments</param>
     /// <param name="scheduledTime">Geplante Einnahmezeit</param>
-    Task SendMissedMedicationAlertAsync(string patientEmail, string patientName, string medicationName, TimeSpan scheduledTime);
+    /// <param name="currentTime">Aktuelle Zeit (CET)</param>
+    Task SendMissedMedicationAlertAsync(string patientEmail, string patientName, string medicationName, TimeSpan scheduledTime, DateTime currentTime);
 }

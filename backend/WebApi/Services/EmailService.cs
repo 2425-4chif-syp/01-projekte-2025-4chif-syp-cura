@@ -88,7 +88,8 @@ public class EmailService : IEmailService
         string patientEmail, 
         string patientName, 
         string medicationName, 
-        TimeSpan scheduledTime)
+        TimeSpan scheduledTime,
+        DateTime currentTime)
     {
         var subject = "⚠️ Medikamenten-Erinnerung verpasst";
         
@@ -101,7 +102,7 @@ public class EmailService : IEmailService
                     <ul>
                         <li><strong>Medikament:</strong> {medicationName}</li>
                         <li><strong>Geplante Zeit:</strong> {scheduledTime.ToString(@"hh\:mm")} Uhr</li>
-                        <li><strong>Aktuell:</strong> {DateTime.Now:HH:mm} Uhr</li>
+                        <li><strong>Aktuell:</strong> {currentTime:HH:mm} Uhr</li>
                     </ul>
                     <p style='color: #d9534f; font-weight: bold;'>Bitte nehmen Sie Ihre Medikamente umgehend ein!</p>
                     <hr style='margin-top: 30px; border: none; border-top: 1px solid #ccc;'>
