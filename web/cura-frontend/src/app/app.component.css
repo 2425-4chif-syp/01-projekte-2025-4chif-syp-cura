@@ -58,7 +58,7 @@ header h1 {
 
 main {
   display: flex;
-  flex-wrap: wrap; /* Ermöglicht Umbruch für mobile Ansicht */
+  flex-wrap: wrap;
   gap: var(--space-lg);
   padding: var(--space-lg);
   padding-bottom: var(--space-3xl);
@@ -75,11 +75,11 @@ main {
 }
 
 .desktop-medication {
-  display: block; /* Desktop: anzeigen */
+  display: block;
 }
 
 .mobile-medication {
-  display: none; /* Desktop: ausblenden */
+  display: none;
 }
 
 .left-column {
@@ -87,12 +87,12 @@ main {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-  order: 1; /* Kalender und Quote links */
+  order: 1;
 }
 
 .medication-card {
   flex: 0 0 calc(72% - var(--space-lg));
-  order: 2; /* Medikamentenplan rechts */
+  order: 2;
   background: var(--bg-card);
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-xl);
@@ -211,7 +211,6 @@ main {
   color: white;
 }
 
-/* === DAY DETAIL VIEW === */
 .day-detail-header {
   display: flex;
   justify-content: space-between;
@@ -248,105 +247,23 @@ main {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  overflow-y: auto;
-  max-height: 260px;
-  padding-right: var(--space-xs);
-}
-
+.day-detail-content { overflow-y: auto; max-height: 260px; padding-right: var(--space-xs); }
 .day-detail-content::-webkit-scrollbar { width: 6px; }
 .day-detail-content::-webkit-scrollbar-track { background: rgba(74,87,89,0.05); border-radius: var(--radius-sm); }
 .day-detail-content::-webkit-scrollbar-thumb { background: grey; border-radius: var(--radius-sm); }
 .day-detail-content::-webkit-scrollbar-thumb:hover { background: var(--primary-green); }
+.no-medications { text-align: center; color: var(--text-secondary); font-style: italic; padding: var(--space-xl); }
 
-.no-medications {
-  text-align: center;
-  color: var(--text-secondary);
-  font-style: italic;
-  padding: var(--space-xl);
-}
-
-/* Time Group Container */
-.time-group {
-  background: white;
-  border-radius: var(--radius-md);
-  padding: var(--space-sm);
-  margin-bottom: var(--space-sm);
-  border-left: 4px solid var(--text-muted);
-}
-
-.time-group.all-taken {
-  border-left-color: var(--success);
-  background: linear-gradient(135deg, 
-    rgba(176, 196, 177, 0.15) 0%, 
-    rgba(255, 255, 255, 1) 100%);
-}
-
-.time-group.has-missed {
-  border-left-color: var(--error);
-  background: linear-gradient(135deg, 
-    rgba(188, 71, 73, 0.15) 0%, 
-    rgba(255, 255, 255, 1) 100%);
-}
-
-.time-group-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  color: var(--text-primary);
-  font-weight: var(--weight-semibold);
-  font-size: var(--text-sm);
-  padding: var(--space-sm);
-  border-bottom: 1px solid rgba(74, 87, 89, 0.1);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  user-select: none;
-}
-
-.time-group-header:hover {
-  background: rgba(74, 87, 89, 0.05);
-}
-
-.time-group-header i.fa-clock {
-  color: var(--primary-pink);
-  font-size: var(--text-sm);
-}
-
-.time-group-header span {
-  flex: 1;
-}
-
-.time-group-header .toggle-icon {
-  color: var(--text-secondary);
-  font-size: var(--text-xs);
-  transition: transform var(--transition-fast);
-}
-
-.time-group.expanded .time-group-header .toggle-icon {
-  transform: rotate(180deg);
-}
-
-.medication-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  padding: var(--space-sm);
-  padding-top: var(--space-xs);
-}
-
-.medication-name {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xs);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  transition: all var(--transition-fast);
-}
-
-.medication-name:hover {
-  background: rgba(74, 87, 89, 0.05);
-}
+.time-group { background: white; border-radius: var(--radius-md); padding: var(--space-sm); margin-bottom: var(--space-sm); border-left: 4px solid var(--text-muted); }
+.time-group.all-taken { border-left-color: var(--success); background: linear-gradient(135deg, rgba(176,196,177,0.15) 0%, rgba(255,255,255,1) 100%); }
+.time-group.has-missed { border-left-color: var(--error); background: linear-gradient(135deg, rgba(188,71,73,0.15) 0%, rgba(255,255,255,1) 100%); }
+.time-group-header { display: flex; align-items: center; gap: var(--space-sm); color: var(--text-primary); font-weight: var(--weight-semibold); font-size: var(--text-sm); padding: var(--space-sm); border-bottom: 1px solid rgba(74,87,89,0.1); cursor: pointer; user-select: none; }
+.time-group-header i.fa-clock { color: var(--primary-pink); font-size: var(--text-sm); }
+.time-group-header span { flex: 1; }
+.time-group-header .toggle-icon { color: var(--text-secondary); font-size: var(--text-xs); }
+.time-group.expanded .time-group-header .toggle-icon { transform: rotate(180deg); }
+.medication-list { display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-sm) var(--space-sm) var(--space-xs); }
+.medication-name { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs); border-radius: var(--radius-sm); font-size: var(--text-sm); font-weight: var(--weight-medium); }
 
 .medication-name i {
   font-size: var(--text-xs);
@@ -536,9 +453,7 @@ main {
   background: var(--bg-hover);
 }
 
-/* Mobile Responsive Design */
 @media (max-width: 768px) {
-  /* Mobile Header Styling */
   header {
     padding: var(--space-xs) var(--space-md);
     margin-bottom: var(--space-sm);
@@ -576,12 +491,10 @@ main {
     font-size: var(--text-base);
   }
 
-  /* Desktop Medication Plan ausblenden */
   .desktop-medication {
     display: none;
   }
 
-  /* Mobile Medication Plan anzeigen */
   .mobile-medication {
     display: block;
   }
@@ -597,7 +510,7 @@ main {
     max-width: 600px;
     display: flex;
     flex-direction: column;
-    order: 2; /* Left column (Kalender + Quote) nach dem Medikamentenplan */
+    order: 2;
   }
 
   .mobile-medication {
@@ -615,7 +528,6 @@ main {
     max-width: 600px;
   }
 
-  /* Reihenfolge für Mobile: 1. Medikamentenplan, 2. Kalender, 3. Einnahmequote */
   .calendar-card {
     order: 2;
   }
@@ -624,7 +536,6 @@ main {
     order: 3;
   }
 
-  /* Adjust calendar grid for mobile */
   .calendar-grid {
     font-size: var(--text-xs);
   }
@@ -635,12 +546,10 @@ main {
     font-size: 0.75rem;
   }
 
-  /* Mobile: Reduziere Höhe der Day Detail Content */
   .day-detail-content {
     max-height: 200px;
   }
 
-  /* Adjust medication table for mobile */
   .mobile-medication .medication-table {
     font-size: var(--text-xs);
     flex: none;
@@ -651,7 +560,6 @@ main {
     padding: var(--space-xs) var(--space-sm);
   }
 
-  /* Stack action buttons on mobile */
   .action-buttons {
     flex-direction: column;
     gap: var(--space-sm);
@@ -661,7 +569,6 @@ main {
     width: 100%;
   }
 
-  /* Adjust progress bar for mobile */
   .progress-container {
     margin-top: var(--space-md);
   }
@@ -676,7 +583,6 @@ main {
     font-size: var(--text-xs);
   }
 
-  /* Abstand zum Ende der Seite */
   main {
     padding-bottom: var(--space-3xl);
   }
@@ -686,7 +592,6 @@ main {
   }
 }
 
-/* Desktop: Mobile Medication Plan ausblenden */
 @media (min-width: 769px) {
   .mobile-medication {
     display: none;
@@ -696,18 +601,15 @@ main {
     display: block;
   }
   
-  /* Desktop time groups visible */
   .desktop-time-groups {
     display: block;
   }
   
-  /* Mobile carousel hidden on desktop */
   .mobile-time-carousel {
     display: none;
   }
 }
 
-/* Mobile Carousel */
 @media (max-width: 768px) {
   .desktop-time-groups { display: none; }
   .mobile-time-carousel { display: block; width: 100%; touch-action: pan-y; user-select: none; }
