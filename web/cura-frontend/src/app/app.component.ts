@@ -191,10 +191,13 @@ export class AppComponent implements OnInit {
       if (!medicationsByTime.has(med.timeLabel)) {
         medicationsByTime.set(med.timeLabel, []);
       }
-      medicationsByTime.get(med.timeLabel)!.push({
-        name: med.medication,
-        status: med.status
-      });
+      // Filter out 'unknown' status
+      if (med.status !== 'unknown') {
+        medicationsByTime.get(med.timeLabel)!.push({
+          name: med.medication,
+          status: med.status
+        });
+      }
     }
     
     // Erstelle sortiertes Array
