@@ -431,8 +431,9 @@ public class MedicationReminderService : BackgroundService
                             "Alert-E-Mail gesendet: Patient {PatientName} hat {MedicationName} um {Time} verpasst",
                             patient.Name, medicationName, scheduledTime);
                         
-                        // Entferne aus Tracking (nur einmal Alert senden)
+                        // Entferne aus beiden Trackings (nur einmal Alert senden)
                         _missedMedicationAlerts.Remove(reminderKey);
+                        _sentReminders.Remove(reminderKey);
                     }
                     catch (Exception ex)
                     {
