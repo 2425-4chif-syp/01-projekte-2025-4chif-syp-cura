@@ -285,6 +285,90 @@ main {
   padding: var(--space-xl);
 }
 
+/* Time Group Container */
+.time-group {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  border-left: 4px solid var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.time-group.all-taken {
+  border-left-color: var(--success);
+  background: linear-gradient(135deg, 
+    rgba(176, 196, 177, 0.15) 0%, 
+    rgba(255, 255, 255, 1) 100%);
+}
+
+.time-group.has-missed {
+  border-left-color: var(--error);
+  background: linear-gradient(135deg, 
+    rgba(188, 71, 73, 0.15) 0%, 
+    rgba(255, 255, 255, 1) 100%);
+}
+
+.time-group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid rgba(74, 87, 89, 0.1);
+  margin-bottom: var(--space-xs);
+}
+
+.time-group-header i {
+  color: var(--primary-pink);
+  font-size: var(--text-sm);
+}
+
+.medication-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.medication-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: all var(--transition-fast);
+}
+
+.medication-name:hover {
+  background: rgba(74, 87, 89, 0.05);
+}
+
+.medication-name i {
+  font-size: var(--text-xs);
+  flex-shrink: 0;
+}
+
+.medication-name.taken {
+  color: var(--success);
+}
+
+.medication-name.taken i {
+  color: var(--success);
+}
+
+.medication-name.missed {
+  color: var(--error);
+}
+
+.medication-name.missed i {
+  color: var(--error);
+}
+
+/* Old styles - kann gelöscht werden */
 .medication-item {
   background: white;
   border-radius: var(--radius-sm);

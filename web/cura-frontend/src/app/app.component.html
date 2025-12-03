@@ -58,17 +58,22 @@
             </div>
             
             <div class="day-detail-content">
-              @if (selectedDayMedications.length === 0) {
+              @if (groupedMedications.length === 0) {
                 <p class="no-medications">Keine Medikamente für diesen Tag geplant</p>
               } @else {
-                @for (med of selectedDayMedications; track $index) {
-                  <div class="medication-item" [class.taken]="med.status === 'taken'" [class.missed]="med.status === 'missed'">
-                    <div class="medication-time">
+                @for (timeGroup of groupedMedications; track timeGroup.timeLabel) {
+                  <div class="time-group" [class.all-taken]="timeGroup.allTaken" [class.has-missed]="!timeGroup.allTaken">
+                    <div class="time-group-header">
                       <i class="fa-solid fa-clock"></i>
-                      <span>{{ med.timeLabel }}</span>
+                      <span>{{ timeGroup.timeLabel }}</span>
                     </div>
-                    <div class="medication-name">
-                      <span>{{ med.medication }}</span>
+                    <div class="medication-list">
+                      @for (med of timeGroup.medications; track $index) {
+                        <div class="medication-name" [class.taken]="med.status === 'taken'" [class.missed]="med.status === 'missed'">
+                          <i class="fa-solid" [class.fa-check]="med.status === 'taken'" [class.fa-xmark]="med.status === 'missed'"></i>
+                          <span>{{ med.name }}</span>
+                        </div>
+                      }
                     </div>
                   </div>
                 }

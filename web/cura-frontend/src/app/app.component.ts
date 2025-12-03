@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   showDayDetail = false;
   selectedDay: CalendarDay | null = null;
   selectedDayMedications: { timeLabel: string; medication: string; status: 'taken' | 'missed' | 'unknown' }[] = [];
+  groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
 
   constructor(
     private keycloak: KeycloakService,
@@ -168,13 +169,46 @@ export class AppComponent implements OnInit {
           medication: intake.medicationName,
           status: intake.isTaken ? 'taken' : 'missed'
         }));
+        
+        // Gruppiere Medikamente nach Tageszeit
+        this.groupMedicationsByTime();
       },
       error: (err) => {
         console.error('Error loading day medications:', err);
         // Fallback: Zeige leere Liste
         this.selectedDayMedications = [];
+        this.groupedMedications = [];
       }
     });
+  }
+
+  groupMedicationsByTime() {
+    const timeOrder = ['Morgen', 'Mittag', 'Nachmittag', 'Abend'];
+    const medicationsByTime = new Map<string, { name: string; status: 'taken' | 'missed' }[]>();
+    
+    // Gruppiere nach Tageszeit
+    for (const med of this.selectedDayMedications) {
+      if (!medicationsByTime.has(med.timeLabel)) {
+        medicationsByTime.set(med.timeLabel, []);
+      }
+      medicationsByTime.get(med.timeLabel)!.push({
+        name: med.medication,
+        status: med.status
+      });
+    }
+    
+    // Erstelle sortiertes Array
+    this.groupedMedications = timeOrder
+      .filter(time => medicationsByTime.has(time))
+      .map(time => {
+        const medications = medicationsByTime.get(time)!;
+        const allTaken = medications.every(m => m.status === 'taken');
+        return {
+          timeLabel: time,
+          medications: medications,
+          allTaken: allTaken
+        };
+      });
   }
 
   getFormattedDate(date: string): string {
