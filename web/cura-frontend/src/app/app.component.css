@@ -718,6 +718,11 @@ main {
     font-size: 0.75rem;
   }
 
+  /* Mobile: Reduziere Höhe der Day Detail Content */
+  .day-detail-content {
+    max-height: 200px;
+  }
+
   /* Adjust medication table for mobile */
   .mobile-medication .medication-table {
     font-size: var(--text-xs);
