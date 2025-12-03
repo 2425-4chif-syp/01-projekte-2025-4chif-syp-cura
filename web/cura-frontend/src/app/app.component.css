@@ -276,7 +276,7 @@ main {
   flex-direction: column;
   gap: var(--space-xs);
   overflow-y: auto;
-  max-height: 400px;
+  max-height: 220px;
   padding-right: var(--space-xs);
 }
 
