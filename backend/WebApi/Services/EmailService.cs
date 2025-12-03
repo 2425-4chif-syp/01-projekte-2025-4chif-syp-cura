@@ -92,6 +92,10 @@ public class EmailService : IEmailService
     {
         var subject = "⚠️ Medikamenten-Erinnerung verpasst";
         
+        // Verwende Central European Time für aktuelle Zeit
+        var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var currentTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+        
         var body = $@"
             <html>
                 <body style='font-family: Arial, sans-serif;'>
@@ -100,8 +104,8 @@ public class EmailService : IEmailService
                     <p>Sie haben Ihre Medikamente heute nicht zur geplanten Zeit eingenommen:</p>
                     <ul>
                         <li><strong>Medikament:</strong> {medicationName}</li>
-                        <li><strong>Geplante Zeit:</strong> {scheduledTime.ToString(@"hh\:mm")} Uhr</li>
-                        <li><strong>Aktuell:</strong> {DateTime.Now:HH:mm} Uhr</li>
+                        <li><strong>Geplante Zeit:</strong> {scheduledTime.ToString(@"HH\:mm")} Uhr</li>
+                        <li><strong>Aktuell:</strong> {currentTime:HH:mm} Uhr</li>
                     </ul>
                     <p style='color: #d9534f; font-weight: bold;'>Bitte nehmen Sie Ihre Medikamente umgehend ein!</p>
                     <hr style='margin-top: 30px; border: none; border-top: 1px solid #ccc;'>
