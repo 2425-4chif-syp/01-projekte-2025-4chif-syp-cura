@@ -160,32 +160,21 @@ export class AppComponent implements OnInit {
   }
 
   loadDayMedications(date: string) {
-    const dayOfWeek = new Date(date).getDay();
-    const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-    
-    this.selectedDayMedications = [];
-    
-    for (const row of this.medicationRows) {
-      const medication = row.days[dayIndex];
-      
-      if (medication) {
-        let status: 'taken' | 'missed' | 'unknown' = 'unknown';
-        
-        if (this.selectedDay?.checked) {
-          status = 'taken';
-        } else if (this.selectedDay?.partial) {
-          status = Math.random() > 0.5 ? 'taken' : 'missed';
-        } else if (this.selectedDay?.missed) {
-          status = 'missed';
-        }
-        
-        this.selectedDayMedications.push({
-          timeLabel: row.timeLabel,
-          medication: medication,
-          status: status
-        });
+    // Lade echte Einnahme-Daten vom Backend
+    this.medicationPlanService.getMedicationIntakesForDate(1, date).subscribe({
+      next: (intakes) => {
+        this.selectedDayMedications = intakes.map(intake => ({
+          timeLabel: intake.timeLabel,
+          medication: intake.medicationName,
+          status: intake.isTaken ? 'taken' : 'missed'
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading day medications:', err);
+        // Fallback: Zeige leere Liste
+        this.selectedDayMedications = [];
       }
-    }
+    });
   }
 
   getFormattedDate(date: string): string {
