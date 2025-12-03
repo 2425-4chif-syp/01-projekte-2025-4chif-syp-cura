@@ -616,7 +616,7 @@ main {
   .time-group-header-mobile i.fa-clock { display: none; }
   .medication-list-mobile { display: flex; flex-direction: column; gap: 8px; }
   .day-detail-content { position: relative; padding-bottom: 50px; }
-  .carousel-dots { display: flex; justify-content: center; gap: 10px; padding: 12px 0; position: absolute; bottom: 8px; left: 0; right: 0; z-index: 10; }
+  .carousel-dots { display: flex !important; justify-content: center; gap: 10px; padding: 12px 0; position: absolute; bottom: 8px; left: 0; right: 0; z-index: 10; }
   .carousel-dots .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--neutral-300); background: white; cursor: pointer; transition: all 0.3s; padding: 0; }
   .carousel-dots .dot.active { background: var(--cherry-blossom-pink); border-color: var(--cherry-blossom-pink); width: 14px; height: 14px; }
   .carousel-dots .dot.has-missed { background: #bc4749; border-color: #bc4749; }
