@@ -1,24 +1,10 @@
-/* === ANIMATIONEN === */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 header {
   padding: var(--space-sm) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: -20px;
-  animation: fadeInUp 0.6s ease-out;
-
-  /*border-bottom: 3px double var(--primary-green);*/
+}
 }
 
 header h1 {
@@ -61,7 +47,6 @@ header h1 {
   cursor: pointer;
   padding: var(--space-sm);
   border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
   margin-left: var(--space-sm);
   font-size: var(--text-lg);
 }
@@ -69,7 +54,6 @@ header h1 {
 .btn-logout:hover {
   background: var(--bg-hover);
   color: var(--primary-green);
-  transform: scale(1.1);
 }
 
 main {
@@ -119,16 +103,12 @@ main {
 }
 
 .calendar-card {
-  background: linear-gradient(135deg, 
-    rgba(237, 175, 184, 0.4) 0%, 
-    rgba(247, 225, 215, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(237,175,184,0.4) 0%, rgba(247,225,215,0.6) 100%);
   border: 2px solid var(--primary-pink);
   border-radius: var(--radius-xl);
   padding: 0;
   overflow: visible;
-  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: fadeInUp 0.6s ease-out 0.2s backwards;
+  box-shadow: 0 4px 12px rgba(74,87,89,0.08);
   perspective: 1000px;
   position: relative;
 }
@@ -209,13 +189,6 @@ main {
   font-size: var(--text-xs);
   color: var(--text-primary);
   cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.day:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 10;
 }
 
 .day.checked {
@@ -280,23 +253,10 @@ main {
   padding-right: var(--space-xs);
 }
 
-.day-detail-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.day-detail-content::-webkit-scrollbar-track {
-  background: rgba(74, 87, 89, 0.05);
-  border-radius: var(--radius-sm);
-}
-
-.day-detail-content::-webkit-scrollbar-thumb {
-  background: grey;
-  border-radius: var(--radius-sm);
-}
-
-.day-detail-content::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-green);
-}
+.day-detail-content::-webkit-scrollbar { width: 6px; }
+.day-detail-content::-webkit-scrollbar-track { background: rgba(74,87,89,0.05); border-radius: var(--radius-sm); }
+.day-detail-content::-webkit-scrollbar-thumb { background: grey; border-radius: var(--radius-sm); }
+.day-detail-content::-webkit-scrollbar-thumb:hover { background: var(--primary-green); }
 
 .no-medications {
   text-align: center;
@@ -312,7 +272,6 @@ main {
   padding: var(--space-sm);
   margin-bottom: var(--space-sm);
   border-left: 4px solid var(--text-muted);
-  transition: all var(--transition-fast);
 }
 
 .time-group.all-taken {
@@ -411,20 +370,11 @@ main {
 }
 
 .income-quote {
-  background: linear-gradient(135deg, 
-    rgba(176, 196, 177, 0.3) 0%, 
-    rgba(237, 175, 184, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(176,196,177,0.3) 0%, rgba(237,175,184,0.3) 100%);
   border: 2px solid var(--primary-green);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
-  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: fadeInUp 0.6s ease-out 0.3s backwards;
-}
-
-.income-quote:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(74, 87, 89, 0.12);
+  box-shadow: 0 4px 12px rgba(74,87,89,0.08);
 }
 
 .income-quote h3 {
@@ -460,10 +410,7 @@ main {
   background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
-.status-dot.partial {
-  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
-}
-
+.status-dot.partial,
 .status-dot.missed {
   background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
@@ -478,50 +425,30 @@ main {
 
 .progress-segment {
   height: 100%;
-  transition: width var(--transition-base);
-  animation: fillProgress 1s ease-out;
-}
-
-@keyframes fillProgress {
-  from {
-    width: 0;
-  }
 }
 
 .progress-segment.checked {
   background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
-.progress-segment.partial {
-  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
-}
-
+.progress-segment.partial,
 .progress-segment.missed {
   background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .medication-card {
   flex: 0 0 calc(72% - var(--space-lg));
-  order: 2; /* Medikamentenplan rechts */
-  background: linear-gradient(135deg, 
-    rgba(176, 196, 177, 0.4) 0%, 
-    rgba(222, 219, 210, 0.5) 100%);
+  order: 2;
+  background: linear-gradient(135deg, rgba(176,196,177,0.4) 0%, rgba(222,219,210,0.5) 100%);
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  height: fit-content; /* Höhe passt sich dem Inhalt an */
-  max-height: calc(100vh - 150px); /* Maximale Höhe für Scrolling */
-  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: fadeInUp 0.6s ease-out 0.1s backwards;
-}
-
-.medication-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(74, 87, 89, 0.12);
+  height: fit-content;
+  max-height: calc(100vh - 150px);
+  box-shadow: 0 4px 12px rgba(74,87,89,0.08);
 }
 
 .medication-card h2 {
@@ -536,7 +463,6 @@ main {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: var(--space-lg);
-  flex: none; /* Keine Dehnung mehr */
 }
 
 .medication-table th {
@@ -582,13 +508,11 @@ main {
 
 .btn-primary, .btn-secondary {
   padding: var(--space-sm) var(--space-lg);
-  border: none;
   border-radius: var(--radius-sm);
   font-family: var(--font-heading);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
 }
 
 .btn-primary {
@@ -600,13 +524,6 @@ main {
 .btn-primary:hover {
   background: var(--primary-green);
   border-color: var(--primary-green);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(176, 196, 177, 0.3);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
@@ -617,12 +534,6 @@ main {
 
 .btn-secondary:hover {
   background: var(--bg-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(176, 196, 177, 0.2);
-}
-
-.btn-secondary:active {
-  transform: translateY(0);
 }
 
 /* Mobile Responsive Design */
@@ -692,32 +603,16 @@ main {
   .mobile-medication {
     width: 100%;
     max-width: 600px;
-    order: 1; /* Medikamentenplan ganz oben */
+    order: 1;
     height: auto;
     overflow-y: visible;
     flex: none;
-    animation: fadeInUp 0.6s ease-out 0.1s backwards;
   }
 
   .calendar-card,
-  .income-quote,
-  .mobile-medication {
+  .income-quote {
     width: 100%;
     max-width: 600px;
-  }
-
-  /* Komponenten-Hover-Effekte deaktivieren auf Mobile */
-  .calendar-card:hover,
-  .income-quote:hover,
-  .mobile-medication:hover {
-    transform: none;
-    box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  }
-
-  /* Kalender-Tage Hover deaktivieren auf Mobile */
-  .day:hover {
-    transform: none;
-    box-shadow: none;
   }
 
   /* Reihenfolge für Mobile: 1. Medikamentenplan, 2. Kalender, 3. Einnahmequote */
@@ -743,16 +638,6 @@ main {
   /* Mobile: Reduziere Höhe der Day Detail Content */
   .day-detail-content {
     max-height: 200px;
-  }
-  
-  /* Desktop time groups visible on desktop */
-  .desktop-time-groups {
-    display: block;
-  }
-  
-  /* Mobile carousel hidden on desktop */
-  .mobile-time-carousel {
-    display: none;
   }
 
   /* Adjust medication table for mobile */
@@ -822,107 +707,22 @@ main {
   }
 }
 
-/* Mobile Carousel Styles */
+/* Mobile Carousel */
 @media (max-width: 768px) {
-  /* Hide desktop accordion on mobile */
-  .desktop-time-groups {
-    display: none;
-  }
-  
-  /* Show mobile carousel */
-  .mobile-time-carousel {
-    display: block;
-    width: 100%;
-    touch-action: pan-y;
-    user-select: none;
-  }
-  
-  .time-slide {
-    width: 100%;
-    min-height: 150px;
-  }
-  
-  .time-group-mobile {
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-left: 4px solid;
-    transition: all 0.3s ease;
-  }
-  
-  .time-group-mobile.all-taken {
-    background: linear-gradient(to bottom, rgba(176, 196, 177, 0.15), rgba(176, 196, 177, 0.05));
-    border-left-color: var(--success-green);
-  }
-  
-  .time-group-mobile.has-missed {
-    background: linear-gradient(to bottom, rgba(237, 175, 184, 0.15), rgba(237, 175, 184, 0.05));
-    border-left-color: var(--error-red);
-  }
-  
-  .time-group-header-mobile {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--neutral-900);
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(74, 87, 89, 0.1);
-  }
-  
-  .time-group-header-mobile i.fa-clock {
-    color: var(--cherry-blossom-pink);
-    font-size: 1.2rem;
-  }
-  
-  .medication-list-mobile {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  /* Carousel Dots Navigation */
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 16px 0 8px 0;
-  }
-  
-  .carousel-dots .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid var(--neutral-300);
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0;
-  }
-  
-  .carousel-dots .dot.active {
-    background: var(--cherry-blossom-pink);
-    border-color: var(--cherry-blossom-pink);
-    width: 12px;
-    height: 12px;
-  }
-  
-  .carousel-dots .dot.has-missed {
-    border-color: var(--error-red);
-  }
-  
-  .carousel-dots .dot.has-missed.active {
-    background: var(--error-red);
-    border-color: var(--error-red);
-  }
-  
-  .carousel-dots .dot:hover {
-    transform: scale(1.1);
-  }
-  
-  .carousel-dots .dot:active {
-    transform: scale(0.95);
-  }
+  .desktop-time-groups { display: none; }
+  .mobile-time-carousel { display: block; width: 100%; touch-action: pan-y; user-select: none; }
+  .time-slide { width: 100%; min-height: 150px; }
+  .time-group-mobile { border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid; }
+  .time-group-mobile.all-taken { background: linear-gradient(to bottom, rgba(176,196,177,0.15), rgba(176,196,177,0.05)); border-left-color: var(--success-green); }
+  .time-group-mobile.has-missed { background: linear-gradient(to bottom, rgba(237,175,184,0.15), rgba(237,175,184,0.05)); border-left-color: var(--error-red); }
+  .time-group-header-mobile { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.1rem; color: var(--neutral-900); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(74,87,89,0.1); }
+  .time-group-header-mobile i.fa-clock { color: var(--cherry-blossom-pink); font-size: 1.2rem; }
+  .medication-list-mobile { display: flex; flex-direction: column; gap: 8px; }
+  .carousel-dots { display: flex; justify-content: center; gap: 10px; padding: 16px 0 8px; }
+  .carousel-dots .dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--neutral-300); background: white; cursor: pointer; transition: all 0.3s; padding: 0; }
+  .carousel-dots .dot.active { background: var(--cherry-blossom-pink); border-color: var(--cherry-blossom-pink); width: 12px; height: 12px; }
+  .carousel-dots .dot.has-missed { border-color: var(--error-red); }
+  .carousel-dots .dot.has-missed.active { background: var(--error-red); border-color: var(--error-red); }
+  .carousel-dots .dot:hover { transform: scale(1.1); }
+  .carousel-dots .dot:active { transform: scale(0.95); }
 }
