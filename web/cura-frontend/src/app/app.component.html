@@ -111,23 +111,23 @@
                           }
                         </div>
                       </div>
-                      
-                      <!-- Carousel Dots Navigation (innerhalb Mobile) -->
-                      @if (groupedMedications.length > 1) {
-                        <div class="carousel-dots">
-                          @for (group of groupedMedications; track $index) {
-                            <button class="dot" 
-                                    [class.active]="$index === currentTimeIndex"
-                                    [class.has-missed]="!group.allTaken"
-                                    (click)="goToTimeGroup($index)"
-                                    [attr.aria-label]="'Zu ' + group.timeLabel + ' wechseln'">
-                            </button>
-                          }
-                        </div>
-                      }
                     </div>
                   }
                 </div>
+                
+                <!-- Carousel Dots Navigation (at bottom of calendar) -->
+                @if (groupedMedications.length > 1) {
+                  <div class="carousel-dots">
+                    @for (group of groupedMedications; track $index) {
+                      <button class="dot" 
+                              [class.active]="$index === currentTimeIndex"
+                              [class.has-missed]="!group.allTaken"
+                              (click)="goToTimeGroup($index)"
+                              [attr.aria-label]="'Zu ' + group.timeLabel + ' wechseln'">
+                      </button>
+                    }
+                  </div>
+                }
               }
             </div>
           </div>
