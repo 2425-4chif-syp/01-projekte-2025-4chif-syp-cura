@@ -275,7 +275,27 @@ main {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  overflow: visible;
+  overflow-y: auto;
+  max-height: 400px;
+  padding-right: var(--space-xs);
+}
+
+.day-detail-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.day-detail-content::-webkit-scrollbar-track {
+  background: rgba(74, 87, 89, 0.05);
+  border-radius: var(--radius-sm);
+}
+
+.day-detail-content::-webkit-scrollbar-thumb {
+  background: var(--primary-pink);
+  border-radius: var(--radius-sm);
+}
+
+.day-detail-content::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green);
 }
 
 .no-medications {
