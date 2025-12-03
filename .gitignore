@@ -89,8 +89,5 @@ dist/
 docs/slides/revealjs
 .idea/
 
-# ESPHome
-esphome/.esphome/
-esphome/.pioenvs/
-esphome/.pio/
-esphome/secrets.yaml
+# ESPHome - kompletter Ordner
+esphome/
