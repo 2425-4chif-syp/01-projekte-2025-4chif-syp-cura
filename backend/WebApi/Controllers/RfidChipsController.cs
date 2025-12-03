@@ -154,7 +154,7 @@ namespace WebApi.Controllers
             
             if (chip.Weekday.ToUpper() != todayString)
             {
-                return Ok(new { 
+                return BadRequest(new { 
                     Success = false,
                     Error = "WRONG_WEEKDAY",
                     Message = $"This chip is for {chip.Weekday}, but today is {todayString}",

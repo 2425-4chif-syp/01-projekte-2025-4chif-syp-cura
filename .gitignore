@@ -88,3 +88,6 @@ Temporary Items
 dist/
 docs/slides/revealjs
 .idea/
+
+# ESPHome - kompletter Ordner
+esphome/

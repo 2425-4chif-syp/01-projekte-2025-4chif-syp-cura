@@ -33,6 +33,13 @@ export class AppComponent implements OnInit {
   showDayDetail = false;
   selectedDay: CalendarDay | null = null;
   selectedDayMedications: { timeLabel: string; medication: string; status: 'taken' | 'missed' | 'unknown' }[] = [];
+  groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
+  expandedTimeGroups = new Set<string>();
+  
+  // Mobile Carousel
+  currentTimeIndex = 0;
+  touchStartX = 0;
+  touchEndX = 0;
 
   constructor(
     private keycloak: KeycloakService,
@@ -160,30 +167,128 @@ export class AppComponent implements OnInit {
   }
 
   loadDayMedications(date: string) {
-    const dayOfWeek = new Date(date).getDay();
-    const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-    
-    this.selectedDayMedications = [];
-    
-    for (const row of this.medicationRows) {
-      const medication = row.days[dayIndex];
-      
-      if (medication) {
-        let status: 'taken' | 'missed' | 'unknown' = 'unknown';
+    // Lade echte Einnahme-Daten vom Backend
+    this.medicationPlanService.getMedicationIntakesForDate(1, date).subscribe({
+      next: (intakes) => {
+        this.selectedDayMedications = intakes.map(intake => ({
+          timeLabel: intake.timeLabel,
+          medication: intake.medicationName,
+          status: intake.isTaken ? 'taken' : 'missed'
+        }));
         
-        if (this.selectedDay?.checked) {
-          status = 'taken';
-        } else if (this.selectedDay?.partial) {
-          status = Math.random() > 0.5 ? 'taken' : 'missed';
-        } else if (this.selectedDay?.missed) {
-          status = 'missed';
+        // Gruppiere Medikamente nach Tageszeit
+        this.groupMedicationsByTime();
+      },
+      error: (err) => {
+        console.error('Error loading day medications:', err);
+        // Fallback: Zeige leere Liste
+        this.selectedDayMedications = [];
+        this.groupedMedications = [];
+      }
+    });
+  }
+
+  groupMedicationsByTime() {
+    const timeOrder = ['Morgen', 'Mittag', 'Nachmittag', 'Abend'];
+    const medicationsByTime = new Map<string, { name: string; status: 'taken' | 'missed' }[]>();
+    
+    // Reset expanded groups
+    this.expandedTimeGroups.clear();
+    
+    // Gruppiere nach Tageszeit
+    for (const med of this.selectedDayMedications) {
+      if (!medicationsByTime.has(med.timeLabel)) {
+        medicationsByTime.set(med.timeLabel, []);
+      }
+      // Filter out 'unknown' status
+      if (med.status !== 'unknown') {
+        medicationsByTime.get(med.timeLabel)!.push({
+          name: med.medication,
+          status: med.status
+        });
+      }
+    }
+    
+    // Erstelle sortiertes Array
+    this.groupedMedications = timeOrder
+      .filter(time => medicationsByTime.has(time))
+      .map(time => {
+        const medications = medicationsByTime.get(time)!;
+        const allTaken = medications.every(m => m.status === 'taken');
+        
+        // Auto-expand wenn nicht alle genommen wurden
+        if (!allTaken) {
+          this.expandedTimeGroups.add(time);
         }
         
-        this.selectedDayMedications.push({
-          timeLabel: row.timeLabel,
-          medication: medication,
-          status: status
-        });
+        return {
+          timeLabel: time,
+          medications: medications,
+          allTaken: allTaken
+        };
+      });
+    
+    // Sort: missed groups first
+    this.groupedMedications.sort((a, b) => {
+      if (!a.allTaken && b.allTaken) return -1;
+      if (a.allTaken && !b.allTaken) return 1;
+      return 0;
+    });
+    
+    // Auto-start carousel at first missed medication group
+    const firstMissedIndex = this.groupedMedications.findIndex(g => !g.allTaken);
+    this.currentTimeIndex = firstMissedIndex >= 0 ? firstMissedIndex : 0;
+  }
+
+  toggleTimeGroup(timeLabel: string) {
+    if (this.expandedTimeGroups.has(timeLabel)) {
+      this.expandedTimeGroups.delete(timeLabel);
+    } else {
+      this.expandedTimeGroups.add(timeLabel);
+    }
+  }
+
+  isTimeGroupExpanded(timeLabel: string): boolean {
+    return this.expandedTimeGroups.has(timeLabel);
+  }
+  
+  // Mobile Carousel Methods
+  nextTimeGroup() {
+    if (this.currentTimeIndex < this.groupedMedications.length - 1) {
+      this.currentTimeIndex++;
+    }
+  }
+  
+  prevTimeGroup() {
+    if (this.currentTimeIndex > 0) {
+      this.currentTimeIndex--;
+    }
+  }
+  
+  goToTimeGroup(index: number) {
+    this.currentTimeIndex = index;
+  }
+  
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.touches[0].screenX;
+  }
+  
+  onTouchEnd(event: TouchEvent) {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.handleSwipe();
+  }
+  
+  handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = this.touchStartX - this.touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // Swipe left -> next
+        this.nextTimeGroup();
+      } else {
+        // Swipe right -> prev
+        this.prevTimeGroup();
       }
     }
   }

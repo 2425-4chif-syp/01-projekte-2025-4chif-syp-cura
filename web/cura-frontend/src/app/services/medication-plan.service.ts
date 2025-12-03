@@ -31,6 +31,12 @@ export class MedicationPlanService {
     );
   }
 
+  getMedicationIntakesForDate(patientId: number, date: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.API_URL}/MedicationIntakes/patient/${patientId}/date/${date}`
+    );
+  }
+
   buildMedicationTable(plans: MedicationPlan[], medicationNames: Map<number, string>): { timeLabel: string; days: string[] }[] {
     const timeLabels = [
       { flag: 1, label: 'Morgen' },

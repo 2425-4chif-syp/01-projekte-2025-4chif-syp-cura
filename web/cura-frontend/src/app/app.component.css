@@ -1,24 +1,9 @@
-/* === ANIMATIONEN === */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 header {
   padding: var(--space-sm) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: -20px;
-  animation: fadeInUp 0.6s ease-out;
-
-  /*border-bottom: 3px double var(--primary-green);*/
 }
 
 header h1 {
@@ -61,7 +46,6 @@ header h1 {
   cursor: pointer;
   padding: var(--space-sm);
   border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
   margin-left: var(--space-sm);
   font-size: var(--text-lg);
 }
@@ -69,12 +53,11 @@ header h1 {
 .btn-logout:hover {
   background: var(--bg-hover);
   color: var(--primary-green);
-  transform: scale(1.1);
 }
 
 main {
   display: flex;
-  flex-wrap: wrap; /* Ermöglicht Umbruch für mobile Ansicht */
+  flex-wrap: wrap;
   gap: var(--space-lg);
   padding: var(--space-lg);
   padding-bottom: var(--space-3xl);
@@ -91,11 +74,11 @@ main {
 }
 
 .desktop-medication {
-  display: block; /* Desktop: anzeigen */
+  display: block;
 }
 
 .mobile-medication {
-  display: none; /* Desktop: ausblenden */
+  display: none;
 }
 
 .left-column {
@@ -103,12 +86,12 @@ main {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-  order: 1; /* Kalender und Quote links */
+  order: 1;
 }
 
 .medication-card {
   flex: 0 0 calc(72% - var(--space-lg));
-  order: 2; /* Medikamentenplan rechts */
+  order: 2;
   background: var(--bg-card);
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-xl);
@@ -119,16 +102,12 @@ main {
 }
 
 .calendar-card {
-  background: linear-gradient(135deg, 
-    rgba(237, 175, 184, 0.4) 0%, 
-    rgba(247, 225, 215, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(237,175,184,0.4) 0%, rgba(247,225,215,0.6) 100%);
   border: 2px solid var(--primary-pink);
   border-radius: var(--radius-xl);
   padding: 0;
   overflow: visible;
-  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: fadeInUp 0.6s ease-out 0.2s backwards;
+  box-shadow: 0 4px 12px rgba(74,87,89,0.08);
   perspective: 1000px;
   position: relative;
 }
@@ -209,13 +188,6 @@ main {
   font-size: var(--text-xs);
   color: var(--text-primary);
   cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.day:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 10;
 }
 
 .day.checked {
@@ -238,7 +210,6 @@ main {
   color: white;
 }
 
-/* === DAY DETAIL VIEW === */
 .day-detail-header {
   display: flex;
   justify-content: space-between;
@@ -271,117 +242,53 @@ main {
   transform: scale(1.1);
 }
 
-.day-detail-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  overflow: visible;
-}
+.day-detail-content { overflow-y: auto; max-height: 260px; padding-right: var(--space-xs); }
+.day-detail-content::-webkit-scrollbar { width: 6px; }
+.day-detail-content::-webkit-scrollbar-track { background: rgba(74,87,89,0.05); border-radius: var(--radius-sm); }
+.day-detail-content::-webkit-scrollbar-thumb { background: grey; border-radius: var(--radius-sm); }
+.day-detail-content::-webkit-scrollbar-thumb:hover { background: var(--primary-green); }
+.no-medications { text-align: center; color: var(--text-secondary); font-style: italic; padding: var(--space-xl); }
 
-.no-medications {
-  text-align: center;
-  color: var(--text-secondary);
-  font-style: italic;
-  padding: var(--space-xl);
-}
+.carousel-dots { display: none; }
 
-.medication-item {
-  background: white;
-  border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-sm);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  border-left: 3px solid var(--text-muted);
-  transition: all var(--transition-fast);
-}
+.time-group { background: white; border-radius: var(--radius-md); padding: var(--space-sm); margin-bottom: var(--space-sm); border-left: 4px solid var(--text-muted); }
+.time-group.all-taken { border-left-color: var(--success); background: linear-gradient(135deg, rgba(176,196,177,0.15) 0%, rgba(255,255,255,1) 100%); }
+.time-group.has-missed { border-left-color: var(--error); background: linear-gradient(135deg, rgba(188,71,73,0.15) 0%, rgba(255,255,255,1) 100%); }
+.time-group-header { display: flex; align-items: center; gap: var(--space-sm); color: var(--text-primary); font-weight: var(--weight-semibold); font-size: var(--text-sm); padding: var(--space-sm); border-bottom: 1px solid rgba(74,87,89,0.1); cursor: pointer; user-select: none; }
+.time-group-header i.fa-clock { color: var(--primary-pink); font-size: var(--text-sm); }
+.time-group-header span { flex: 1; }
+.time-group-header .toggle-icon { color: var(--text-secondary); font-size: var(--text-xs); }
+.time-group.expanded .time-group-header .toggle-icon { transform: rotate(180deg); }
+.medication-list { display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-sm) var(--space-sm) var(--space-xs); }
+.medication-name { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs); border-radius: var(--radius-sm); font-size: var(--text-sm); font-weight: var(--weight-medium); }
 
-.medication-item:hover {
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(74, 87, 89, 0.1);
-}
-
-.medication-item.taken {
-  border-left-color: var(--success);
-  background: linear-gradient(135deg, 
-    rgba(176, 196, 177, 0.1) 0%, 
-    rgba(255, 255, 255, 1) 100%);
-}
-
-.medication-item.missed {
-  border-left-color: var(--error);
-  background: rgba(188, 71, 73, 0.15);
-}
-
-.medication-time,
-.medication-name,
-.medication-status {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.medication-time {
-  color: var(--text-secondary);
+.medication-name i {
   font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  min-width: 80px;
   flex-shrink: 0;
 }
 
-.medication-time i {
-  color: var(--primary-pink);
-  margin-right: var(--space-xs);
-  font-size: var(--text-xs);
-}
-
-.medication-name {
-  color: var(--text-primary);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  font-family: var(--font-heading);
-  flex: 1;
-  text-align: left;
-}
-
-.medication-status {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-}
-
-.medication-item.taken .medication-status {
+.medication-name.taken {
   color: var(--success);
 }
 
-.medication-item.taken .medication-status i {
+.medication-name.taken i {
   color: var(--success);
 }
 
-.medication-item.missed .medication-status {
+.medication-name.missed {
   color: var(--error);
 }
 
-.medication-item.missed .medication-status i {
+.medication-name.missed i {
   color: var(--error);
 }
 
 .income-quote {
-  background: linear-gradient(135deg, 
-    rgba(176, 196, 177, 0.3) 0%, 
-    rgba(237, 175, 184, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(176,196,177,0.3) 0%, rgba(237,175,184,0.3) 100%);
   border: 2px solid var(--primary-green);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
-  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: fadeInUp 0.6s ease-out 0.3s backwards;
-}
-
-.income-quote:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(74, 87, 89, 0.12);
+  box-shadow: 0 4px 12px rgba(74,87,89,0.08);
 }
 
 .income-quote h3 {
@@ -417,10 +324,7 @@ main {
   background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
-.status-dot.partial {
-  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
-}
-
+.status-dot.partial,
 .status-dot.missed {
   background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
@@ -435,50 +339,30 @@ main {
 
 .progress-segment {
   height: 100%;
-  transition: width var(--transition-base);
-  animation: fillProgress 1s ease-out;
-}
-
-@keyframes fillProgress {
-  from {
-    width: 0;
-  }
 }
 
 .progress-segment.checked {
   background: linear-gradient(90deg, #66BB6A 0%, #81C784 100%);
 }
 
-.progress-segment.partial {
-  background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
-}
-
+.progress-segment.partial,
 .progress-segment.missed {
   background: linear-gradient(90deg, #bc4749 0%, #d05557 100%);
 }
 
 .medication-card {
   flex: 0 0 calc(72% - var(--space-lg));
-  order: 2; /* Medikamentenplan rechts */
-  background: linear-gradient(135deg, 
-    rgba(176, 196, 177, 0.4) 0%, 
-    rgba(222, 219, 210, 0.5) 100%);
+  order: 2;
+  background: linear-gradient(135deg, rgba(176,196,177,0.4) 0%, rgba(222,219,210,0.5) 100%);
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  height: fit-content; /* Höhe passt sich dem Inhalt an */
-  max-height: calc(100vh - 150px); /* Maximale Höhe für Scrolling */
-  box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: fadeInUp 0.6s ease-out 0.1s backwards;
-}
-
-.medication-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(74, 87, 89, 0.12);
+  height: fit-content;
+  max-height: calc(100vh - 150px);
+  box-shadow: 0 4px 12px rgba(74,87,89,0.08);
 }
 
 .medication-card h2 {
@@ -493,7 +377,6 @@ main {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: var(--space-lg);
-  flex: none; /* Keine Dehnung mehr */
 }
 
 .medication-table th {
@@ -539,13 +422,11 @@ main {
 
 .btn-primary, .btn-secondary {
   padding: var(--space-sm) var(--space-lg);
-  border: none;
   border-radius: var(--radius-sm);
   font-family: var(--font-heading);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
 }
 
 .btn-primary {
@@ -557,13 +438,6 @@ main {
 .btn-primary:hover {
   background: var(--primary-green);
   border-color: var(--primary-green);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(176, 196, 177, 0.3);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
@@ -574,17 +448,9 @@ main {
 
 .btn-secondary:hover {
   background: var(--bg-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(176, 196, 177, 0.2);
 }
 
-.btn-secondary:active {
-  transform: translateY(0);
-}
-
-/* Mobile Responsive Design */
 @media (max-width: 768px) {
-  /* Mobile Header Styling */
   header {
     padding: var(--space-xs) var(--space-md);
     margin-bottom: var(--space-sm);
@@ -622,12 +488,10 @@ main {
     font-size: var(--text-base);
   }
 
-  /* Desktop Medication Plan ausblenden */
   .desktop-medication {
     display: none;
   }
 
-  /* Mobile Medication Plan anzeigen */
   .mobile-medication {
     display: block;
   }
@@ -643,41 +507,24 @@ main {
     max-width: 600px;
     display: flex;
     flex-direction: column;
-    order: 2; /* Left column (Kalender + Quote) nach dem Medikamentenplan */
+    order: 2;
   }
 
   .mobile-medication {
     width: 100%;
     max-width: 600px;
-    order: 1; /* Medikamentenplan ganz oben */
+    order: 1;
     height: auto;
     overflow-y: visible;
     flex: none;
-    animation: fadeInUp 0.6s ease-out 0.1s backwards;
   }
 
   .calendar-card,
-  .income-quote,
-  .mobile-medication {
+  .income-quote {
     width: 100%;
     max-width: 600px;
   }
 
-  /* Komponenten-Hover-Effekte deaktivieren auf Mobile */
-  .calendar-card:hover,
-  .income-quote:hover,
-  .mobile-medication:hover {
-    transform: none;
-    box-shadow: 0 4px 12px rgba(74, 87, 89, 0.08);
-  }
-
-  /* Kalender-Tage Hover deaktivieren auf Mobile */
-  .day:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
-  /* Reihenfolge für Mobile: 1. Medikamentenplan, 2. Kalender, 3. Einnahmequote */
   .calendar-card {
     order: 2;
   }
@@ -686,7 +533,6 @@ main {
     order: 3;
   }
 
-  /* Adjust calendar grid for mobile */
   .calendar-grid {
     font-size: var(--text-xs);
   }
@@ -697,7 +543,10 @@ main {
     font-size: 0.75rem;
   }
 
-  /* Adjust medication table for mobile */
+  .day-detail-content {
+    max-height: 200px;
+  }
+
   .mobile-medication .medication-table {
     font-size: var(--text-xs);
     flex: none;
@@ -708,7 +557,6 @@ main {
     padding: var(--space-xs) var(--space-sm);
   }
 
-  /* Stack action buttons on mobile */
   .action-buttons {
     flex-direction: column;
     gap: var(--space-sm);
@@ -718,7 +566,6 @@ main {
     width: 100%;
   }
 
-  /* Adjust progress bar for mobile */
   .progress-container {
     margin-top: var(--space-md);
   }
@@ -733,7 +580,6 @@ main {
     font-size: var(--text-xs);
   }
 
-  /* Abstand zum Ende der Seite */
   main {
     padding-bottom: var(--space-3xl);
   }
@@ -743,7 +589,6 @@ main {
   }
 }
 
-/* Desktop: Mobile Medication Plan ausblenden */
 @media (min-width: 769px) {
   .mobile-medication {
     display: none;
@@ -752,4 +597,32 @@ main {
   .desktop-medication {
     display: block;
   }
+  
+  .desktop-time-groups {
+    display: block;
+  }
+  
+  .mobile-time-carousel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-time-groups { display: none; }
+  .mobile-time-carousel { display: block; width: 100%; touch-action: pan-y; user-select: none; }
+  .time-slide { width: 100%; min-height: 150px; }
+  .time-group-mobile { border-radius: 12px; padding: 16px; border-left: 4px solid; }
+  .time-group-mobile.all-taken { background: linear-gradient(to bottom, rgba(176,196,177,0.15), rgba(176,196,177,0.05)); border-left-color: var(--success-green); }
+  .time-group-mobile.has-missed { background: linear-gradient(to bottom, rgba(188,71,73,0.22), rgba(188,71,73,0.08)); border-left-color: #8b0000; }
+  .time-group-header-mobile { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.1rem; color: var(--neutral-900); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(74,87,89,0.1); }
+  .time-group-header-mobile i.fa-clock { display: none; }
+  .medication-list-mobile { display: flex; flex-direction: column; gap: 8px; }
+  .day-detail-content { position: relative; padding-bottom: 50px; }
+  .carousel-dots { display: flex !important; justify-content: center; gap: 10px; padding: 12px 0; position: absolute; bottom: 8px; left: 0; right: 0; z-index: 10; }
+  .carousel-dots .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--neutral-300); background: white; cursor: pointer; transition: all 0.3s; padding: 0; }
+  .carousel-dots .dot.active { background: var(--cherry-blossom-pink); border-color: var(--cherry-blossom-pink); width: 14px; height: 14px; }
+  .carousel-dots .dot.has-missed { background: #bc4749; border-color: #bc4749; }
+  .carousel-dots .dot.has-missed.active { background: #8b0000; border-color: #8b0000; box-shadow: 0 0 8px rgba(139,0,0,0.6); }
+  .carousel-dots .dot:hover { transform: scale(1.15); }
+  .carousel-dots .dot:active { transform: scale(0.9); }
 }
