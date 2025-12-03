@@ -4,21 +4,13 @@
 -- Drop tables in reverse order (due to Foreign Key Constraints)
 DROP TABLE IF EXISTS medication_intakes CASCADE;
 DROP TABLE IF EXISTS medication_plans CASCADE;
+DROP TABLE IF EXISTS rfid_chips CASCADE;
 DROP TABLE IF EXISTS patients CASCADE;
 DROP TABLE IF EXISTS caregivers CASCADE;
 DROP TABLE IF EXISTS medications CASCADE;
 DROP TABLE IF EXISTS locations CASCADE;
-DROP TABLE IF EXISTS rfid_chips CASCADE;
 
--- 1. RFID Chips Table (for weekdays)
-CREATE TABLE rfid_chips (
-    id SERIAL PRIMARY KEY,
-    chip_id VARCHAR(50) UNIQUE NOT NULL,
-    weekday VARCHAR(20) NOT NULL CHECK (weekday IN ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')),
-    is_active BOOLEAN DEFAULT true
-);
-
--- 2. Locations Table
+-- 1. Locations Table
 CREATE TABLE locations (
     id SERIAL PRIMARY KEY,
     street VARCHAR(255) NOT NULL,
@@ -28,14 +20,14 @@ CREATE TABLE locations (
     floor VARCHAR(10)
 );
 
--- 3. Medications Table
+-- 2. Medications Table
 CREATE TABLE medications (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     active_ingredient VARCHAR(255)
 );
 
--- 4. Caregivers Table
+-- 3. Caregivers Table
 CREATE TABLE caregivers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -44,7 +36,7 @@ CREATE TABLE caregivers (
     location_id INTEGER REFERENCES locations(id)
 );
 
--- 5. Patients Table
+-- 4. Patients Table
 CREATE TABLE patients (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -52,6 +44,15 @@ CREATE TABLE patients (
     location_id INTEGER REFERENCES locations(id),
     phone_number VARCHAR(50),
     email VARCHAR(255)
+);
+
+-- 5. RFID Chips Table (for weekdays - moved after patients)
+CREATE TABLE rfid_chips (
+    id SERIAL PRIMARY KEY,
+    chip_id VARCHAR(50) UNIQUE NOT NULL,
+    patient_id INTEGER NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+    weekday VARCHAR(20) NOT NULL CHECK (weekday IN ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')),
+    is_active BOOLEAN DEFAULT true
 );
 
 -- 6. Medication Plans Table (combined with details, binary flags)
@@ -93,6 +94,7 @@ CREATE TABLE medication_intakes (
 -- Indexes for better performance
 CREATE INDEX idx_rfid_chips_weekday ON rfid_chips(weekday);
 CREATE INDEX idx_rfid_chips_chip_id ON rfid_chips(chip_id);
+CREATE INDEX idx_rfid_chips_patient ON rfid_chips(patient_id);
 CREATE INDEX idx_patients_name ON patients(name);
 CREATE INDEX idx_medication_plans_patient ON medication_plans(patient_id);
 CREATE INDEX idx_medication_plans_medication ON medication_plans(medication_id);

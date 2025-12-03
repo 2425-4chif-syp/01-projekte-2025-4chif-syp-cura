@@ -40,6 +40,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Add MQTT Service
 builder.Services.AddSingleton<IMqttService, MqttService>();
 
+// Add Email Service
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 // Add Medication Reminder Background Service
 builder.Services.AddHostedService<MedicationReminderService>();
 

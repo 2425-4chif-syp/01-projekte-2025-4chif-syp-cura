@@ -29,7 +29,7 @@ INSERT INTO caregivers (name, phone_number, email, location_id) VALUES
 
 -- Sample patients
 INSERT INTO patients (name, age, location_id, phone_number, email) VALUES
-('Johann Meier', 78, 1, '+43 1 2345678', 'johann.meier@email.at'),
+('Johann Meier', 78, 1, '+43 1 2345678', 'timon.schmalzer@gmail.com'),
 ('Elisabeth Gruber', 82, 2, '+43 1 3456789', 'elisabeth.gruber@email.at'),
 ('Franz Wagner', 75, 3, '+43 1 4567890', 'franz.wagner@email.at'),
 ('Margarete Koch', 89, 4, '+43 1 5678901', 'margarete.koch@email.at'),
@@ -94,14 +94,17 @@ INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_f
 (6, 1, 1, 127, 8, 1, '2024-01-01', '2024-12-31', 'As needed');
 
 -- Additional RFID chips for multiple sets
-INSERT INTO rfid_chips (chip_id, weekday) VALUES
-('0441AB6EBA2A81', 'MONDAY'),
-('04E7AE6EBA2A81', 'TUESDAY'),
-('04E6AE6EBA2A81', 'WEDNESDAY'),
-('04E5AE6EBA2A81', 'THURSDAY'),
-('04E4AE6EBA2A81', 'FRIDAY'),
-('04DFAE6EBA2A81', 'SATURDAY'),
-('04DDAE6EBA2A81', 'SUNDAY');
+-- Patient 1: Johann Meier
+INSERT INTO rfid_chips (chip_id, patient_id, weekday) VALUES
+('0441AB6EBA2A81', 1, 'MONDAY'),
+('04E7AE6EBA2A81', 1, 'TUESDAY'),
+('04E6AE6EBA2A81', 1, 'WEDNESDAY'),
+('04E5AE6EBA2A81', 1, 'THURSDAY'),
+('04E4AE6EBA2A81', 1, 'FRIDAY'),
+('04DFAE6EBA2A81', 1, 'SATURDAY'),
+('04DDAE6EBA2A81', 1, 'SUNDAY');
+
+
 
 -- Sample medication intake logs for testing calendar functionality
 -- Patient 1 (Johann Meier) has plans: 1, 2, 3, 4
@@ -463,3 +466,209 @@ INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, qua
 (1, 2, '2025-11-22 09:20:00', 1, 'Weekend breakfast');
 
 -- November 23-30 intentionally left empty for ongoing testing
+
+-- ========================================
+-- DECEMBER 2025 - Complete Month (Dec 1-31)
+-- Most days perfect ✅, except Dec 7, 15, 23 ❌
+-- ========================================
+
+-- Monday 2025-12-01 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-01 08:00:00', 1, 'December starts', '0441AB6EBA2A81'),
+(1, 2, '2025-12-01 08:15:00', 1, 'New month', '0441AB6EBA2A81'),
+(1, 3, '2025-12-01 12:30:00', 1, 'Lunch', '0441AB6EBA2A81'),
+(1, 4, '2025-12-01 20:00:00', 5, 'Evening', '0441AB6EBA2A81');
+
+
+
+-- Wednesday 2025-12-03 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-03 08:00:00', 1, 'Mid-week', '04E6AE6EBA2A81'),
+(1, 2, '2025-12-03 08:20:00', 1, 'Morning', '04E6AE6EBA2A81'),
+(1, 3, '2025-12-03 12:45:00', 1, 'Lunch', '04E6AE6EBA2A81'),
+(1, 4, '2025-12-03 20:05:00', 5, 'Evening', '04E6AE6EBA2A81');
+
+-- Thursday 2025-12-04 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-04 08:05:00', 1, 'Regular', '04E5AE6EBA2A81'),
+(1, 2, '2025-12-04 08:20:00', 1, 'Morning', '04E5AE6EBA2A81'),
+(1, 3, '2025-12-04 12:35:00', 1, 'Noon', '04E5AE6EBA2A81'),
+(1, 4, '2025-12-04 19:55:00', 5, 'Evening', '04E5AE6EBA2A81');
+
+-- Friday 2025-12-05 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-05 08:00:00', 1, 'Friday', '04E4AE6EBA2A81'),
+(1, 2, '2025-12-05 08:20:00', 1, 'Morning', '04E4AE6EBA2A81'),
+(1, 3, '2025-12-05 12:30:00', 1, 'Lunch', '04E4AE6EBA2A81'),
+(1, 4, '2025-12-05 19:45:00', 5, 'Weekend ahead', '04E4AE6EBA2A81');
+
+-- Saturday 2025-12-06 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-06 09:15:00', 1, 'Nikolaus weekend', '04DFAE6EBA2A81'),
+(1, 2, '2025-12-06 09:30:00', 1, 'Late morning', '04DFAE6EBA2A81'),
+(1, 4, '2025-12-06 20:30:00', 5, 'Evening', '04DFAE6EBA2A81');
+
+-- Sunday 2025-12-07 ❌ Partially (forgot evening - family visit)
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-07 09:30:00', 1, 'Sunday morning', '04DDAE6EBA2A81'),
+(1, 2, '2025-12-07 09:45:00', 1, 'Breakfast', '04DDAE6EBA2A81');
+
+-- Monday 2025-12-08 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-08 08:00:00', 1, 'Back to routine', '0441AB6EBA2A81'),
+(1, 2, '2025-12-08 08:15:00', 1, 'Monday', '0441AB6EBA2A81'),
+(1, 3, '2025-12-08 12:30:00', 1, 'Lunch', '0441AB6EBA2A81'),
+(1, 4, '2025-12-08 20:00:00', 5, 'Evening', '0441AB6EBA2A81');
+
+-- Tuesday 2025-12-09 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-09 08:10:00', 1, 'Regular', '04E7AE6EBA2A81'),
+(1, 2, '2025-12-09 08:25:00', 1, 'Morning', '04E7AE6EBA2A81'),
+(1, 3, '2025-12-09 12:40:00', 1, 'Midday', '04E7AE6EBA2A81'),
+(1, 4, '2025-12-09 19:55:00', 5, 'Evening', '04E7AE6EBA2A81');
+
+-- Wednesday 2025-12-10 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-10 08:00:00', 1, 'Mid-week', '04E6AE6EBA2A81'),
+(1, 2, '2025-12-10 08:20:00', 1, 'Morning', '04E6AE6EBA2A81'),
+(1, 3, '2025-12-10 12:45:00', 1, 'Lunch', '04E6AE6EBA2A81'),
+(1, 4, '2025-12-10 20:05:00', 5, 'Evening', '04E6AE6EBA2A81');
+
+-- Thursday 2025-12-11 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-11 08:05:00', 1, 'Regular', '04E5AE6EBA2A81'),
+(1, 2, '2025-12-11 08:20:00', 1, 'Morning', '04E5AE6EBA2A81'),
+(1, 3, '2025-12-11 12:35:00', 1, 'Noon', '04E5AE6EBA2A81'),
+(1, 4, '2025-12-11 19:55:00', 5, 'Evening', '04E5AE6EBA2A81');
+
+-- Friday 2025-12-12 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-12 08:00:00', 1, 'Friday', '04E4AE6EBA2A81'),
+(1, 2, '2025-12-12 08:20:00', 1, 'Morning', '04E4AE6EBA2A81'),
+(1, 3, '2025-12-12 12:30:00', 1, 'Lunch', '04E4AE6EBA2A81'),
+(1, 4, '2025-12-12 19:45:00', 5, 'Evening', '04E4AE6EBA2A81');
+
+-- Saturday 2025-12-13 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-13 09:00:00', 1, 'Weekend', '04DFAE6EBA2A81'),
+(1, 2, '2025-12-13 09:20:00', 1, 'Late morning', '04DFAE6EBA2A81'),
+(1, 4, '2025-12-13 20:30:00', 5, 'Evening', '04DFAE6EBA2A81');
+
+-- Sunday 2025-12-14 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-14 09:30:00', 1, 'Sunday routine', '04DDAE6EBA2A81'),
+(1, 2, '2025-12-14 09:45:00', 1, 'Breakfast', '04DDAE6EBA2A81'),
+(1, 4, '2025-12-14 20:15:00', 5, 'Evening', '04DDAE6EBA2A81');
+
+-- Monday 2025-12-15 ❌ Partially (doctor appointment - forgot noon)
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-15 07:30:00', 1, 'Early - doctor appointment', '0441AB6EBA2A81'),
+(1, 2, '2025-12-15 07:45:00', 1, 'Quick breakfast', '0441AB6EBA2A81'),
+(1, 4, '2025-12-15 21:00:00', 5, 'Late evening after appointment', '0441AB6EBA2A81');
+
+-- Tuesday 2025-12-16 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-16 08:10:00', 1, 'Back to normal', '04E7AE6EBA2A81'),
+(1, 2, '2025-12-16 08:25:00', 1, 'Regular routine', '04E7AE6EBA2A81'),
+(1, 3, '2025-12-16 12:40:00', 1, 'Lunch', '04E7AE6EBA2A81'),
+(1, 4, '2025-12-16 19:55:00', 5, 'Evening', '04E7AE6EBA2A81');
+
+-- Wednesday 2025-12-17 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-17 08:00:00', 1, 'Mid-week', '04E6AE6EBA2A81'),
+(1, 2, '2025-12-17 08:20:00', 1, 'Morning', '04E6AE6EBA2A81'),
+(1, 3, '2025-12-17 12:45:00', 1, 'Lunch', '04E6AE6EBA2A81'),
+(1, 4, '2025-12-17 20:05:00', 5, 'Evening', '04E6AE6EBA2A81');
+
+-- Thursday 2025-12-18 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-18 08:05:00', 1, 'Regular', '04E5AE6EBA2A81'),
+(1, 2, '2025-12-18 08:20:00', 1, 'Morning', '04E5AE6EBA2A81'),
+(1, 3, '2025-12-18 12:35:00', 1, 'Noon', '04E5AE6EBA2A81'),
+(1, 4, '2025-12-18 19:55:00', 5, 'Evening', '04E5AE6EBA2A81');
+
+-- Friday 2025-12-19 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-19 08:00:00', 1, 'Last Friday before Christmas', '04E4AE6EBA2A81'),
+(1, 2, '2025-12-19 08:20:00', 1, 'Morning', '04E4AE6EBA2A81'),
+(1, 3, '2025-12-19 12:30:00', 1, 'Lunch', '04E4AE6EBA2A81'),
+(1, 4, '2025-12-19 19:45:00', 5, 'Evening', '04E4AE6EBA2A81');
+
+-- Saturday 2025-12-20 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-20 09:15:00', 1, 'Christmas preparations', '04DFAE6EBA2A81'),
+(1, 2, '2025-12-20 09:30:00', 1, 'Late morning', '04DFAE6EBA2A81'),
+(1, 4, '2025-12-20 20:30:00', 5, 'Evening', '04DFAE6EBA2A81');
+
+-- Sunday 2025-12-21 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-21 09:30:00', 1, 'Sunday before Christmas', '04DDAE6EBA2A81'),
+(1, 2, '2025-12-21 09:45:00', 1, 'Breakfast', '04DDAE6EBA2A81'),
+(1, 4, '2025-12-21 20:15:00', 5, 'Evening', '04DDAE6EBA2A81');
+
+-- Monday 2025-12-22 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-22 08:00:00', 1, 'Christmas week', '0441AB6EBA2A81'),
+(1, 2, '2025-12-22 08:15:00', 1, 'Monday', '0441AB6EBA2A81'),
+(1, 3, '2025-12-22 12:30:00', 1, 'Lunch', '0441AB6EBA2A81'),
+(1, 4, '2025-12-22 20:00:00', 5, 'Evening', '0441AB6EBA2A81');
+
+-- Tuesday 2025-12-23 ❌ Partially (Christmas stress - forgot evening)
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-23 08:10:00', 1, 'Busy day', '04E7AE6EBA2A81'),
+(1, 2, '2025-12-23 08:25:00', 1, 'Morning rush', '04E7AE6EBA2A81'),
+(1, 3, '2025-12-23 12:40:00', 1, 'Quick lunch', '04E7AE6EBA2A81');
+
+-- Wednesday 2025-12-24 ✅ (Heiligabend)
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-24 08:00:00', 1, 'Christmas Eve morning', '04E6AE6EBA2A81'),
+(1, 2, '2025-12-24 08:20:00', 1, 'Special day', '04E6AE6EBA2A81'),
+(1, 3, '2025-12-24 12:45:00', 1, 'Before celebrations', '04E6AE6EBA2A81'),
+(1, 4, '2025-12-24 19:00:00', 5, 'Early evening - Christmas dinner', '04E6AE6EBA2A81');
+
+-- Thursday 2025-12-25 ✅ (Christtag)
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-25 09:00:00', 1, 'Merry Christmas!', '04E5AE6EBA2A81'),
+(1, 2, '2025-12-25 09:20:00', 1, 'Christmas morning', '04E5AE6EBA2A81'),
+(1, 3, '2025-12-25 13:00:00', 1, 'After Christmas lunch', '04E5AE6EBA2A81'),
+(1, 4, '2025-12-25 20:30:00', 5, 'Christmas evening', '04E5AE6EBA2A81');
+
+-- Friday 2025-12-26 ✅ (Stefanitag)
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-26 09:15:00', 1, 'Boxing Day', '04E4AE6EBA2A81'),
+(1, 2, '2025-12-26 09:30:00', 1, 'Relaxed morning', '04E4AE6EBA2A81'),
+(1, 3, '2025-12-26 13:15:00', 1, 'After leftovers', '04E4AE6EBA2A81'),
+(1, 4, '2025-12-26 20:00:00', 5, 'Evening', '04E4AE6EBA2A81');
+
+-- Saturday 2025-12-27 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-27 09:30:00', 1, 'Weekend', '04DFAE6EBA2A81'),
+(1, 2, '2025-12-27 09:45:00', 1, 'Late morning', '04DFAE6EBA2A81'),
+(1, 4, '2025-12-27 20:30:00', 5, 'Evening', '04DFAE6EBA2A81');
+
+-- Sunday 2025-12-28 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-28 09:30:00', 1, 'Last Sunday of year', '04DDAE6EBA2A81'),
+(1, 2, '2025-12-28 09:45:00', 1, 'Breakfast', '04DDAE6EBA2A81'),
+(1, 4, '2025-12-28 20:15:00', 5, 'Evening', '04DDAE6EBA2A81');
+
+-- Monday 2025-12-29 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-29 08:00:00', 1, 'Almost New Year', '0441AB6EBA2A81'),
+(1, 2, '2025-12-29 08:15:00', 1, 'Monday', '0441AB6EBA2A81'),
+(1, 3, '2025-12-29 12:30:00', 1, 'Lunch', '0441AB6EBA2A81'),
+(1, 4, '2025-12-29 20:00:00', 5, 'Evening', '0441AB6EBA2A81');
+
+-- Tuesday 2025-12-30 ✅
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-30 08:10:00', 1, 'Second last day', '04E7AE6EBA2A81'),
+(1, 2, '2025-12-30 08:25:00', 1, 'Morning', '04E7AE6EBA2A81'),
+(1, 3, '2025-12-30 12:40:00', 1, 'Midday', '04E7AE6EBA2A81'),
+(1, 4, '2025-12-30 19:55:00', 5, 'Evening', '04E7AE6EBA2A81');
+
+-- Wednesday 2025-12-31 ✅ (Silvester)
+INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
+(1, 1, '2025-12-31 08:00:00', 1, 'New Years Eve', '04E6AE6EBA2A81'),
+(1, 2, '2025-12-31 08:20:00', 1, 'Last day of 2025', '04E6AE6EBA2A81'),
+(1, 3, '2025-12-31 12:45:00', 1, 'Lunch', '04E6AE6EBA2A81'),
+(1, 4, '2025-12-31 18:30:00', 5, 'Early evening before celebration', '04E6AE6EBA2A81');

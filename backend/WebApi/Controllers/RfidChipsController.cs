@@ -125,6 +125,7 @@ namespace WebApi.Controllers
 
         /// <summary>
         /// Registriert einen RFID-Scan vom ESP32.
+        /// Validiert Wochentag, Tageszeit und erstellt Medication Intake Einträge.
         /// </summary>
         /// <param name="request">Scan-Daten mit ChipId und optional Event-Type</param>
         /// <returns></returns>
@@ -134,28 +135,170 @@ namespace WebApi.Controllers
             if (string.IsNullOrEmpty(request.ChipId))
                 return BadRequest("ChipId is required");
 
+            // 1. Chip in Datenbank suchen
             var chip = await _unitOfWork.RfidChipRepository.GetByChipIdAsync(request.ChipId);
-            
-            // Log den Scan (kann später erweitert werden für weitere Logik)
-            Console.WriteLine($"RFID Scan registered: {request.ChipId} - Event: {request.Event} - Time: {DateTime.UtcNow}");
-            
             if (chip == null)
             {
                 return Ok(new { 
                     Success = false, 
-                    Message = "RFID Chip not found in database",
-                    ChipId = request.ChipId,
-                    Event = request.Event
+                    Error = "CHIP_NOT_FOUND",
+                    Message = "RFID chip not found in database",
+                    ChipId = request.ChipId
                 });
             }
 
-            return Ok(new { 
-                Success = true, 
-                Message = "RFID Chip recognized",
-                Chip = chip,
-                Event = request.Event,
-                Timestamp = DateTime.UtcNow
-            });
+            // 2. Heutigen Wochentag prüfen
+            var now = DateTime.Now;
+            var today = now.DayOfWeek;
+            var todayString = today.ToString().ToUpper();
+            
+            if (chip.Weekday.ToUpper() != todayString)
+            {
+                return Ok(new { 
+                    Success = false,
+                    Error = "WRONG_WEEKDAY",
+                    Message = $"This chip is for {chip.Weekday}, but today is {todayString}",
+                    ChipId = request.ChipId,
+                    ExpectedWeekday = chip.Weekday,
+                    ActualWeekday = todayString
+                });
+            }
+
+            // 3. Wochentag-Flag berechnen (Sun=1, Mon=2, Tue=4, etc.)
+            int weekdayFlag = today switch
+            {
+                DayOfWeek.Sunday => 1,
+                DayOfWeek.Monday => 2,
+                DayOfWeek.Tuesday => 4,
+                DayOfWeek.Wednesday => 8,
+                DayOfWeek.Thursday => 16,
+                DayOfWeek.Friday => 32,
+                DayOfWeek.Saturday => 64,
+                _ => 0
+            };
+
+            // 4. Aktuelle Tageszeit ermitteln und Flag berechnen
+            var hour = now.Hour;
+            int dayTimeFlag;
+            string dayTimeName;
+            
+            if (hour >= 6 && hour < 11)
+            {
+                dayTimeFlag = 1; // Morning
+                dayTimeName = "MORNING";
+            }
+            else if (hour >= 11 && hour < 14)
+            {
+                dayTimeFlag = 2; // Noon
+                dayTimeName = "NOON";
+            }
+            else if (hour >= 14 && hour < 18)
+            {
+                dayTimeFlag = 4; // Afternoon
+                dayTimeName = "AFTERNOON";
+            }
+            else if (hour >= 18 && hour < 23)
+            {
+                dayTimeFlag = 8; // Evening
+                dayTimeName = "EVENING";
+            }
+            else
+            {
+                return Ok(new { 
+                    Success = false,
+                    Error = "OUTSIDE_TIME_WINDOW",
+                    Message = $"Current time {now:HH:mm} is outside medication time windows (06:00-23:00)",
+                    CurrentTime = now.ToString("HH:mm")
+                });
+            }
+
+            // 5. Medication Plans für diesen Patienten, Wochentag und Tageszeit finden
+            var medicationPlans = await _unitOfWork.MedicationPlanRepository
+                .GetByPatientWeekdayAndDayTimeAsync(chip.PatientId, weekdayFlag, dayTimeFlag, DateTime.SpecifyKind(now.Date, DateTimeKind.Utc));
+
+            if (!medicationPlans.Any())
+            {
+                return Ok(new { 
+                    Success = false,
+                    Error = "NO_MEDICATIONS_SCHEDULED",
+                    Message = $"No medications scheduled for {todayString} at {dayTimeName}",
+                    ChipId = request.ChipId,
+                    PatientId = chip.PatientId,
+                    Weekday = todayString,
+                    DayTime = dayTimeName
+                });
+            }
+
+            // 6. Prüfen welche Medikamente noch nicht eingenommen wurden
+            var recordedIntakes = new List<object>();
+            var alreadyTaken = new List<object>();
+
+            foreach (var plan in medicationPlans)
+            {
+                bool hasAlreadyTaken = await _unitOfWork.MedicationIntakeRepository
+                    .HasTakenTodayAsync(chip.PatientId, plan.Id, DateTime.SpecifyKind(now.Date, DateTimeKind.Utc));
+
+                if (hasAlreadyTaken)
+                {
+                    alreadyTaken.Add(new
+                    {
+                        MedicationPlanId = plan.Id,
+                        MedicationName = plan.Medication?.Name ?? "Unknown"
+                    });
+                }
+                else
+                {
+                    // 7. Neuen Intake erstellen
+                    var intake = new MedicationIntake
+                    {
+                        PatientId = chip.PatientId,
+                        MedicationPlanId = plan.Id,
+                        IntakeTime = DateTime.SpecifyKind(now, DateTimeKind.Utc),
+                        Quantity = plan.Quantity,
+                        RfidTag = request.ChipId,
+                        Notes = $"Auto-recorded via RFID scan at {dayTimeName}"
+                    };
+
+                    var createdIntake = await _unitOfWork.MedicationIntakeRepository.CreateAsync(intake);
+
+                    recordedIntakes.Add(new
+                    {
+                        MedicationPlanId = plan.Id,
+                        MedicationName = plan.Medication?.Name ?? "Unknown",
+                        Quantity = plan.Quantity,
+                        IntakeTime = createdIntake.IntakeTime
+                    });
+                }
+            }
+
+            // 8. Erfolgreiche Response
+            if (recordedIntakes.Any())
+            {
+                return Ok(new { 
+                    Success = true,
+                    Message = $"Medications recorded successfully for {dayTimeName}",
+                    Timestamp = now,
+                    ChipId = request.ChipId,
+                    PatientId = chip.PatientId,
+                    Weekday = todayString,
+                    DayTime = dayTimeName,
+                    RecordedIntakes = recordedIntakes,
+                    AlreadyTaken = alreadyTaken.Any() ? alreadyTaken : null
+                });
+            }
+            else
+            {
+                return Ok(new { 
+                    Success = false,
+                    Error = "ALREADY_TAKEN",
+                    Message = "All medications for this time period already recorded today",
+                    ChipId = request.ChipId,
+                    PatientId = chip.PatientId,
+                    Weekday = todayString,
+                    DayTime = dayTimeName,
+                    AlreadyTaken = alreadyTaken
+                });
+            }
         }
     }
 }

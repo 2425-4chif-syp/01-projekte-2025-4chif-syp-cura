@@ -11,6 +11,7 @@ namespace Core.Contracts
         Task<List<MedicationPlan>> GetByCaregiverIdAsync(int caregiverId);
         Task<List<MedicationPlan>> GetActiveAsync();
         Task<List<MedicationPlan>> GetByDateRangeAsync(DateTime from, DateTime to);
+        Task<List<MedicationPlan>> GetByPatientWeekdayAndDayTimeAsync(int patientId, int weekdayFlag, int dayTimeFlag, DateTime date);
         Task AddAsync(MedicationPlan medicationPlan);
         void Update(MedicationPlan medicationPlan);
         void Delete(MedicationPlan medicationPlan);

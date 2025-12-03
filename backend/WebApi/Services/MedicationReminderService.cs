@@ -12,10 +12,10 @@ public class MedicationReminderService : BackgroundService
     // Definierte Zeiten für die day_time_flags
     private readonly Dictionary<int, TimeSpan> _dayTimes = new()
     {
-        { 1, new TimeSpan(10, 20, 0) },   // Morning = 10:20
-        { 2, new TimeSpan(15, 03, 0) },  // Noon = 14:55
-        { 4, new TimeSpan(16, 0, 0) },  // Afternoon = 16:00
-        { 8, new TimeSpan(20, 0, 0) }   // Evening = 20:00
+        { 1, new TimeSpan(9, 31, 0) },   // TEST: 09:20 CET
+        { 2, new TimeSpan(9, 31, 0) },   // TEST: Alle gleich für Test
+        { 4, new TimeSpan(9, 31, 0) },   // TEST: Alle gleich für Test
+        { 8, new TimeSpan(9, 31, 0) }    // TEST: Alle gleich für Test
     };
 
     // Wochentage-Mapping für weekday_flags
@@ -32,6 +32,10 @@ public class MedicationReminderService : BackgroundService
 
     private readonly HashSet<string> _sentReminders = new(); // Cache für bereits gesendete Erinnerungen
     private readonly HashSet<string> _acknowledgedReminders = new(); // Cache für quittierte Erinnerungen (Tag_Datum_Zeit)
+    
+    // Tracking für Missed Medication Alerts
+    private readonly Dictionary<string, DateTime> _missedMedicationAlerts = new(); // Key: ReminderKey, Value: Zeit der Erinnerung
+    private readonly TimeSpan _alertDelay = TimeSpan.FromMinutes(2); // TEST: Nur 2 Minuten warten!
 
     public MedicationReminderService(
         IServiceProvider serviceProvider,
@@ -53,6 +57,7 @@ public class MedicationReminderService : BackgroundService
             try
             {
                 await CheckMedicationReminders();
+                await CheckForMissedMedications();
             }
             catch (Exception ex)
             {
@@ -171,7 +176,9 @@ public class MedicationReminderService : BackgroundService
 
         try
         {
-            var now = DateTime.Now;
+            // Verwende Central European Time (CET/CEST)
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+            var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
             var currentTime = now.TimeOfDay;
             var currentWeekday = now.DayOfWeek;
             var currentWeekdayFlag = _weekdays[currentWeekday];
@@ -218,11 +225,21 @@ public class MedicationReminderService : BackgroundService
                             
                             if (!_acknowledgedReminders.Contains(patientAckKey))
                             {
-                                await SendMedicationReminder(mqttService, plan, targetTime);
+                                // ✅ WICHTIG: ERST zur Liste hinzufügen (für Alert-Tracking)
                                 _sentReminders.Add(reminderKey);
                                 
+                                // Dann MQTT-Nachricht senden (kann fehlschlagen)
+                                try
+                                {
+                                    await SendMedicationReminder(mqttService, plan, targetTime);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogWarning(ex, "MQTT-Nachricht konnte nicht gesendet werden für Plan {PlanId}", plan.Id);
+                                }
+                                
                                 _logger.LogInformation(
-                                    "Medikamenten-Erinnerung gesendet für Patient: {PatientName}, Medikament: {MedicationName}, Zeit: {Time}",
+                                    "Medikamenten-Erinnerung getrackt für Patient: {PatientName}, Medikament: {MedicationName}, Zeit: {Time}",
                                     plan.Patient?.Name ?? "Unbekannt",
                                     plan.Medication?.Name ?? "Unbekannt",
                                     targetTime.ToString(@"hh\:mm"));
@@ -309,6 +326,141 @@ public class MedicationReminderService : BackgroundService
         if (toRemove.Count > 0)
         {
             _logger.LogDebug("Bereinigt {Count} alte Quittierungen", toRemove.Count);
+        }
+    }
+
+    private async Task CheckForMissedMedications()
+    {
+        try
+        {
+            // Verwende Central European Time (CET/CEST)
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+            var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+            var today = now.ToString("yyyy-MM-dd");
+            
+            // Finde alle Erinnerungen die noch nicht quittiert wurden
+            var missedReminders = _sentReminders
+                .Where(reminderKey => 
+                {
+                    // Parse reminderKey: "PlanId_Date_TimeFlag"
+                    var parts = reminderKey.Split('_');
+                    if (parts.Length < 3) return false;
+                    
+                    var planId = parts[0];
+                    var date = parts[1];
+                    var timeFlag = parts[2];
+                    
+                    // Nur heute
+                    if (date != today) return false;
+                    
+                    // Prüfe ob diese Erinnerung bereits quittiert wurde
+                    // Wir müssen die PatientId aus dem Plan holen
+                    return true; // Erst mal alle nicht quittierten heute
+                })
+                .ToList();
+
+            using var scope = _serviceProvider.CreateScope();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+
+            foreach (var reminderKey in missedReminders)
+            {
+                // Parse reminderKey: "PlanId_Date_TimeFlag"
+                var parts = reminderKey.Split('_');
+                if (parts.Length < 3) continue;
+                
+                var planId = int.Parse(parts[0]);
+                var date = parts[1];
+                var timeFlag = int.Parse(parts[2]);
+                
+                // Finde den MedicationPlan
+                var allPlans = await unitOfWork.MedicationPlans.GetActiveAsync();
+                var plan = allPlans.FirstOrDefault(p => p.Id == planId);
+                
+                if (plan == null) continue;
+                
+                // Prüfe ob Patient diese Zeit-Erinnerung quittiert hat
+                var patientAckKey = $"PATIENT_{plan.PatientId}_{date}_{timeFlag}";
+                
+                if (_acknowledgedReminders.Contains(patientAckKey))
+                {
+                    // Wurde quittiert - entferne aus Tracking
+                    _missedMedicationAlerts.Remove(reminderKey);
+                    continue;
+                }
+                
+                // Prüfe ob wir diese Erinnerung schon im Alert-Tracking haben
+                if (!_missedMedicationAlerts.ContainsKey(reminderKey))
+                {
+                    // Erste Prüfung - füge zum Tracking hinzu
+                    _missedMedicationAlerts[reminderKey] = now;
+                    _logger.LogDebug("Tracking missed medication: {ReminderKey}", reminderKey);
+                    continue;
+                }
+                
+                // Prüfe ob genug Zeit vergangen ist für einen Alert
+                var reminderTime = _missedMedicationAlerts[reminderKey];
+                var timeSinceReminder = now - reminderTime;
+                
+                if (timeSinceReminder >= _alertDelay)
+                {
+                    // Zeit ist abgelaufen - sende Alert-E-Mail
+                    // ✅ Lade Patient explizit aus DB (Navigation Properties könnten NULL sein)
+                    var patient = await unitOfWork.PatientRepository.GetByIdAsync(plan.PatientId);
+                    
+                    if (patient == null)
+                    {
+                        _logger.LogWarning("Patient {PatientId} nicht gefunden", plan.PatientId);
+                        _missedMedicationAlerts.Remove(reminderKey);
+                        continue;
+                    }
+                    
+                    var medicationName = plan.Medication?.Name ?? $"Medikament-ID {plan.MedicationId}";
+                    var scheduledTime = _dayTimes[timeFlag];
+                    
+                    try
+                    {
+                        await emailService.SendMissedMedicationAlertAsync(
+                            patient.Email ?? "timon.schmalzer@gmail.com",
+                            patient.Name ?? "Unbekannter Patient",
+                            medicationName,
+                            scheduledTime
+                        );
+                        
+                        _logger.LogWarning(
+                            "Alert-E-Mail gesendet: Patient {PatientName} hat {MedicationName} um {Time} verpasst",
+                            patient.Name, medicationName, scheduledTime);
+                        
+                        // Entferne aus beiden Trackings (nur einmal Alert senden)
+                        _missedMedicationAlerts.Remove(reminderKey);
+                        _sentReminders.Remove(reminderKey);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Fehler beim Senden der Alert-E-Mail für {ReminderKey}", reminderKey);
+                    }
+                }
+            }
+            
+            // Cleanup alte Alerts (älter als heute)
+            var oldAlerts = _missedMedicationAlerts
+                .Where(kvp => !kvp.Key.Contains(today))
+                .Select(kvp => kvp.Key)
+                .ToList();
+                
+            foreach (var key in oldAlerts)
+            {
+                _missedMedicationAlerts.Remove(key);
+            }
+            
+            if (oldAlerts.Count > 0)
+            {
+                _logger.LogDebug("Bereinigt {Count} alte Alert-Trackings", oldAlerts.Count);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Fehler beim Überprüfen verpasster Medikamente");
         }
     }
 
