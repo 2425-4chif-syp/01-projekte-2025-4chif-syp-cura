@@ -147,13 +147,22 @@ namespace WebApi.Controllers
                 });
             }
 
-            // 2. Wochentag-Prüfung DEAKTIVIERT - Chip funktioniert jeden Tag
+            // 2. Heutigen Wochentag prüfen
             var now = DateTime.Now;
             var today = now.DayOfWeek;
             var todayString = today.ToString().ToUpper();
             
-            // ALTE VALIDIERUNG DEAKTIVIERT:
-            // if (chip.Weekday.ToUpper() != todayString) { ... }
+            if (chip.Weekday.ToUpper() != todayString)
+            {
+                return BadRequest(new { 
+                    Success = false,
+                    Error = "WRONG_WEEKDAY",
+                    Message = $"This chip is for {chip.Weekday}, but today is {todayString}",
+                    ChipId = request.ChipId,
+                    ExpectedWeekday = chip.Weekday,
+                    ActualWeekday = todayString
+                });
+            }
 
             // 3. Wochentag-Flag berechnen (Sun=1, Mon=2, Tue=4, etc.)
             int weekdayFlag = today switch
