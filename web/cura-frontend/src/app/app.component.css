@@ -608,18 +608,18 @@ main {
 @media (max-width: 768px) {
   .desktop-time-groups { display: none; }
   .mobile-time-carousel { display: block; width: 100%; touch-action: pan-y; user-select: none; }
-  .time-slide { width: 100%; min-height: 150px; }
-  .time-group-mobile { border-radius: 12px; padding: 16px; margin-bottom: 0; border-left: 4px solid; }
+  .time-slide { width: 100%; min-height: 150px; display: flex; flex-direction: column; }
+  .time-group-mobile { border-radius: 12px; padding: 16px; flex: 1; border-left: 4px solid; }
   .time-group-mobile.all-taken { background: linear-gradient(to bottom, rgba(176,196,177,0.15), rgba(176,196,177,0.05)); border-left-color: var(--success-green); }
   .time-group-mobile.has-missed { background: linear-gradient(to bottom, rgba(237,175,184,0.15), rgba(237,175,184,0.05)); border-left-color: var(--error-red); }
   .time-group-header-mobile { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.1rem; color: var(--neutral-900); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(74,87,89,0.1); }
   .time-group-header-mobile i.fa-clock { color: var(--cherry-blossom-pink); font-size: 1.2rem; }
   .medication-list-mobile { display: flex; flex-direction: column; gap: 8px; }
-  .carousel-dots { display: flex; justify-content: center; gap: 10px; padding: 20px 0 12px; position: relative; bottom: 0; }
+  .carousel-dots { display: flex; justify-content: center; gap: 10px; padding: 16px 0 8px; margin-top: auto; }
   .carousel-dots .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--neutral-300); background: white; cursor: pointer; transition: all 0.3s; padding: 0; }
   .carousel-dots .dot.active { background: var(--cherry-blossom-pink); border-color: var(--cherry-blossom-pink); width: 14px; height: 14px; }
-  .carousel-dots .dot.has-missed { background: rgba(237,175,184,0.3); border-color: var(--error-red); border-width: 2px; }
-  .carousel-dots .dot.has-missed.active { background: var(--error-red); border-color: var(--error-red); box-shadow: 0 0 8px rgba(237,175,184,0.6); }
+  .carousel-dots .dot.has-missed { background: #bc4749; border-color: #bc4749; }
+  .carousel-dots .dot.has-missed.active { background: #8b0000; border-color: #8b0000; box-shadow: 0 0 8px rgba(139,0,0,0.6); }
   .carousel-dots .dot:hover { transform: scale(1.15); }
   .carousel-dots .dot:active { transform: scale(0.9); }
 }
