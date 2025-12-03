@@ -336,20 +336,42 @@ main {
   color: var(--text-primary);
   font-weight: var(--weight-semibold);
   font-size: var(--text-sm);
-  padding-bottom: var(--space-xs);
+  padding: var(--space-sm);
   border-bottom: 1px solid rgba(74, 87, 89, 0.1);
-  margin-bottom: var(--space-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
 }
 
-.time-group-header i {
+.time-group-header:hover {
+  background: rgba(74, 87, 89, 0.05);
+}
+
+.time-group-header i.fa-clock {
   color: var(--primary-pink);
   font-size: var(--text-sm);
+}
+
+.time-group-header span {
+  flex: 1;
+}
+
+.time-group-header .toggle-icon {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  transition: transform var(--transition-fast);
+}
+
+.time-group.expanded .time-group-header .toggle-icon {
+  transform: rotate(180deg);
 }
 
 .medication-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  padding: var(--space-sm);
+  padding-top: var(--space-xs);
 }
 
 .medication-name {

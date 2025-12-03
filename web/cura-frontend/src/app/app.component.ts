@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   selectedDay: CalendarDay | null = null;
   selectedDayMedications: { timeLabel: string; medication: string; status: 'taken' | 'missed' | 'unknown' }[] = [];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
+  expandedTimeGroups = new Set<string>();
 
   constructor(
     private keycloak: KeycloakService,
@@ -186,6 +187,9 @@ export class AppComponent implements OnInit {
     const timeOrder = ['Morgen', 'Mittag', 'Nachmittag', 'Abend'];
     const medicationsByTime = new Map<string, { name: string; status: 'taken' | 'missed' }[]>();
     
+    // Reset expanded groups
+    this.expandedTimeGroups.clear();
+    
     // Gruppiere nach Tageszeit
     for (const med of this.selectedDayMedications) {
       if (!medicationsByTime.has(med.timeLabel)) {
@@ -206,12 +210,30 @@ export class AppComponent implements OnInit {
       .map(time => {
         const medications = medicationsByTime.get(time)!;
         const allTaken = medications.every(m => m.status === 'taken');
+        
+        // Auto-expand wenn nicht alle genommen wurden
+        if (!allTaken) {
+          this.expandedTimeGroups.add(time);
+        }
+        
         return {
           timeLabel: time,
           medications: medications,
           allTaken: allTaken
         };
       });
+  }
+
+  toggleTimeGroup(timeLabel: string) {
+    if (this.expandedTimeGroups.has(timeLabel)) {
+      this.expandedTimeGroups.delete(timeLabel);
+    } else {
+      this.expandedTimeGroups.add(timeLabel);
+    }
+  }
+
+  isTimeGroupExpanded(timeLabel: string): boolean {
+    return this.expandedTimeGroups.has(timeLabel);
   }
 
   getFormattedDate(date: string): string {
