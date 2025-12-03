@@ -12,10 +12,10 @@ public class MedicationReminderService : BackgroundService
     // Definierte Zeiten für die day_time_flags
     private readonly Dictionary<int, TimeSpan> _dayTimes = new()
     {
-        { 1, new TimeSpan(9, 31, 0) },   // TEST: 09:20 CET
-        { 2, new TimeSpan(9, 31, 0) },   // TEST: Alle gleich für Test
-        { 4, new TimeSpan(15, 45, 0) },   // TEST: Alle gleich für Test
-        { 8, new TimeSpan(9, 31, 0) }    // TEST: Alle gleich für Test
+        { 1, new TimeSpan(9, 31, 0) },   
+        { 2, new TimeSpan(9, 31, 0) },   
+        { 4, new TimeSpan(16, 33, 0) },   
+        { 8, new TimeSpan(9, 31, 0) }   
     };
 
     // Wochentage-Mapping für weekday_flags
