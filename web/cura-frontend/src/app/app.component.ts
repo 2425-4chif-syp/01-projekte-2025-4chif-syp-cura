@@ -35,6 +35,11 @@ export class AppComponent implements OnInit {
   selectedDayMedications: { timeLabel: string; medication: string; status: 'taken' | 'missed' | 'unknown' }[] = [];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
   expandedTimeGroups = new Set<string>();
+  
+  // Mobile Carousel
+  currentTimeIndex = 0;
+  touchStartX = 0;
+  touchEndX = 0;
 
   constructor(
     private keycloak: KeycloakService,
@@ -222,6 +227,17 @@ export class AppComponent implements OnInit {
           allTaken: allTaken
         };
       });
+    
+    // Sort: missed groups first
+    this.groupedMedications.sort((a, b) => {
+      if (!a.allTaken && b.allTaken) return -1;
+      if (a.allTaken && !b.allTaken) return 1;
+      return 0;
+    });
+    
+    // Auto-start carousel at first missed medication group
+    const firstMissedIndex = this.groupedMedications.findIndex(g => !g.allTaken);
+    this.currentTimeIndex = firstMissedIndex >= 0 ? firstMissedIndex : 0;
   }
 
   toggleTimeGroup(timeLabel: string) {
@@ -234,6 +250,47 @@ export class AppComponent implements OnInit {
 
   isTimeGroupExpanded(timeLabel: string): boolean {
     return this.expandedTimeGroups.has(timeLabel);
+  }
+  
+  // Mobile Carousel Methods
+  nextTimeGroup() {
+    if (this.currentTimeIndex < this.groupedMedications.length - 1) {
+      this.currentTimeIndex++;
+    }
+  }
+  
+  prevTimeGroup() {
+    if (this.currentTimeIndex > 0) {
+      this.currentTimeIndex--;
+    }
+  }
+  
+  goToTimeGroup(index: number) {
+    this.currentTimeIndex = index;
+  }
+  
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.touches[0].screenX;
+  }
+  
+  onTouchEnd(event: TouchEvent) {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.handleSwipe();
+  }
+  
+  handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = this.touchStartX - this.touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // Swipe left -> next
+        this.nextTimeGroup();
+      } else {
+        // Swipe right -> prev
+        this.prevTimeGroup();
+      }
+    }
   }
 
   getFormattedDate(date: string): string {

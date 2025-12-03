@@ -744,6 +744,16 @@ main {
   .day-detail-content {
     max-height: 200px;
   }
+  
+  /* Desktop time groups visible on desktop */
+  .desktop-time-groups {
+    display: block;
+  }
+  
+  /* Mobile carousel hidden on desktop */
+  .mobile-time-carousel {
+    display: none;
+  }
 
   /* Adjust medication table for mobile */
   .mobile-medication .medication-table {
@@ -799,5 +809,120 @@ main {
 
   .desktop-medication {
     display: block;
+  }
+  
+  /* Desktop time groups visible */
+  .desktop-time-groups {
+    display: block;
+  }
+  
+  /* Mobile carousel hidden on desktop */
+  .mobile-time-carousel {
+    display: none;
+  }
+}
+
+/* Mobile Carousel Styles */
+@media (max-width: 768px) {
+  /* Hide desktop accordion on mobile */
+  .desktop-time-groups {
+    display: none;
+  }
+  
+  /* Show mobile carousel */
+  .mobile-time-carousel {
+    display: block;
+    width: 100%;
+    touch-action: pan-y;
+    user-select: none;
+  }
+  
+  .time-slide {
+    width: 100%;
+    min-height: 150px;
+  }
+  
+  .time-group-mobile {
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+  }
+  
+  .time-group-mobile.all-taken {
+    background: linear-gradient(to bottom, rgba(176, 196, 177, 0.15), rgba(176, 196, 177, 0.05));
+    border-left-color: var(--success-green);
+  }
+  
+  .time-group-mobile.has-missed {
+    background: linear-gradient(to bottom, rgba(237, 175, 184, 0.15), rgba(237, 175, 184, 0.05));
+    border-left-color: var(--error-red);
+  }
+  
+  .time-group-header-mobile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--neutral-900);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(74, 87, 89, 0.1);
+  }
+  
+  .time-group-header-mobile i.fa-clock {
+    color: var(--cherry-blossom-pink);
+    font-size: 1.2rem;
+  }
+  
+  .medication-list-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  /* Carousel Dots Navigation */
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 0 8px 0;
+  }
+  
+  .carousel-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--neutral-300);
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+  
+  .carousel-dots .dot.active {
+    background: var(--cherry-blossom-pink);
+    border-color: var(--cherry-blossom-pink);
+    width: 12px;
+    height: 12px;
+  }
+  
+  .carousel-dots .dot.has-missed {
+    border-color: var(--error-red);
+  }
+  
+  .carousel-dots .dot.has-missed.active {
+    background: var(--error-red);
+    border-color: var(--error-red);
+  }
+  
+  .carousel-dots .dot:hover {
+    transform: scale(1.1);
+  }
+  
+  .carousel-dots .dot:active {
+    transform: scale(0.95);
   }
 }
