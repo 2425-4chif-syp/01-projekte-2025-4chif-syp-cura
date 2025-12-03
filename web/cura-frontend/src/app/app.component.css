@@ -622,7 +622,7 @@ main {
   .carousel-dots .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--neutral-300); background: white; cursor: pointer; transition: all 0.3s; padding: 0; }
   .carousel-dots .dot.active { background: var(--cherry-blossom-pink); border-color: var(--cherry-blossom-pink); width: 14px; height: 14px; }
   .carousel-dots .dot.has-missed { background: #bc4749; border-color: #bc4749; }
-  .carousel-dots .dot.has-missed.active { background: #8b0000; border-color: #8b0000; box-shadow: 0 0 8px rgba(139,0,0,0.6); }
+  .carousel-dots .dot.has-missed.active { background: #8b0000; border-color: #8b0000; }
   .carousel-dots .dot:hover { transform: scale(1.15); }
   .carousel-dots .dot:active { transform: scale(0.9); }
 }
