@@ -77,18 +77,23 @@ CREATE TABLE medication_plans (
     is_active BOOLEAN DEFAULT true
 );
 
--- 7. Medication Intakes Table (logs when medications were actually taken)
+-- 7. Drawer Openings Table (logs when drawer was opened - not specific medications)
+-- System can only detect: day (via RFID) + time of day (morning/noon/afternoon/evening)
 CREATE TABLE medication_intakes (
     id SERIAL PRIMARY KEY,
     patient_id INTEGER NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
-    medication_plan_id INTEGER NOT NULL REFERENCES medication_plans(id) ON DELETE CASCADE,
-    intake_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    quantity INTEGER NOT NULL CHECK (quantity > 0),
-    notes TEXT,
-    rfid_tag VARCHAR(50),
+    intake_date DATE NOT NULL,
     
-    -- Ensure we can quickly query by patient and date
-    CONSTRAINT unique_intake_per_plan_per_time UNIQUE (patient_id, medication_plan_id, intake_time)
+    -- Day time when drawer was opened: Morning=1, Noon=2, Afternoon=4, Evening=8
+    -- Only ONE value per entry (not combined like in medication_plans)
+    day_time_flag INTEGER NOT NULL CHECK (day_time_flag IN (1, 2, 4, 8)),
+    
+    opened_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    rfid_tag VARCHAR(50),
+    notes TEXT,
+    
+    -- One entry per patient, date, and time of day
+    CONSTRAINT unique_opening_per_day_time UNIQUE (patient_id, intake_date, day_time_flag)
 );
 
 -- Indexes for better performance
@@ -102,9 +107,9 @@ CREATE INDEX idx_medications_name ON medications(name);
 
 -- Indexes for medication_intakes (critical for calendar queries)
 CREATE INDEX idx_medication_intakes_patient ON medication_intakes(patient_id);
-CREATE INDEX idx_medication_intakes_intake_time ON medication_intakes(intake_time);
-CREATE INDEX idx_medication_intakes_patient_date ON medication_intakes(patient_id, DATE(intake_time));
-CREATE INDEX idx_medication_intakes_plan ON medication_intakes(medication_plan_id);
+CREATE INDEX idx_medication_intakes_date ON medication_intakes(intake_date);
+CREATE INDEX idx_medication_intakes_patient_date ON medication_intakes(patient_id, intake_date);
+CREATE INDEX idx_medication_intakes_day_time ON medication_intakes(day_time_flag);
 CREATE INDEX idx_medication_intakes_rfid ON medication_intakes(rfid_tag) WHERE rfid_tag IS NOT NULL;
 
 -- Create Keycloak Database
