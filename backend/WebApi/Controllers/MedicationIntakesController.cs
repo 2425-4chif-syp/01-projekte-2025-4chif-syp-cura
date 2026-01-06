@@ -1,4 +1,5 @@
 using Core.Contracts;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.DTOs;
 
@@ -15,83 +16,137 @@ namespace WebApi.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet("patient/{patientId}/date/{date}")]
+        /// <summary>
+        /// Get all drawer opening logs for a specific date and patient
+        /// Returns which times of day the drawer was opened
+        /// </summary>
+        [HttpGet("patient/{patientId}/date/{dateStr}")]
         public async Task<ActionResult<List<MedicationIntakeDetailDto>>> GetIntakesForDate(
             int patientId, 
-            DateTime date)
+            string dateStr)
         {
             var patient = await _unitOfWork.PatientRepository.GetByIdAsync(patientId);
             if (patient == null)
                 return NotFound($"Patient with ID {patientId} not found");
 
-            var dayOfWeek = (int)date.DayOfWeek;
-            var weekdayFlag = dayOfWeek == 0 ? 1 : (1 << dayOfWeek);
+            if (!DateOnly.TryParse(dateStr, out var date))
+                return BadRequest("Invalid date format. Use YYYY-MM-DD");
 
-            // Get active medication plans for this patient and weekday
-            var medicationPlans = await _unitOfWork.MedicationPlans.GetByPatientIdAsync(patientId);
-            var activePlans = medicationPlans
-                .Where(p => p.IsActive 
-                         && (p.WeekdayFlags & weekdayFlag) != 0
-                         && p.ValidFrom <= date 
-                         && (!p.ValidTo.HasValue || p.ValidTo >= date))
-                .ToList();
+            var intakes = await _unitOfWork.MedicationIntakeRepository
+                .GetByPatientAndDateAsync(patientId, date);
 
-            // Get actual intakes for this day
-            var intakes = await _unitOfWork.MedicationIntakeRepository.GetByPatientIdAsync(patientId);
-            var dayIntakes = intakes
-                .Where(i => i.IntakeTime.Date == date.Date)
-                .ToList();
-
-            var result = new List<MedicationIntakeDetailDto>();
-
-            // Define time slots
-            var timeSlots = new[]
+            var result = intakes.Select(intake => new MedicationIntakeDetailDto
             {
-                new { Flag = 1, Label = "Morgen" },
-                new { Flag = 2, Label = "Mittag" },
-                new { Flag = 4, Label = "Nachmittag" },
-                new { Flag = 8, Label = "Abend" }
-            };
+                IntakeDate = intake.IntakeDate,
+                DayTimeFlag = intake.DayTimeFlag,
+                TimeLabel = GetTimeLabelFromFlag(intake.DayTimeFlag),
+                OpenedAt = intake.OpenedAt,
+                RfidTag = intake.RfidTag,
+                Notes = intake.Notes
+            }).ToList();
 
-            foreach (var timeSlot in timeSlots)
-            {
-                var plansForTime = activePlans
-                    .Where(p => (p.DayTimeFlags & timeSlot.Flag) != 0)
-                    .ToList();
-
-                foreach (var plan in plansForTime)
-                {
-                    var medication = await _unitOfWork.MedicationRepository.GetByIdAsync(plan.MedicationId);
-                    if (medication == null) continue;
-
-                    // Check if there's an intake record for this plan
-                    var intake = dayIntakes.FirstOrDefault(i => i.MedicationPlanId == plan.Id);
-
-                    result.Add(new MedicationIntakeDetailDto
-                    {
-                        MedicationPlanId = plan.Id,
-                        MedicationName = medication.Name,
-                        TimeLabel = timeSlot.Label,
-                        ScheduledTime = date.Date.AddHours(GetHourForTimeSlot(timeSlot.Flag)),
-                        IsTaken = intake != null,
-                        TakenAt = intake?.IntakeTime
-                    });
-                }
-            }
-
-            return Ok(result.OrderBy(r => r.ScheduledTime).ToList());
+            return Ok(result);
         }
 
-        private int GetHourForTimeSlot(int flag)
+        /// <summary>
+        /// Get all drawer opening logs for a patient within a date range
+        /// </summary>
+        [HttpGet("patient/{patientId}/range")]
+        public async Task<ActionResult<List<MedicationIntakeDetailDto>>> GetIntakesForRange(
+            int patientId,
+            [FromQuery] string startDate,
+            [FromQuery] string endDate)
+        {
+            var patient = await _unitOfWork.PatientRepository.GetByIdAsync(patientId);
+            if (patient == null)
+                return NotFound($"Patient with ID {patientId} not found");
+
+            if (!DateOnly.TryParse(startDate, out var start))
+                return BadRequest("Invalid start date format. Use YYYY-MM-DD");
+
+            if (!DateOnly.TryParse(endDate, out var end))
+                return BadRequest("Invalid end date format. Use YYYY-MM-DD");
+
+            var intakes = await _unitOfWork.MedicationIntakeRepository
+                .GetByPatientAndDateRangeAsync(patientId, start, end);
+
+            var result = intakes.Select(intake => new MedicationIntakeDetailDto
+            {
+                IntakeDate = intake.IntakeDate,
+                DayTimeFlag = intake.DayTimeFlag,
+                TimeLabel = GetTimeLabelFromFlag(intake.DayTimeFlag),
+                OpenedAt = intake.OpenedAt,
+                RfidTag = intake.RfidTag,
+                Notes = intake.Notes
+            }).ToList();
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Create a new drawer opening log (called by RFID system)
+        /// </summary>
+        [HttpPost]
+        public async Task<ActionResult<MedicationIntakeDetailDto>> CreateIntake(
+            [FromBody] CreateMedicationIntakeRequest request)
+        {
+            var patient = await _unitOfWork.PatientRepository.GetByIdAsync(request.PatientId);
+            if (patient == null)
+                return NotFound($"Patient with ID {request.PatientId} not found");
+
+            // Validate day time flag (must be 1, 2, 4, or 8)
+            if (request.DayTimeFlag != 1 && request.DayTimeFlag != 2 
+                && request.DayTimeFlag != 4 && request.DayTimeFlag != 8)
+            {
+                return BadRequest("DayTimeFlag must be 1 (Morning), 2 (Noon), 4 (Afternoon), or 8 (Evening)");
+            }
+
+            var intake = new MedicationIntake
+            {
+                PatientId = request.PatientId,
+                IntakeDate = request.IntakeDate,
+                DayTimeFlag = request.DayTimeFlag,
+                OpenedAt = DateTime.UtcNow,
+                RfidTag = request.RfidTag,
+                Notes = request.Notes
+            };
+
+            var created = await _unitOfWork.MedicationIntakeRepository.CreateAsync(intake);
+
+            var result = new MedicationIntakeDetailDto
+            {
+                IntakeDate = created.IntakeDate,
+                DayTimeFlag = created.DayTimeFlag,
+                TimeLabel = GetTimeLabelFromFlag(created.DayTimeFlag),
+                OpenedAt = created.OpenedAt,
+                RfidTag = created.RfidTag,
+                Notes = created.Notes
+            };
+
+            return CreatedAtAction(nameof(GetIntakesForDate), 
+                new { patientId = created.PatientId, dateStr = created.IntakeDate.ToString("yyyy-MM-dd") }, 
+                result);
+        }
+
+        private static string GetTimeLabelFromFlag(int flag)
         {
             return flag switch
             {
-                1 => 8,   // Morgen: 08:00
-                2 => 12,  // Mittag: 12:00
-                4 => 16,  // Nachmittag: 16:00
-                8 => 20,  // Abend: 20:00
-                _ => 12
+                1 => "Morgen",
+                2 => "Mittag",
+                4 => "Nachmittag",
+                8 => "Abend",
+                _ => "Unknown"
             };
         }
+    }
+
+    public class CreateMedicationIntakeRequest
+    {
+        public int PatientId { get; set; }
+        public DateOnly IntakeDate { get; set; }
+        public int DayTimeFlag { get; set; }
+        public string? RfidTag { get; set; }
+        public string? Notes { get; set; }
     }
 }

@@ -167,16 +167,19 @@ export class AppComponent implements OnInit {
   }
 
   loadDayMedications(date: string) {
-    // Lade echte Einnahme-Daten vom Backend
+    // Lade Schubladen-Öffnungen vom Backend
+    // Das System kann nur erfassen WANN die Schublade geöffnet wurde (Morgen/Mittag/Nachmittag/Abend)
+    // NICHT welches Medikament genommen wurde
     this.medicationPlanService.getMedicationIntakesForDate(1, date).subscribe({
       next: (intakes) => {
+        // Konvertiere zu Display-Format
         this.selectedDayMedications = intakes.map(intake => ({
           timeLabel: intake.timeLabel,
-          medication: intake.medicationName,
-          status: intake.isTaken ? 'taken' : 'missed'
+          medication: `Schublade geöffnet um ${new Date(intake.openedAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`,
+          status: 'taken' as const // Schublade wurde geöffnet = genommen
         }));
         
-        // Gruppiere Medikamente nach Tageszeit
+        // Gruppiere nach Tageszeit
         this.groupMedicationsByTime();
       },
       error: (err) => {

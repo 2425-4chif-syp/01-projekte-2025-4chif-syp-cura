@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, map, of } from 'rxjs';
 import { MedicationPlan } from '../models/medication-plan.model';
 import { Medication } from '../models/medication.model';
+import { MedicationIntake } from '../models/medication-intake.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -31,9 +32,27 @@ export class MedicationPlanService {
     );
   }
 
-  getMedicationIntakesForDate(patientId: number, date: string): Observable<any[]> {
-    return this.http.get<any[]>(
+  /**
+   * Get all drawer opening logs for a specific date
+   * @param patientId Patient ID
+   * @param date Date in YYYY-MM-DD format
+   * @returns Array of drawer opening events (which times of day were opened)
+   */
+  getMedicationIntakesForDate(patientId: number, date: string): Observable<MedicationIntake[]> {
+    return this.http.get<MedicationIntake[]>(
       `${this.API_URL}/MedicationIntakes/patient/${patientId}/date/${date}`
+    );
+  }
+
+  /**
+   * Get all drawer opening logs for a date range
+   * @param patientId Patient ID
+   * @param startDate Start date in YYYY-MM-DD format
+   * @param endDate End date in YYYY-MM-DD format
+   */
+  getMedicationIntakesForRange(patientId: number, startDate: string, endDate: string): Observable<MedicationIntake[]> {
+    return this.http.get<MedicationIntake[]>(
+      `${this.API_URL}/MedicationIntakes/patient/${patientId}/range?startDate=${startDate}&endDate=${endDate}`
     );
   }
 

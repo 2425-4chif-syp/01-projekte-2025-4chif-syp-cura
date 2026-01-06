@@ -17,43 +17,39 @@ namespace Persistence
         {
             return await _context.MedicationIntakes
                 .Include(mi => mi.Patient)
-                .Include(mi => mi.MedicationPlan)
-                    .ThenInclude(mp => mp.Medication)
                 .Where(mi => mi.PatientId == patientId)
-                .OrderByDescending(mi => mi.IntakeTime)
+                .OrderByDescending(mi => mi.IntakeDate)
+                    .ThenByDescending(mi => mi.OpenedAt)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<MedicationIntake>> GetByPatientAndDateRangeAsync(int patientId, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<MedicationIntake>> GetByPatientAndDateRangeAsync(int patientId, DateOnly startDate, DateOnly endDate)
         {
             return await _context.MedicationIntakes
                 .Include(mi => mi.Patient)
-                .Include(mi => mi.MedicationPlan)
-                    .ThenInclude(mp => mp.Medication)
                 .Where(mi => mi.PatientId == patientId 
-                    && mi.IntakeTime.Date >= startDate.Date 
-                    && mi.IntakeTime.Date <= endDate.Date)
-                .OrderBy(mi => mi.IntakeTime)
+                    && mi.IntakeDate >= startDate 
+                    && mi.IntakeDate <= endDate)
+                .OrderBy(mi => mi.IntakeDate)
+                    .ThenBy(mi => mi.DayTimeFlag)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<MedicationIntake>> GetByPatientAndDateAsync(int patientId, DateTime date)
+        public async Task<IEnumerable<MedicationIntake>> GetByPatientAndDateAsync(int patientId, DateOnly date)
         {
             return await _context.MedicationIntakes
                 .Include(mi => mi.Patient)
-                .Include(mi => mi.MedicationPlan)
-                    .ThenInclude(mp => mp.Medication)
-                .Where(mi => mi.PatientId == patientId && mi.IntakeTime.Date == date.Date)
-                .OrderBy(mi => mi.IntakeTime)
+                .Where(mi => mi.PatientId == patientId && mi.IntakeDate == date)
+                .OrderBy(mi => mi.DayTimeFlag)
                 .ToListAsync();
         }
 
-        public async Task<bool> HasTakenTodayAsync(int patientId, int medicationPlanId, DateTime date)
+        public async Task<bool> WasDrawerOpenedAsync(int patientId, DateOnly date, int dayTimeFlag)
         {
             return await _context.MedicationIntakes
                 .AnyAsync(mi => mi.PatientId == patientId &&
-                               mi.MedicationPlanId == medicationPlanId &&
-                               mi.IntakeTime.Date == date.Date);
+                               mi.IntakeDate == date &&
+                               mi.DayTimeFlag == dayTimeFlag);
         }
 
         public async Task<MedicationIntake> CreateAsync(MedicationIntake intake)
@@ -64,8 +60,6 @@ namespace Persistence
             // Reload with navigation properties
             return await _context.MedicationIntakes
                 .Include(mi => mi.Patient)
-                .Include(mi => mi.MedicationPlan)
-                    .ThenInclude(mp => mp.Medication)
                 .FirstAsync(mi => mi.Id == intake.Id);
         }
 
@@ -73,8 +67,6 @@ namespace Persistence
         {
             return await _context.MedicationIntakes
                 .Include(mi => mi.Patient)
-                .Include(mi => mi.MedicationPlan)
-                    .ThenInclude(mp => mp.Medication)
                 .FirstOrDefaultAsync(mi => mi.Id == id);
         }
 

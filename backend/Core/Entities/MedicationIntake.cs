@@ -4,7 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Core.Entities
 {
     /// <summary>
-    /// Logs when a medication was actually taken by a patient
+    /// Logs when the medication drawer was opened (by day and time of day)
+    /// System can only detect: which day (via RFID) + time of day (morning/noon/afternoon/evening)
+    /// NOT which specific medication was taken
     /// </summary>
     public class MedicationIntake : EntityObject
     {
@@ -12,30 +14,47 @@ namespace Core.Entities
         [ForeignKey(nameof(Patient))]
         public int PatientId { get; set; }
         
+        /// <summary>
+        /// Date when the drawer was opened
+        /// </summary>
         [Required]
-        [ForeignKey(nameof(MedicationPlan))]
-        public int MedicationPlanId { get; set; }
-        
-        [Required]
-        public DateTime IntakeTime { get; set; }
-        
-        [Required, Range(1, int.MaxValue)]
-        public int Quantity { get; set; }
-        
-        public string? Notes { get; set; }
+        public DateOnly IntakeDate { get; set; }
         
         /// <summary>
-        /// RFID Tag that was used to log this intake (if applicable)
+        /// Time of day when drawer was opened
+        /// Binary flags: Morning=1, Noon=2, Afternoon=4, Evening=8
+        /// Only ONE value per entry (not combined)
+        /// </summary>
+        [Required, Range(1, 8)]
+        public int DayTimeFlag { get; set; }
+        
+        /// <summary>
+        /// Exact timestamp when the drawer was opened
+        /// </summary>
+        [Required]
+        public DateTime OpenedAt { get; set; }
+        
+        /// <summary>
+        /// RFID Tag that was used (weekday chip)
         /// </summary>
         public string? RfidTag { get; set; }
+        
+        public string? Notes { get; set; }
 
         // Navigation Properties
         public Patient Patient { get; set; } = null!;
-        public MedicationPlan MedicationPlan { get; set; } = null!;
 
         public override string ToString()
         {
-            return $"{Patient?.Name} - {MedicationPlan?.Medication?.Name} at {IntakeTime:yyyy-MM-dd HH:mm}";
+            var timeOfDay = DayTimeFlag switch
+            {
+                1 => "Morning",
+                2 => "Noon",
+                4 => "Afternoon",
+                8 => "Evening",
+                _ => "Unknown"
+            };
+            return $"{Patient?.Name} - {timeOfDay} on {IntakeDate:yyyy-MM-dd} at {OpenedAt:HH:mm}";
         }
     }
 }

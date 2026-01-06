@@ -5,42 +5,42 @@ namespace Core.Contracts
     public interface IMedicationIntakeRepository
     {
         /// <summary>
-        /// Gets all medication intakes for a specific patient
+        /// Gets all drawer opening logs for a specific patient
         /// </summary>
         Task<IEnumerable<MedicationIntake>> GetByPatientIdAsync(int patientId);
         
         /// <summary>
-        /// Gets all medication intakes for a patient within a date range
+        /// Gets all drawer opening logs for a patient within a date range
         /// </summary>
-        Task<IEnumerable<MedicationIntake>> GetByPatientAndDateRangeAsync(int patientId, DateTime startDate, DateTime endDate);
+        Task<IEnumerable<MedicationIntake>> GetByPatientAndDateRangeAsync(int patientId, DateOnly startDate, DateOnly endDate);
         
         /// <summary>
-        /// Gets all medication intakes for a specific date
+        /// Gets all drawer opening logs for a specific date
         /// </summary>
-        Task<IEnumerable<MedicationIntake>> GetByPatientAndDateAsync(int patientId, DateTime date);
+        Task<IEnumerable<MedicationIntake>> GetByPatientAndDateAsync(int patientId, DateOnly date);
         
         /// <summary>
-        /// Checks if a medication plan was already taken today
+        /// Checks if drawer was opened at specific time of day for a date
         /// </summary>
-        Task<bool> HasTakenTodayAsync(int patientId, int medicationPlanId, DateTime date);
+        Task<bool> WasDrawerOpenedAsync(int patientId, DateOnly date, int dayTimeFlag);
         
         /// <summary>
-        /// Creates a new medication intake log
+        /// Creates a new drawer opening log
         /// </summary>
         Task<MedicationIntake> CreateAsync(MedicationIntake intake);
         
         /// <summary>
-        /// Gets a specific medication intake by ID
+        /// Gets a specific drawer opening log by ID
         /// </summary>
         Task<MedicationIntake?> GetByIdAsync(int id);
         
         /// <summary>
-        /// Updates an existing medication intake
+        /// Updates an existing drawer opening log
         /// </summary>
         Task UpdateAsync(MedicationIntake intake);
         
         /// <summary>
-        /// Deletes a medication intake
+        /// Deletes a drawer opening log
         /// </summary>
         Task DeleteAsync(int id);
     }
