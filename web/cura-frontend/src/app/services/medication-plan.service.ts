@@ -79,36 +79,35 @@ export class MedicationPlanService {
       { flag: 8, label: 'Abend' }
     ];
 
+    // Wochentag-Flags: Sonntag=1, Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64
+    const weekdayFlags = [1, 2, 4, 8, 16, 32, 64]; // So, Mo, Di, Mi, Do, Fr, Sa
+
     const rows: { timeLabel: string; days: string[] }[] = [];
-    const medicationsByTime = new Map<number, Map<number, string>>();
 
-    for (const plan of plans) {
-      for (let timeFlag = 1; timeFlag <= 8; timeFlag *= 2) {
-        if (plan.dayTimeFlags & timeFlag) {
-          if (!medicationsByTime.has(timeFlag)) {
-            medicationsByTime.set(timeFlag, new Map());
-          }
-          const timeMap = medicationsByTime.get(timeFlag)!;
-          
-          for (let dayFlag = 1; dayFlag <= 64; dayFlag *= 2) {
-            if (plan.weekdayFlags & dayFlag) {
-              const dayIndex = Math.log2(dayFlag);
-              const medName = medicationNames.get(plan.medicationId) || `Med${plan.medicationId}`;
-              timeMap.set(dayIndex, medName);
-            }
-          }
-        }
-      }
-    }
-
+    // Für jede Tageszeit
     for (const timeConfig of timeLabels) {
       const days: string[] = [];
-      const timeMap = medicationsByTime.get(timeConfig.flag);
-      
+
+      // Für jeden Wochentag (So-Sa)
       for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
-        days.push(timeMap?.get(dayIndex) || '');
+        const dayFlag = weekdayFlags[dayIndex];
+        const medications: string[] = [];
+
+        // Sammle alle Medikamente für diese Zeit + Tag Kombination
+        for (const plan of plans) {
+          const hasTime = (plan.dayTimeFlags & timeConfig.flag) !== 0;
+          const hasDay = (plan.weekdayFlags & dayFlag) !== 0;
+          
+          if (hasTime && hasDay) {
+            const medName = medicationNames.get(plan.medicationId) || `Med${plan.medicationId}`;
+            medications.push(medName);
+          }
+        }
+
+        // Verbinde mehrere Medikamente mit Komma
+        days.push(medications.join(', '));
       }
-      
+
       rows.push({ timeLabel: timeConfig.label, days });
     }
 
