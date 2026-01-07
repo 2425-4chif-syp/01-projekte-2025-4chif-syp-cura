@@ -44,15 +44,18 @@ namespace Core.Entities
 
         public override string ToString()
         {
-            var timeOfDay = DayTimeFlag switch
+            var hour = IntakeTime.Hour;
+            var timeOfDay = hour switch
             {
-                1 => "Morning",
-                2 => "Noon",
-                4 => "Afternoon",
-                8 => "Evening",
-                _ => "Unknown"
+                >= 6 and < 11 => "Morning",
+                >= 11 and < 14 => "Noon",
+                >= 14 and < 18 => "Afternoon",
+                >= 18 and < 24 => "Evening",
+                _ => "Night"
             };
-            return $"{Patient?.Name} - {timeOfDay} on {IntakeDate:yyyy-MM-dd} at {OpenedAt:HH:mm}";
+            
+            var planInfo = MedicationPlanId.HasValue ? $"Plan {MedicationPlanId}" : "No Plan";
+            return $"{Patient?.Name} - {timeOfDay} on {IntakeTime:yyyy-MM-dd} at {IntakeTime:HH:mm} ({Quantity}x) [{planInfo}]";
         }
     }
 }
