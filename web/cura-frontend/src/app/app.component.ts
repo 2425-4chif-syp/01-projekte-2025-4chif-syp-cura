@@ -6,6 +6,8 @@ import { MedicationPlan } from './models/medication-plan.model';
 import { DayDetail } from './models/day-detail.model';
 import { CalendarService } from './services/calendar.service';
 import { MedicationPlanService } from './services/medication-plan.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-root',
@@ -323,5 +325,48 @@ export class AppComponent implements OnInit {
       month: 'long', 
       year: 'numeric' 
     });
+  }
+
+  exportMedicationPlan() {
+    const doc = new jsPDF();
+    
+    // Titel
+    doc.setFontSize(16);
+    doc.text('Medikamentenplan', 14, 20);
+    
+    // Untertitel mit aktuellem Monat
+    doc.setFontSize(12);
+    doc.text(this.currentMonth, 14, 28);
+    
+    // Tabellendaten vorbereiten
+    const headers = [['Zeit', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']];
+    const data = this.medicationRows.map(row => [
+      row.timeLabel,
+      ...row.days
+    ]);
+    
+    // Tabelle erstellen
+    autoTable(doc, {
+      head: headers,
+      body: data,
+      startY: 35,
+      styles: {
+        fontSize: 10,
+        cellPadding: 3,
+        halign: 'center'
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      columnStyles: {
+        0: { halign: 'left', cellWidth: 30 }
+      }
+    });
+    
+    // PDF speichern
+    const fileName = `Medikamentenplan_${this.currentMonth.replace(' ', '_')}.pdf`;
+    doc.save(fileName);
   }
 }
