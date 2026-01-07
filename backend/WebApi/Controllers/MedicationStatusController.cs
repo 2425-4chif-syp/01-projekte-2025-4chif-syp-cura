@@ -103,5 +103,81 @@ namespace WebApi.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("patient/{patientId}/day/{year}/{month}/{day}")]
+        public async Task<ActionResult<IEnumerable<DayDetailDto>>> GetDayDetails(
+            int patientId, int year, int month, int day)
+        {
+            var date = new DateTime(year, month, day);
+            var dayOfWeek = (int)date.DayOfWeek;
+            var weekdayFlag = dayOfWeek == 0 ? 1 : (1 << dayOfWeek);
+
+            // Get all active plans for this patient
+            var medicationPlans = await _unitOfWork.MedicationPlans.GetByPatientIdAsync(patientId);
+            var activePlans = medicationPlans
+                .Where(p => p.IsActive 
+                         && p.ValidFrom <= date
+                         && (!p.ValidTo.HasValue || p.ValidTo >= date)
+                         && (p.WeekdayFlags & weekdayFlag) != 0)
+                .ToList();
+
+            // Get actual intakes for this day
+            var intakes = await _unitOfWork.MedicationIntakeRepository.GetByPatientIdAsync(patientId);
+            var dayIntakes = intakes
+                .Where(i => i.IntakeTime.Date == date)
+                .ToList();
+
+            var result = new List<DayDetailDto>();
+
+            // Process each plan
+            foreach (var plan in activePlans)
+            {
+                // Check each time slot
+                for (int timeFlag = 1; timeFlag <= 8; timeFlag *= 2)
+                {
+                    if ((plan.DayTimeFlags & timeFlag) != 0)
+                    {
+                        // This medication is scheduled for this time slot
+                        var timeLabel = timeFlag switch
+                        {
+                            1 => "Morning",
+                            2 => "Noon",
+                            4 => "Afternoon",
+                            8 => "Evening",
+                            _ => "Unknown"
+                        };
+
+                        // Find if there's an intake for this plan in this time slot
+                        var intake = dayIntakes.FirstOrDefault(i => 
+                            i.MedicationPlanId == plan.Id && 
+                            GetTimeSlotFromHour(i.IntakeTime.Hour) == timeFlag);
+
+                        result.Add(new DayDetailDto
+                        {
+                            MedicationPlanId = plan.Id,
+                            MedicationName = plan.Medication?.Name ?? "Unknown",
+                            TimeLabel = timeLabel,
+                            TimeSlotFlag = timeFlag,
+                            Quantity = plan.Quantity,
+                            WasTaken = intake != null,
+                            IntakeTime = intake?.IntakeTime,
+                            ActualQuantity = intake?.Quantity,
+                            Notes = intake?.Notes
+                        });
+                    }
+                }
+            }
+
+            return Ok(result.OrderBy(r => r.TimeSlotFlag).ThenBy(r => r.MedicationName));
+        }
+
+        private int GetTimeSlotFromHour(int hour)
+        {
+            if (hour >= 6 && hour < 11) return 1;      // Morning
+            else if (hour >= 11 && hour < 14) return 2; // Noon
+            else if (hour >= 14 && hour < 18) return 4; // Afternoon
+            else if (hour >= 18 && hour < 24) return 8; // Evening
+            return 0;
+        }
     }
 }

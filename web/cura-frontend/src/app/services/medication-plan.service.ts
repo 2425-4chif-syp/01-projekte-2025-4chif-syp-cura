@@ -4,6 +4,7 @@ import { Observable, forkJoin, map, of } from 'rxjs';
 import { MedicationPlan } from '../models/medication-plan.model';
 import { Medication } from '../models/medication.model';
 import { MedicationIntake } from '../models/medication-intake.model';
+import { DayDetail } from '../models/day-detail.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -53,6 +54,20 @@ export class MedicationPlanService {
   getMedicationIntakesForRange(patientId: number, startDate: string, endDate: string): Observable<MedicationIntake[]> {
     return this.http.get<MedicationIntake[]>(
       `${this.API_URL}/MedicationIntakes/patient/${patientId}/range?startDate=${startDate}&endDate=${endDate}`
+    );
+  }
+
+  /**
+   * Get day details showing all scheduled medications and their status
+   * @param patientId Patient ID
+   * @param year Year
+   * @param month Month (1-12)
+   * @param day Day of month
+   * @returns Array of medications with status (taken/missed)
+   */
+  getDayDetails(patientId: number, year: number, month: number, day: number): Observable<DayDetail[]> {
+    return this.http.get<DayDetail[]>(
+      `${this.API_URL}/MedicationStatus/patient/${patientId}/day/${year}/${month}/${day}`
     );
   }
 

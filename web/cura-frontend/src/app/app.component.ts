@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { KeycloakService } from 'keycloak-angular';
 import { CalendarDay } from './models/calendar-day.model';
 import { MedicationPlan } from './models/medication-plan.model';
+import { DayDetail } from './models/day-detail.model';
 import { CalendarService } from './services/calendar.service';
 import { MedicationPlanService } from './services/medication-plan.service';
 
@@ -167,23 +168,38 @@ export class AppComponent implements OnInit {
   }
 
   loadDayMedications(date: string) {
-    // Lade Medikamenten-Einnahmen vom Backend
-    // System erfasst konkrete Einnahmen mit Zeitstempel und Menge
-    this.medicationPlanService.getMedicationIntakesForDate(1, date).subscribe({
-      next: (intakes) => {
-        // Konvertiere zu Display-Format
-        this.selectedDayMedications = intakes.map(intake => ({
-          timeLabel: intake.timeLabel || 'Unbekannt',
-          medication: `Medikament eingenommen um ${new Date(intake.intakeTime).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} (${intake.quantity}x)`,
-          status: 'taken' as const
-        }));
+    // Parse date (format: YYYY-MM-DD)
+    const [year, month, day] = date.split('-').map(Number);
+    
+    // Load all scheduled and taken medications for this day
+    this.medicationPlanService.getDayDetails(1, year, month, day).subscribe({
+      next: (details) => {
+        // Convert to display format
+        this.selectedDayMedications = details.map(detail => {
+          let medication = detail.medicationName;
+          
+          if (detail.wasTaken && detail.intakeTime) {
+            const time = new Date(detail.intakeTime).toLocaleTimeString('de-DE', { 
+              hour: '2-digit', 
+              minute: '2-digit' 
+            });
+            medication += ` - Eingenommen um ${time} (${detail.actualQuantity || detail.quantity}x)`;
+          } else {
+            medication += ` - Verpasst (${detail.quantity}x geplant)`;
+          }
+          
+          return {
+            timeLabel: detail.timeLabel,
+            medication: medication,
+            status: detail.wasTaken ? 'taken' as const : 'missed' as const
+          };
+        });
         
-        // Gruppiere nach Tageszeit
+        // Group by time
         this.groupMedicationsByTime();
       },
       error: (err) => {
         console.error('Error loading day medications:', err);
-        // Fallback: Zeige leere Liste
         this.selectedDayMedications = [];
         this.groupedMedications = [];
       }
