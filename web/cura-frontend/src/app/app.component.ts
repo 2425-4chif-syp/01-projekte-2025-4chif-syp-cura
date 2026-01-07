@@ -188,7 +188,7 @@ export class AppComponent implements OnInit {
             });
             medication += ` - Eingenommen um ${time} (${detail.actualQuantity || detail.quantity}x)`;
           } else {
-            medication += ` - Verpasst (${detail.quantity}x geplant)`;
+            medication;
           }
           
           return {
