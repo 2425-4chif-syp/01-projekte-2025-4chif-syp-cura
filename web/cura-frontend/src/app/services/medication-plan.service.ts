@@ -79,8 +79,9 @@ export class MedicationPlanService {
       { flag: 8, label: 'Abend' }
     ];
 
-    // Wochentag-Flags: Sonntag=1, Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64
-    const weekdayFlags = [1, 2, 4, 8, 16, 32, 64]; // So, Mo, Di, Mi, Do, Fr, Sa
+    // WICHTIG: Reihenfolge muss Mo, Di, Mi, Do, Fr, Sa, So sein!
+    // Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64, So=1
+    const weekdayFlags = [2, 4, 8, 16, 32, 64, 1]; // Mo, Di, Mi, Do, Fr, Sa, So
 
     const rows: { timeLabel: string; days: string[] }[] = [];
 
@@ -88,10 +89,10 @@ export class MedicationPlanService {
     for (const timeConfig of timeLabels) {
       const days: string[] = [];
 
-      // Für jeden Wochentag (So-Sa)
+      // Für jeden Wochentag (Mo-So)
       for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
         const dayFlag = weekdayFlags[dayIndex];
-        const medications: string[] = [];
+        const medicationSet = new Set<string>();
 
         // Sammle alle Medikamente für diese Zeit + Tag Kombination
         for (const plan of plans) {
@@ -100,12 +101,12 @@ export class MedicationPlanService {
           
           if (hasTime && hasDay) {
             const medName = medicationNames.get(plan.medicationId) || `Med${plan.medicationId}`;
-            medications.push(medName);
+            medicationSet.add(medName);
           }
         }
 
-        // Verbinde mehrere Medikamente mit Komma
-        days.push(medications.join(', '));
+        // Konvertiere Set zu Array und verbinde mit Komma, oder "-" wenn leer
+        days.push(medicationSet.size > 0 ? Array.from(medicationSet).join(', ') : '-');
       }
 
       rows.push({ timeLabel: timeConfig.label, days });
