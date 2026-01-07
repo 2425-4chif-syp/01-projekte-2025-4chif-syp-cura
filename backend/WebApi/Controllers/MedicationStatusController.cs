@@ -127,6 +127,15 @@ namespace WebApi.Controllers
                 .Where(i => i.IntakeTime.Date == date)
                 .ToList();
 
+            // Group intakes by time slot (any intake in a time slot counts for all meds in that slot)
+            var takenTimeSlots = new HashSet<int>();
+            foreach (var intake in dayIntakes)
+            {
+                var slot = GetTimeSlotFromHour(intake.IntakeTime.Hour);
+                if (slot > 0)
+                    takenTimeSlots.Add(slot);
+            }
+
             var result = new List<DayDetailDto>();
 
             // Process each plan
@@ -147,7 +156,10 @@ namespace WebApi.Controllers
                             _ => "Unknown"
                         };
 
-                        // Find if there's an intake for this plan in this time slot
+                        // Check if ANY intake happened in this time slot
+                        var wasTaken = takenTimeSlots.Contains(timeFlag);
+                        
+                        // Try to find specific intake for this plan
                         var intake = dayIntakes.FirstOrDefault(i => 
                             i.MedicationPlanId == plan.Id && 
                             GetTimeSlotFromHour(i.IntakeTime.Hour) == timeFlag);
@@ -160,7 +172,7 @@ namespace WebApi.Controllers
                             TimeSlotFlag = timeFlag,
                             DayTimeFlag = timeFlag,
                             Quantity = plan.Quantity,
-                            WasTaken = intake != null,
+                            WasTaken = wasTaken,
                             IntakeTime = intake?.IntakeTime,
                             ActualQuantity = intake?.Quantity,
                             Notes = intake?.Notes
