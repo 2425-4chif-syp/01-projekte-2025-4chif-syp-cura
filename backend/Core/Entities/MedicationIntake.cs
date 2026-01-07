@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Core.Entities
 {
     /// <summary>
-    /// Logs when the medication drawer was opened (by day and time of day)
-    /// System can only detect: which day (via RFID) + time of day (morning/noon/afternoon/evening)
-    /// NOT which specific medication was taken
+    /// Tracks medication intake events from the database
+    /// Records when medications were taken via RFID drawer opening
     /// </summary>
     public class MedicationIntake : EntityObject
     {
@@ -15,24 +14,22 @@ namespace Core.Entities
         public int PatientId { get; set; }
         
         /// <summary>
-        /// Date when the drawer was opened
+        /// Medication plan that was followed (null if drawer opening tracked all meds at once)
         /// </summary>
-        [Required]
-        public DateOnly IntakeDate { get; set; }
+        [ForeignKey(nameof(MedicationPlan))]
+        public int? MedicationPlanId { get; set; }
         
         /// <summary>
-        /// Time of day when drawer was opened
-        /// Binary flags: Morning=1, Noon=2, Afternoon=4, Evening=8
-        /// Only ONE value per entry (not combined)
-        /// </summary>
-        [Required, Range(1, 8)]
-        public int DayTimeFlag { get; set; }
-        
-        /// <summary>
-        /// Exact timestamp when the drawer was opened
+        /// Exact timestamp when medication was taken
         /// </summary>
         [Required]
-        public DateTime OpenedAt { get; set; }
+        public DateTime IntakeTime { get; set; }
+        
+        /// <summary>
+        /// Quantity of medication taken
+        /// </summary>
+        [Required, Range(1, 100)]
+        public int Quantity { get; set; }
         
         /// <summary>
         /// RFID Tag that was used (weekday chip)
@@ -43,6 +40,7 @@ namespace Core.Entities
 
         // Navigation Properties
         public Patient Patient { get; set; } = null!;
+        public MedicationPlan? MedicationPlan { get; set; }
 
         public override string ToString()
         {

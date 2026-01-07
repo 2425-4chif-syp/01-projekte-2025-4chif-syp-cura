@@ -37,10 +37,11 @@ namespace WebApi.Controllers
 
             var result = intakes.Select(intake => new MedicationIntakeDetailDto
             {
-                IntakeDate = intake.IntakeDate,
-                DayTimeFlag = intake.DayTimeFlag,
-                TimeLabel = GetTimeLabelFromFlag(intake.DayTimeFlag),
-                OpenedAt = intake.OpenedAt,
+                Id = intake.Id,
+                PatientId = intake.PatientId,
+                MedicationPlanId = intake.MedicationPlanId,
+                IntakeTime = intake.IntakeTime,
+                Quantity = intake.Quantity,
                 RfidTag = intake.RfidTag,
                 Notes = intake.Notes
             }).ToList();
@@ -72,10 +73,11 @@ namespace WebApi.Controllers
 
             var result = intakes.Select(intake => new MedicationIntakeDetailDto
             {
-                IntakeDate = intake.IntakeDate,
-                DayTimeFlag = intake.DayTimeFlag,
-                TimeLabel = GetTimeLabelFromFlag(intake.DayTimeFlag),
-                OpenedAt = intake.OpenedAt,
+                Id = intake.Id,
+                PatientId = intake.PatientId,
+                MedicationPlanId = intake.MedicationPlanId,
+                IntakeTime = intake.IntakeTime,
+                Quantity = intake.Quantity,
                 RfidTag = intake.RfidTag,
                 Notes = intake.Notes
             }).ToList();
@@ -94,19 +96,15 @@ namespace WebApi.Controllers
             if (patient == null)
                 return NotFound($"Patient with ID {request.PatientId} not found");
 
-            // Validate day time flag (must be 1, 2, 4, or 8)
-            if (request.DayTimeFlag != 1 && request.DayTimeFlag != 2 
-                && request.DayTimeFlag != 4 && request.DayTimeFlag != 8)
-            {
-                return BadRequest("DayTimeFlag must be 1 (Morning), 2 (Noon), 4 (Afternoon), or 8 (Evening)");
-            }
+            if (request.Quantity <= 0)
+                return BadRequest("Quantity must be greater than 0");
 
             var intake = new MedicationIntake
             {
                 PatientId = request.PatientId,
-                IntakeDate = request.IntakeDate,
-                DayTimeFlag = request.DayTimeFlag,
-                OpenedAt = DateTime.UtcNow,
+                MedicationPlanId = request.MedicationPlanId,
+                IntakeTime = request.IntakeTime ?? DateTime.Now,
+                Quantity = request.Quantity,
                 RfidTag = request.RfidTag,
                 Notes = request.Notes
             };
@@ -115,37 +113,28 @@ namespace WebApi.Controllers
 
             var result = new MedicationIntakeDetailDto
             {
-                IntakeDate = created.IntakeDate,
-                DayTimeFlag = created.DayTimeFlag,
-                TimeLabel = GetTimeLabelFromFlag(created.DayTimeFlag),
-                OpenedAt = created.OpenedAt,
+                Id = created.Id,
+                PatientId = created.PatientId,
+                MedicationPlanId = created.MedicationPlanId,
+                IntakeTime = created.IntakeTime,
+                Quantity = created.Quantity,
                 RfidTag = created.RfidTag,
                 Notes = created.Notes
             };
 
+            var dateStr = created.IntakeTime.ToString("yyyy-MM-dd");
             return CreatedAtAction(nameof(GetIntakesForDate), 
-                new { patientId = created.PatientId, dateStr = created.IntakeDate.ToString("yyyy-MM-dd") }, 
+                new { patientId = created.PatientId, dateStr }, 
                 result);
-        }
-
-        private static string GetTimeLabelFromFlag(int flag)
-        {
-            return flag switch
-            {
-                1 => "Morgen",
-                2 => "Mittag",
-                4 => "Nachmittag",
-                8 => "Abend",
-                _ => "Unknown"
-            };
         }
     }
 
     public class CreateMedicationIntakeRequest
     {
         public int PatientId { get; set; }
-        public DateOnly IntakeDate { get; set; }
-        public int DayTimeFlag { get; set; }
+        public int? MedicationPlanId { get; set; }
+        public DateTime? IntakeTime { get; set; }
+        public int Quantity { get; set; } = 1;
         public string? RfidTag { get; set; }
         public string? Notes { get; set; }
     }

@@ -128,15 +128,15 @@ namespace Persistence
             });
 
             // MedicationIntake Configuration
-            // Tracks when the medication drawer was opened (by date and time of day)
+            // Tracks individual medication intake events with timestamp and quantity
             modelBuilder.Entity<MedicationIntake>(entity =>
             {
                 entity.ToTable("medication_intakes");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.PatientId).HasColumnName("patient_id").IsRequired();
-                entity.Property(e => e.IntakeDate).HasColumnName("intake_date").IsRequired();
-                entity.Property(e => e.DayTimeFlag).HasColumnName("day_time_flag").IsRequired();
-                entity.Property(e => e.OpenedAt).HasColumnName("opened_at").IsRequired();
+                entity.Property(e => e.MedicationPlanId).HasColumnName("medication_plan_id");
+                entity.Property(e => e.IntakeTime).HasColumnName("intake_time").IsRequired();
+                entity.Property(e => e.Quantity).HasColumnName("quantity").IsRequired();
                 entity.Property(e => e.Notes).HasColumnName("notes");
                 entity.Property(e => e.RfidTag).HasColumnName("rfid_tag").HasMaxLength(50);
 
@@ -144,9 +144,14 @@ namespace Persistence
                     .WithMany()
                     .HasForeignKey(e => e.PatientId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.MedicationPlan)
+                    .WithMany()
+                    .HasForeignKey(e => e.MedicationPlanId)
+                    .OnDelete(DeleteBehavior.SetNull);
                     
-                // Index for efficient date-based queries
-                entity.HasIndex(e => new { e.PatientId, e.IntakeDate, e.DayTimeFlag });
+                // Index for efficient time-based queries
+                entity.HasIndex(e => new { e.PatientId, e.IntakeTime });
             });
         }
     }

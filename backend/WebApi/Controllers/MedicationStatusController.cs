@@ -53,11 +53,25 @@ namespace WebApi.Controllers
                 var dayOfWeek = (int)date.DayOfWeek;
                 var weekdayFlag = dayOfWeek == 0 ? 1 : (1 << dayOfWeek);
 
-                var scheduledCount = activePlans.Count(p => 
-                    (p.WeekdayFlags & weekdayFlag) != 0 
-                    && p.ValidFrom <= date 
-                    && (!p.ValidTo.HasValue || p.ValidTo >= date));
+                // Count how many times medications should be taken this day
+                // Each medication plan can have multiple day_time_flags (morning, noon, evening)
+                var scheduledCount = 0;
+                foreach (var plan in activePlans)
+                {
+                    if ((plan.WeekdayFlags & weekdayFlag) != 0 
+                        && plan.ValidFrom <= date 
+                        && (!plan.ValidTo.HasValue || plan.ValidTo >= date))
+                    {
+                        // Count how many times per day (morning, noon, afternoon, evening)
+                        for (int flag = 1; flag <= 8; flag *= 2)
+                        {
+                            if ((plan.DayTimeFlags & flag) != 0)
+                                scheduledCount++;
+                        }
+                    }
+                }
 
+                // Count actual intakes for this day
                 var takenCount = monthIntakes.Count(i => i.IntakeTime.Date == date);
 
                 var status = scheduledCount == 0 ? "empty" 

@@ -1,37 +1,80 @@
 namespace WebApi.DTOs
 {
     /// <summary>
-    /// Represents a single drawer opening event
-    /// System can only track: Date + Time of Day (Morning/Noon/Afternoon/Evening)
+    /// Represents a medication intake record from the database
+    /// Tracks when medications were taken via RFID drawer opening
     /// </summary>
     public class MedicationIntakeDetailDto
     {
         /// <summary>
-        /// Date when drawer was opened (e.g., 2026-01-15)
+        /// Unique identifier for the intake record
         /// </summary>
-        public DateOnly IntakeDate { get; set; }
+        public int Id { get; set; }
         
         /// <summary>
-        /// Time of day when drawer was opened
-        /// 1 = Morning, 2 = Noon, 4 = Afternoon, 8 = Evening
+        /// Patient who took the medication
         /// </summary>
-        public int DayTimeFlag { get; set; }
+        public int PatientId { get; set; }
         
         /// <summary>
-        /// Human-readable time of day (Morning, Noon, Afternoon, Evening)
+        /// Medication plan that was followed (null if drawer opening tracked all meds at once)
         /// </summary>
-        public string TimeLabel { get; set; } = string.Empty;
+        public int? MedicationPlanId { get; set; }
         
         /// <summary>
-        /// Exact timestamp when drawer was opened
+        /// Exact timestamp when medication was taken
         /// </summary>
-        public DateTime OpenedAt { get; set; }
+        public DateTime IntakeTime { get; set; }
+        
+        /// <summary>
+        /// Quantity of medication taken
+        /// </summary>
+        public int Quantity { get; set; }
         
         /// <summary>
         /// RFID tag used to open the drawer
         /// </summary>
         public string? RfidTag { get; set; }
         
+        /// <summary>
+        /// Additional notes about the intake
+        /// </summary>
         public string? Notes { get; set; }
+        
+        // Calculated properties for frontend compatibility
+        
+        /// <summary>
+        /// Date when medication was taken (derived from IntakeTime)
+        /// </summary>
+        public DateOnly IntakeDate => DateOnly.FromDateTime(IntakeTime);
+        
+        /// <summary>
+        /// Time of day flag (1=Morning, 2=Noon, 4=Afternoon, 8=Evening)
+        /// Calculated from IntakeTime hour
+        /// </summary>
+        public int DayTimeFlag => GetDayTimeFlag(IntakeTime.Hour);
+        
+        /// <summary>
+        /// Human-readable time of day label
+        /// </summary>
+        public string TimeLabel => GetTimeLabel(IntakeTime.Hour);
+        
+        private static int GetDayTimeFlag(int hour) => hour switch
+        {
+            >= 6 and < 11 => 1,   // Morning
+            >= 11 and < 14 => 2,  // Noon
+            >= 14 and < 18 => 4,  // Afternoon
+            >= 18 and <= 23 => 8, // Evening
+            _ => 1                // Night -> treat as Morning
+        };
+        
+        private static string GetTimeLabel(int hour) => hour switch
+        {
+            >= 6 and < 11 => "Morning",
+            >= 11 and < 14 => "Noon",
+            >= 14 and < 18 => "Afternoon",
+            >= 18 and <= 23 => "Evening",
+            _ => "Night"
+        };
     }
 }
