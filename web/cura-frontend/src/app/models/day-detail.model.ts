@@ -3,6 +3,7 @@ export interface DayDetail {
   medicationName: string;
   timeLabel: string;
   timeSlotFlag: number;
+  dayTimeFlag: number;
   quantity: number;
   wasTaken: boolean;
   intakeTime?: string;

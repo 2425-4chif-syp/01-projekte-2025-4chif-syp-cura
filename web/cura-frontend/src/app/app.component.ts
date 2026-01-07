@@ -175,6 +175,8 @@ export class AppComponent implements OnInit {
     // Load all scheduled and taken medications for this day
     this.medicationPlanService.getDayDetails(1, year, month, day).subscribe({
       next: (details) => {
+        console.log('Day details from backend:', details);
+        
         // Convert to display format
         this.selectedDayMedications = details.map(detail => {
           let medication = detail.medicationName;
@@ -195,6 +197,8 @@ export class AppComponent implements OnInit {
             status: detail.wasTaken ? 'taken' as const : 'missed' as const
           };
         });
+        
+        console.log('Selected day medications:', this.selectedDayMedications);
         
         // Group by time
         this.groupMedicationsByTime();
