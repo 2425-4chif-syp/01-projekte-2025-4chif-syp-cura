@@ -1,41 +1,41 @@
 -- JANUARY 2026 - 31 days (Problematic: Jan 7, 15, 23, 28)
 -- Wed Jan 1 (New Year) ✅
-INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
-(1, '2026-01-01', 1, '2026-01-01 09:30:00', '04E5AE6EBA2A81'),
-(1, '2026-01-01', 8, '2026-01-01 20:15:00', '04E5AE6EBA2A81');
+INSERT INTO medication_intakes (medication_plan_id, opened_at, day_time_flag, notes, rfid_tag) VALUES
+(NULL, '2026-01-01 09:30:00', 1, 'Morning intake', '04E5AE6EBA2A81'),
+(NULL, '2026-01-01 20:15:00', 8, 'Evening intake', '04E5AE6EBA2A81');
 
 -- Thu Jan 2 ✅
-INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
-(1, '2026-01-02', 1, '2026-01-02 08:00:00', '04E4AE6EBA2A81'),
-(1, '2026-01-02', 2, '2026-01-02 12:30:00', '04E4AE6EBA2A81'),
-(1, '2026-01-02', 8, '2026-01-02 20:00:00', '04E4AE6EBA2A81');
+INSERT INTO medication_intakes (medication_plan_id, opened_at, day_time_flag, notes, rfid_tag) VALUES
+(NULL, '2026-01-02 08:00:00', 1, 'Morning intake', '04E4AE6EBA2A81'),
+(NULL, '2026-01-02 12:30:00', 2, 'Noon intake', '04E4AE6EBA2A81'),
+(NULL, '2026-01-02 20:00:00', 8, 'Evening intake', '04E4AE6EBA2A81');
 
 -- Fri Jan 3 ✅
-INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
-(1, '2026-01-03', 1, '2026-01-03 08:10:00', '04DFAE6EBA2A81'),
-(1, '2026-01-03', 2, '2026-01-03 12:40:00', '04DFAE6EBA2A81'),
-(1, '2026-01-03', 8, '2026-01-03 19:55:00', '04DFAE6EBA2A81');
+INSERT INTO medication_intakes (medication_plan_id, opened_at, day_time_flag, notes, rfid_tag) VALUES
+(NULL, '2026-01-03 08:10:00', 1, 'Morning intake', '04DFAE6EBA2A81'),
+(NULL, '2026-01-03 12:40:00', 2, 'Noon intake', '04DFAE6EBA2A81'),
+(NULL, '2026-01-03 19:55:00', 8, 'Evening intake', '04DFAE6EBA2A81');
 
 -- Sat Jan 4 ✅
-INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
-(1, '2026-01-04', 1, '2026-01-04 09:15:00', '04DDAE6EBA2A81'),
-(1, '2026-01-04', 8, '2026-01-04 20:30:00', '04DDAE6EBA2A81');
+INSERT INTO medication_intakes (medication_plan_id, opened_at, day_time_flag, notes, rfid_tag) VALUES
+(NULL, '2026-01-04 09:15:00', 1, 'Morning intake', '04DDAE6EBA2A81'),
+(NULL, '2026-01-04 20:30:00', 8, 'Evening intake', '04DDAE6EBA2A81');
 
 -- Sun Jan 5 ✅
-INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
-(1, '2026-01-05', 1, '2026-01-05 09:30:00', '0441AB6EBA2A81'),
-(1, '2026-01-05', 8, '2026-01-05 20:15:00', '0441AB6EBA2A81');
+INSERT INTO medication_intakes (medication_plan_id, opened_at, day_time_flag, notes, rfid_tag) VALUES
+(NULL, '2026-01-05 09:30:00', 1, 'Morning intake', '0441AB6EBA2A81'),
+(NULL, '2026-01-05 20:15:00', 8, 'Evening intake', '0441AB6EBA2A81');
 
 -- Mon Jan 6 (Epiphany) ✅
-INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
-(1, '2026-01-06', 1, '2026-01-06 08:00:00', '04E7AE6EBA2A81'),
-(1, '2026-01-06', 2, '2026-01-06 12:30:00', '04E7AE6EBA2A81'),
-(1, '2026-01-06', 8, '2026-01-06 20:00:00', '04E7AE6EBA2A81');
+INSERT INTO medication_intakes (medication_plan_id, opened_at, day_time_flag, notes, rfid_tag) VALUES
+(NULL, '2026-01-06 08:00:00', 1, 'Morning intake', '04E7AE6EBA2A81'),
+(NULL, '2026-01-06 12:30:00', 2, 'Noon intake', '04E7AE6EBA2A81'),
+(NULL, '2026-01-06 20:00:00', 8, 'Evening intake', '04E7AE6EBA2A81');
 
 -- Tue Jan 7 ❌ PARTIALLY (forgot evening)
-INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
-(1, '2026-01-07', 1, '2026-01-07 08:10:00', '04E6AE6EBA2A81'),
-(1, '2026-01-07', 2, '2026-01-07 12:35:00', '04E6AE6EBA2A81');
+INSERT INTO medication_intakes (medication_plan_id, opened_at, day_time_flag, notes, rfid_tag) VALUES
+(NULL, '2026-01-07 08:10:00', 1, 'Morning intake', '04E6AE6EBA2A81'),
+(NULL, '2026-01-07 12:35:00', 2, 'Noon intake', '04E6AE6EBA2A81');
 
 -- Wed Jan 8 ✅
 INSERT INTO medication_intakes (patient_id, intake_date, day_time_flag, opened_at, rfid_tag) VALUES
