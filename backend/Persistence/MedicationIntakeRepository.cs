@@ -25,8 +25,8 @@ namespace Persistence
 
         public async Task<IEnumerable<MedicationIntake>> GetByPatientAndDateRangeAsync(int patientId, DateOnly startDate, DateOnly endDate)
         {
-            var startDateTime = startDate.ToDateTime(TimeOnly.MinValue);
-            var endDateTime = endDate.ToDateTime(TimeOnly.MaxValue);
+            var startDateTime = DateTime.SpecifyKind(startDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endDateTime = DateTime.SpecifyKind(endDate.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
             
             return await _context.MedicationIntakes
                 .Include(mi => mi.Patient)
@@ -40,8 +40,8 @@ namespace Persistence
 
         public async Task<IEnumerable<MedicationIntake>> GetByPatientAndDateAsync(int patientId, DateOnly date)
         {
-            var startDateTime = date.ToDateTime(TimeOnly.MinValue);
-            var endDateTime = date.ToDateTime(TimeOnly.MaxValue);
+            var startDateTime = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endDateTime = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
             
             return await _context.MedicationIntakes
                 .Include(mi => mi.Patient)
@@ -57,8 +57,8 @@ namespace Persistence
         {
             // Note: dayTimeFlag logic moved to application layer since DB doesn't store it
             // This method now checks if ANY intake exists for the date
-            var startDateTime = date.ToDateTime(TimeOnly.MinValue);
-            var endDateTime = date.ToDateTime(TimeOnly.MaxValue);
+            var startDateTime = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endDateTime = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
             
             return await _context.MedicationIntakes
                 .AnyAsync(mi => mi.PatientId == patientId 
