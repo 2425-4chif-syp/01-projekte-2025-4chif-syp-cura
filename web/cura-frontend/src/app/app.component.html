@@ -79,8 +79,7 @@
                         <div class="medication-list">
                           @for (med of timeGroup.medications; track $index) {
                             <div class="medication-name" [class.taken]="med.status === 'taken'" [class.missed]="med.status === 'missed'">
-                              <i class="fa-solid" [class.fa-check]="med.status === 'taken'" [class.fa-xmark]="med.status === 'missed'"></i>
-                              <span>{{ med.name }}</span>
+                              {{ med.name }}
                             </div>
                           }
                         </div>
@@ -105,8 +104,7 @@
                         <div class="medication-list-mobile">
                           @for (med of currentGroup.medications; track $index) {
                             <div class="medication-name" [class.taken]="med.status === 'taken'" [class.missed]="med.status === 'missed'">
-                              <i class="fa-solid" [class.fa-check]="med.status === 'taken'" [class.fa-xmark]="med.status === 'missed'"></i>
-                              <span>{{ med.name }}</span>
+                              {{ med.name }}
                             </div>
                           }
                         </div>
