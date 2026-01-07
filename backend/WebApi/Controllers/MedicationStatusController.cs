@@ -158,6 +158,7 @@ namespace WebApi.Controllers
                             MedicationName = plan.Medication?.Name ?? "Unknown",
                             TimeLabel = timeLabel,
                             TimeSlotFlag = timeFlag,
+                            DayTimeFlag = timeFlag,
                             Quantity = plan.Quantity,
                             WasTaken = intake != null,
                             IntakeTime = intake?.IntakeTime,

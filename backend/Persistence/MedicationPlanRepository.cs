@@ -30,6 +30,7 @@ namespace Persistence
         public async Task<List<MedicationPlan>> GetByPatientIdAsync(int patientId)
         {
             return await _context.MedicationPlans
+                .Include(m => m.Medication)
                 .Where(m => m.PatientId == patientId)
                 .OrderBy(m => m.ValidFrom)
                 .ToListAsync();

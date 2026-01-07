@@ -6,6 +6,7 @@ namespace WebApi.DTOs
         public string MedicationName { get; set; } = string.Empty;
         public string TimeLabel { get; set; } = string.Empty;
         public int TimeSlotFlag { get; set; }
+        public int DayTimeFlag { get; set; }  // Same as TimeSlotFlag
         public int Quantity { get; set; }
         public bool WasTaken { get; set; }
         public DateTime? IntakeTime { get; set; }
