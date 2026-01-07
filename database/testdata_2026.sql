@@ -2,7 +2,8 @@
 -- Wed Jan 1 (New Year) ✅
 INSERT INTO medication_intakes (patient_id, medication_plan_id, intake_time, quantity, notes, rfid_tag) VALUES
 (1, 1, '2026-01-01 09:30:00', 1, 'Morning intake - Blood pressure', '04E5AE6EBA2A81'),
-(1, 2, '2026-01-01 12:30:00', 1, 'Morning intake - Heart medication', '04E5AE6EBA2A81'),
+(1, 2, '2026-01-01 09:30:00', 1, 'Morning intake - Heart medication', '04E5AE6EBA2A81'),
+(1, 3, '2026-01-01 12:30:00', 1, 'Morning intake - Heart medication', '04E5AE6EBA2A81'),
 (1, 4, '2026-01-01 16:00:00', 1, 'Afternoon intake - Stomach protection', '04E5AE6EBA2A81'),
 (1, 5, '2026-01-01 20:15:00', 5, 'Evening intake - Vitamin D3', '04E5AE6EBA2A81');
 

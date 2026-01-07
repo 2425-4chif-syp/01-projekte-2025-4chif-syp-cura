@@ -38,8 +38,8 @@ namespace WebApi.Controllers
             var medicationPlans = await _unitOfWork.MedicationPlans.GetByPatientIdAsync(patientId);
             var activePlans = medicationPlans
                 .Where(p => p.IsActive 
-                         && p.ValidFrom <= endDate 
-                         && (!p.ValidTo.HasValue || p.ValidTo >= startDate))
+                         && p.ValidFrom <= DateOnly.FromDateTime(endDate)
+                         && p.ValidTo >= DateOnly.FromDateTime(startDate))
                 .ToList();
 
             var intakes = await _unitOfWork.MedicationIntakeRepository.GetByPatientIdAsync(patientId);
@@ -59,8 +59,8 @@ namespace WebApi.Controllers
                 foreach (var plan in activePlans)
                 {
                     if ((plan.WeekdayFlags & weekdayFlag) != 0 
-                        && plan.ValidFrom <= date 
-                        && (!plan.ValidTo.HasValue || plan.ValidTo >= date))
+                        && DateOnly.FromDateTime(date) >= plan.ValidFrom 
+                        && DateOnly.FromDateTime(date) <= plan.ValidTo)
                     {
                         // Add each time slot that this plan covers
                         if ((plan.DayTimeFlags & 1) != 0) scheduledTimeSlots.Add(1); // Morning
