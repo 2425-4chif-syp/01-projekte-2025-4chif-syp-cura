@@ -168,8 +168,9 @@ export class AppComponent implements OnInit {
   }
 
   loadDayMedications(date: string) {
-    // Parse date (format: YYYY-MM-DD)
-    const [year, month, day] = date.split('-').map(Number);
+    // Parse date (format: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)
+    const dateOnly = date.split('T')[0]; // Remove time part if present
+    const [year, month, day] = dateOnly.split('-').map(Number);
     
     // Load all scheduled and taken medications for this day
     this.medicationPlanService.getDayDetails(1, year, month, day).subscribe({
