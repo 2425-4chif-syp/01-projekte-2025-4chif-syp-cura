@@ -191,7 +191,7 @@ export class AppComponent implements OnInit {
   }
 
   groupMedicationsByTime() {
-    const timeOrder = ['Morgen', 'Mittag', 'Nachmittag', 'Abend'];
+    const timeOrder = ['Morning', 'Noon', 'Afternoon', 'Evening'];
     const medicationsByTime = new Map<string, { name: string; status: 'taken' | 'missed' }[]>();
     
     // Reset expanded groups
