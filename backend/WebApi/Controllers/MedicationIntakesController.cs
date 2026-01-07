@@ -29,8 +29,20 @@ namespace WebApi.Controllers
             if (patient == null)
                 return NotFound($"Patient with ID {patientId} not found");
 
-            if (!DateOnly.TryParse(dateStr, out var date))
-                return BadRequest("Invalid date format. Use YYYY-MM-DD");
+            // Try to parse as DateOnly first, then as DateTime
+            DateOnly date;
+            if (!DateOnly.TryParse(dateStr, out date))
+            {
+                // Try parsing as DateTime and convert to DateOnly
+                if (DateTime.TryParse(dateStr, out var dateTime))
+                {
+                    date = DateOnly.FromDateTime(dateTime);
+                }
+                else
+                {
+                    return BadRequest("Invalid date format. Use YYYY-MM-DD or ISO DateTime");
+                }
+            }
 
             var intakes = await _unitOfWork.MedicationIntakeRepository
                 .GetByPatientAndDateAsync(patientId, date);
@@ -62,11 +74,23 @@ namespace WebApi.Controllers
             if (patient == null)
                 return NotFound($"Patient with ID {patientId} not found");
 
-            if (!DateOnly.TryParse(startDate, out var start))
-                return BadRequest("Invalid start date format. Use YYYY-MM-DD");
+            // Try to parse as DateOnly first, then as DateTime
+            DateOnly start, end;
+            if (!DateOnly.TryParse(startDate, out start))
+            {
+                if (DateTime.TryParse(startDate, out var startDateTime))
+                    start = DateOnly.FromDateTime(startDateTime);
+                else
+                    return BadRequest("Invalid start date format. Use YYYY-MM-DD or ISO DateTime");
+            }
 
-            if (!DateOnly.TryParse(endDate, out var end))
-                return BadRequest("Invalid end date format. Use YYYY-MM-DD");
+            if (!DateOnly.TryParse(endDate, out end))
+            {
+                if (DateTime.TryParse(endDate, out var endDateTime))
+                    end = DateOnly.FromDateTime(endDateTime);
+                else
+                    return BadRequest("Invalid end date format. Use YYYY-MM-DD or ISO DateTime");
+            }
 
             var intakes = await _unitOfWork.MedicationIntakeRepository
                 .GetByPatientAndDateRangeAsync(patientId, start, end);
