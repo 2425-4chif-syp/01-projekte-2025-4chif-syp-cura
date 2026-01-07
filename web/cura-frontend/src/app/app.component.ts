@@ -188,7 +188,7 @@ export class AppComponent implements OnInit {
               hour: '2-digit', 
               minute: '2-digit' 
             });
-            medication += ` - Eingenommen um ${time} (${detail.actualQuantity || detail.quantity}x)`;
+            medication += ` - ${time}`;
           } else {
             medication;
           }
