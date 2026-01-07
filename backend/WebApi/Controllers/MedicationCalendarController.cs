@@ -49,7 +49,7 @@ public class MedicationCalendarController : ControllerBase
 
             // Get all intakes for this month
             var intakes = await _unitOfWork.MedicationIntakeRepository
-                .GetByPatientAndDateRangeAsync(patientId, startDate, endDate);
+                .GetByPatientAndDateRangeAsync(patientId, DateOnly.FromDateTime(startDate), DateOnly.FromDateTime(endDate));
 
             var intakesByDate = intakes.GroupBy(i => i.IntakeTime.Date).ToDictionary(g => g.Key, g => g.ToList());
 
@@ -126,7 +126,7 @@ public class MedicationCalendarController : ControllerBase
 
             // Get actual intakes for this day
             var intakes = await _unitOfWork.MedicationIntakeRepository
-                .GetByPatientAndDateAsync(patientId, parsedDate);
+                .GetByPatientAndDateAsync(patientId, DateOnly.FromDateTime(parsedDate));
 
             // Build detailed information
             var medicationDetails = expectedMedications.Select(em => {
@@ -136,7 +136,7 @@ public class MedicationCalendarController : ControllerBase
                     medicationPlanId = em.PlanId,
                     medicationName = em.MedicationName,
                     expectedQuantity = em.Quantity,
-                    expectedTimes = em.DayTimes,
+                    expectedTimes = em.DayTimes.ToString(),
                     wasTaken = taken != null,
                     actualIntakeTime = taken?.IntakeTime.ToString("yyyy-MM-dd HH:mm:ss"),
                     actualQuantity = taken?.Quantity,
@@ -208,8 +208,8 @@ public class MedicationCalendarController : ControllerBase
                 {
                     id = created.Id,
                     patientId = created.PatientId,
-                    patientName = created.Patient.Name,
-                    medicationName = created.MedicationPlan.Medication.Name,
+                    patientName = created.Patient?.Name,
+                    medicationName = created.MedicationPlan?.Medication?.Name,
                     intakeTime = created.IntakeTime,
                     quantity = created.Quantity,
                     notes = created.Notes,

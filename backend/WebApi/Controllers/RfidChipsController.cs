@@ -235,8 +235,11 @@ namespace WebApi.Controllers
 
             foreach (var plan in medicationPlans)
             {
-                bool hasAlreadyTaken = await _unitOfWork.MedicationIntakeRepository
-                    .HasTakenTodayAsync(chip.PatientId, plan.Id, DateTime.SpecifyKind(now.Date, DateTimeKind.Utc));
+                // Check if there's already an intake for this plan today
+                var todayIntakes = await _unitOfWork.MedicationIntakeRepository
+                    .GetByPatientAndDateAsync(chip.PatientId, DateOnly.FromDateTime(now.Date));
+                
+                bool hasAlreadyTaken = todayIntakes.Any(i => i.MedicationPlanId == plan.Id);
 
                 if (hasAlreadyTaken)
                 {
