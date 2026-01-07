@@ -43,11 +43,13 @@ INSERT INTO patients (name, age, location_id, phone_number, email) VALUES
 -- Patient 1: Johann Meier - Multiple medications with different schedules
 -- Morning (1): Blood pressure + Heart medication (daily)
 -- Noon (2): Aspirin (weekdays only Mon-Fri)
+-- Afternoon (4): Stomach Protection (daily)
 -- Evening (8): Vitamin D3 (daily)
 INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_flags, day_time_flags, quantity, valid_from, valid_to, notes) VALUES
 (1, 4, 1, 127, 1, 1, '2024-01-01', '2026-12-31', 'Blood pressure - morning empty stomach'),
 (1, 7, 1, 127, 1, 1, '2024-01-01', '2026-12-31', 'Heart medication - after breakfast'),
 (1, 1, 1, 62, 2, 1, '2024-01-01', '2026-12-31', 'Aspirin - weekdays noon'),
+(1, 8, 1, 127, 4, 1, '2024-01-01', '2026-12-31', 'Stomach protection - afternoon'),
 (1, 6, 1, 127, 8, 5, '2024-01-01', '2026-12-31', 'Vitamin D3 - daily evening');
 
 -- Patient 2: Elisabeth Gruber - Morning and noon medications

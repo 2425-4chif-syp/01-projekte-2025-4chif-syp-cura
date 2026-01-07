@@ -53,30 +53,43 @@ namespace WebApi.Controllers
                 var dayOfWeek = (int)date.DayOfWeek;
                 var weekdayFlag = dayOfWeek == 0 ? 1 : (1 << dayOfWeek);
 
-                // Count how many times medications should be taken this day
-                // Each medication plan can have multiple day_time_flags (morning, noon, evening)
-                var scheduledCount = 0;
+                // Determine which time slots are scheduled for this day
+                var scheduledTimeSlots = new HashSet<int>(); // 1=Morning, 2=Noon, 4=Afternoon, 8=Evening
+                
                 foreach (var plan in activePlans)
                 {
                     if ((plan.WeekdayFlags & weekdayFlag) != 0 
                         && plan.ValidFrom <= date 
                         && (!plan.ValidTo.HasValue || plan.ValidTo >= date))
                     {
-                        // Count how many times per day (morning, noon, afternoon, evening)
-                        for (int flag = 1; flag <= 8; flag *= 2)
-                        {
-                            if ((plan.DayTimeFlags & flag) != 0)
-                                scheduledCount++;
-                        }
+                        // Add each time slot that this plan covers
+                        if ((plan.DayTimeFlags & 1) != 0) scheduledTimeSlots.Add(1); // Morning
+                        if ((plan.DayTimeFlags & 2) != 0) scheduledTimeSlots.Add(2); // Noon
+                        if ((plan.DayTimeFlags & 4) != 0) scheduledTimeSlots.Add(4); // Afternoon
+                        if ((plan.DayTimeFlags & 8) != 0) scheduledTimeSlots.Add(8); // Evening
                     }
                 }
 
-                // Count actual intakes for this day
-                var takenCount = monthIntakes.Count(i => i.IntakeTime.Date == date);
+                var scheduledCount = scheduledTimeSlots.Count;
+
+                // Count how many time slots have intakes (drawer was opened)
+                var dayIntakes = monthIntakes.Where(i => i.IntakeTime.Date == date).ToList();
+                var takenTimeSlots = new HashSet<int>();
+                
+                foreach (var intake in dayIntakes)
+                {
+                    var hour = intake.IntakeTime.Hour;
+                    // Determine which time slot this intake belongs to
+                    if (hour >= 6 && hour < 11) takenTimeSlots.Add(1);      // Morning
+                    else if (hour >= 11 && hour < 14) takenTimeSlots.Add(2); // Noon
+                    else if (hour >= 14 && hour < 18) takenTimeSlots.Add(4); // Afternoon
+                    else if (hour >= 18 && hour < 24) takenTimeSlots.Add(8); // Evening
+                }
+
+                var takenCount = takenTimeSlots.Count;
 
                 var status = scheduledCount == 0 ? "empty" 
                            : takenCount >= scheduledCount ? "checked"
-                           : takenCount > 0 ? "partial"
                            : "missed";
 
                 result.Add(new DailyStatusDto
