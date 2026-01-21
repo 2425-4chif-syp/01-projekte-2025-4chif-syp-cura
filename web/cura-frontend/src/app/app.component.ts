@@ -67,11 +67,12 @@ export class AppComponent implements OnInit {
     dosageUnit: string;
   }>>> = new Map();
   
-  currentMedication = {
-    medicationId: null as number | null,
-    name: '',
-    dosage: 1,
-    dosageUnit: 'Tablette(n)'
+  // Separates Formular für jede Tageszeit
+  currentMedications: { [key: string]: { medicationId: number | null, name: string, dosage: number, dosageUnit: string } } = {
+    'MORNING': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' },
+    'NOON': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' },
+    'AFTERNOON': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' },
+    'EVENING': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' }
   };
   
   timesOfDay = ['MORNING', 'NOON', 'AFTERNOON', 'EVENING'];
@@ -500,12 +501,8 @@ export class AppComponent implements OnInit {
       });
       this.weekSchedule.set(dayIndex, dayMap);
     }
-    this.currentMedication = {
-      medicationId: null,
-      name: '',
-      dosage: 1,
-      dosageUnit: 'Tablette(n)'
-    };
+    // Alle Tageszeit-Formulare zurücksetzen
+    this.resetCurrentMedication();
   }
 
   nextWizardStep() {
@@ -559,22 +556,23 @@ export class AppComponent implements OnInit {
   }
 
   addMedicationToTimeSlot(dayIndex: number, timeOfDay: string) {
-    if ((this.currentMedication.medicationId || this.currentMedication.name.trim()) && this.currentMedication.dosage > 0) {
+    const current = this.currentMedications[timeOfDay];
+    if ((current.medicationId || current.name.trim()) && current.dosage > 0) {
       const dayMap = this.weekSchedule.get(dayIndex);
       if (!dayMap) return;
       
       const medications = dayMap.get(timeOfDay) || [];
       medications.push({
-        medicationId: this.currentMedication.medicationId,
-        name: this.currentMedication.name,
-        dosage: this.currentMedication.dosage,
-        dosageUnit: this.currentMedication.dosageUnit
+        medicationId: current.medicationId,
+        name: current.name,
+        dosage: current.dosage,
+        dosageUnit: current.dosageUnit
       });
       
       dayMap.set(timeOfDay, medications);
       
-      // Formular komplett zurücksetzen
-      this.resetCurrentMedication();
+      // Formular für diese Tageszeit zurücksetzen
+      this.resetCurrentMedication(timeOfDay);
     }
   }
 
@@ -612,13 +610,26 @@ export class AppComponent implements OnInit {
     alert(`${medToRepeat.name} wurde für alle anderen Tage zur gleichen Tageszeit (${this.timeLabels[timeOfDay]}) übernommen!`);
   }
 
-  resetCurrentMedication() {
-    this.currentMedication = {
-      medicationId: null,
-      name: '',
-      dosage: 1,
-      dosageUnit: 'Tablette(n)'
-    };
+  resetCurrentMedication(timeOfDay?: string) {
+    if (timeOfDay) {
+      // Nur für eine bestimmte Tageszeit zurücksetzen
+      this.currentMedications[timeOfDay] = {
+        medicationId: null,
+        name: '',
+        dosage: 1,
+        dosageUnit: 'Tablette(n)'
+      };
+    } else {
+      // Alle Tageszeiten zurücksetzen
+      this.timesOfDay.forEach(time => {
+        this.currentMedications[time] = {
+          medicationId: null,
+          name: '',
+          dosage: 1,
+          dosageUnit: 'Tablette(n)'
+        };
+      });
+    }
   }
 
   removeMedicationFromTimeSlot(dayIndex: number, timeOfDay: string, medIndex: number) {
@@ -636,13 +647,14 @@ export class AppComponent implements OnInit {
     return dayMap.get(timeOfDay) || [];
   }
 
-  onMedicationSelect() {
-    const selected = this.availableMedications.find(m => m.id === this.currentMedication.medicationId);
+  onMedicationSelect(timeOfDay: string) {
+    const current = this.currentMedications[timeOfDay];
+    const selected = this.availableMedications.find(m => m.id === current.medicationId);
     if (selected) {
-      this.currentMedication.name = selected.name;
+      current.name = selected.name;
     } else {
       // Wenn "neu eingeben" gewählt wurde, Name leeren
-      this.currentMedication.name = '';
+      current.name = '';
     }
   }
 

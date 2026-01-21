@@ -1405,17 +1405,29 @@ main {
 /* Mobile Wizard Anpassungen */
 @media (max-width: 768px) {
   .wizard-container {
-    max-width: 100%;
-    max-height: 100vh;
-    border-radius: 0;
+    max-width: 95%;
+    max-height: 95vh;
+    border-radius: var(--radius-md);
+    margin: 2.5vh auto;
   }
 
   .wizard-stepper {
-    padding: var(--space-sm);
+    padding: var(--space-md) var(--space-sm);
+    gap: var(--space-xs);
+  }
+
+  .step {
+    min-width: 40px;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: var(--text-xs);
   }
 
   .step-label {
-    display: none;
+    font-size: 0.65rem;
   }
 
   .time-selection {
