@@ -125,7 +125,8 @@ jobs:
                 break
               fi
               sleep 1
-            done || true
+            done
+            true  # Ensure zero exit code
             echo "🔍 DEBUG: Database check loop finished (exit code: $?)"
             
             # 🩺 Backend health check (PRIORITÄT - vor Keycloak!)
@@ -139,7 +140,8 @@ jobs:
               fi
               echo "⏳ Backend check $i/4..."
               sleep 3
-            done || true
+            done
+            true  # Ensure zero exit code
             echo "🔍 DEBUG: Backend health check loop finished (exit code: $?)"
             
             # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
