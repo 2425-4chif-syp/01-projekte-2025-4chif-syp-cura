@@ -1372,19 +1372,23 @@ main {
 }
 
 .btn-add-inline {
-  padding: 0.5rem 1rem;
-  background: var(--primary-color);
+  padding: 0.75rem 1.25rem;
+  background: #007bff;
   color: white;
-  border: none;
-  border-radius: 6px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
   flex: 0 0 auto;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-add-inline:hover:not(:disabled) {
   background: #0056b3;
+  border-color: #0056b3;
   transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-add-inline:disabled {
@@ -1393,7 +1397,7 @@ main {
 }
 
 .btn-add-inline i {
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 /* Mobile Wizard Anpassungen */
