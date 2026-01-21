@@ -36,6 +36,15 @@ export class AppComponent implements OnInit {
   showDayDetail = false;
   selectedDay: CalendarDay | null = null;
   selectedDayMedications: { timeLabel: string; medication: string; status: 'taken' | 'missed' | 'unknown' }[] = [];
+  
+  // Medication Plan Flip
+  showPlanSelection = false;
+  selectedPlanId = 1;
+  availablePlans = [
+    { id: 1, name: 'Medikamentenplan 1', patientName: 'Max Mustermann' },
+    { id: 2, name: 'Medikamentenplan 2', patientName: 'Anna Schmidt' },
+    { id: 3, name: 'Medikamentenplan 3', patientName: 'Hans Müller' }
+  ];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
   expandedTimeGroups = new Set<string>();
   
@@ -76,6 +85,22 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.keycloak.logout(window.location.origin);
+  }
+
+  // Medication Plan Selection
+  openPlanSelection() {
+    this.showPlanSelection = true;
+  }
+
+  closePlanSelection() {
+    this.showPlanSelection = false;
+  }
+
+  selectPlan(planId: number) {
+    this.selectedPlanId = planId;
+    this.closePlanSelection();
+    // Hier würdest du dann den Plan neu laden
+    // this.loadMedicationPlans(planId);
   }
 
   loadCalendar() {

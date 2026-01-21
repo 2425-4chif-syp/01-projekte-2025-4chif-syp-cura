@@ -156,60 +156,128 @@
     </div>
 
     <!-- Medikamentenplan - Desktop Version (alle Tage) -->
-    <section class="medication-card desktop-medication">
-      <h2>Medikamentenplan 1</h2>
-      <table class="medication-table">
-        <thead>
-          <tr>
-            <th class="time-label"></th>
-            <th>Mo</th>
-            <th>Di</th>
-            <th>Mi</th>
-            <th>Do</th>
-            <th>Fr</th>
-            <th>Sa</th>
-            <th>So</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of medicationRows; track $index) {
-            <tr>
-              <td class="time-label">{{ row.timeLabel }}</td>
-              @for (cell of row.days; track $index) {
-                <td>{{ cell }}</td>
+    <section class="medication-card desktop-medication" [class.flipped]="showPlanSelection">
+      <div class="medication-inner">
+        <!-- Front: Medikamentenplan -->
+        <div class="medication-front">
+          <h2>{{ availablePlans.find(p => p.id === selectedPlanId)?.name || 'Medikamentenplan' }}</h2>
+          <table class="medication-table">
+            <thead>
+              <tr>
+                <th class="time-label"></th>
+                <th>Mo</th>
+                <th>Di</th>
+                <th>Mi</th>
+                <th>Do</th>
+                <th>Fr</th>
+                <th>Sa</th>
+                <th>So</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of medicationRows; track $index) {
+                <tr>
+                  <td class="time-label">{{ row.timeLabel }}</td>
+                  @for (cell of row.days; track $index) {
+                    <td>{{ cell }}</td>
+                  }
+                </tr>
               }
-            </tr>
-          }
-        </tbody>
-      </table>
-      <div class="action-buttons">
-        <button class="btn-primary">ändern</button>
-        <button class="btn-secondary" (click)="exportMedicationPlan()">exportieren</button>
+            </tbody>
+          </table>
+          <div class="action-buttons">
+            <button class="btn-primary" (click)="openPlanSelection()">ändern</button>
+            <button class="btn-secondary" (click)="exportMedicationPlan()">exportieren</button>
+          </div>
+        </div>
+        
+        <!-- Back: Plan-Auswahl -->
+        <div class="medication-back">
+          <div class="plan-selection-header">
+            <h2>Medikamentenplan wählen</h2>
+            <button class="btn-close" (click)="closePlanSelection()">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          
+          <div class="plan-selection-content">
+            @for (plan of availablePlans; track plan.id) {
+              <div class="plan-option" 
+                   [class.selected]="plan.id === selectedPlanId"
+                   (click)="selectPlan(plan.id)">
+                <div class="plan-icon">
+                  <i class="fa-solid fa-pills"></i>
+                </div>
+                <div class="plan-info">
+                  <h3>{{ plan.name }}</h3>
+                  <p>{{ plan.patientName }}</p>
+                </div>
+                @if (plan.id === selectedPlanId) {
+                  <i class="fa-solid fa-check plan-check"></i>
+                }
+              </div>
+            }
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Medikamentenplan - Mobile Version (nur aktueller Tag) -->
-    <section class="medication-card mobile-medication">
-      <h2>Medikamentenplan 1 - {{ currentDayName }}</h2>
-      <table class="medication-table">
-        <thead>
-          <tr>
-            <th class="time-label">Uhrzeit</th>
-            <th>Medikament</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of medicationRows; track $index) {
-            <tr>
-              <td class="time-label">{{ row.timeLabel }}</td>
-              <td>{{ row.days[currentDayIndex] }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-      <div class="action-buttons">
-        <button class="btn-primary">ändern</button>
-        <button class="btn-secondary" (click)="exportMedicationPlan()">exportieren</button>
+    <section class="medication-card mobile-medication" [class.flipped]="showPlanSelection">
+      <div class="medication-inner">
+        <!-- Front: Medikamentenplan -->
+        <div class="medication-front">
+          <h2>{{ availablePlans.find(p => p.id === selectedPlanId)?.name || 'Medikamentenplan' }} - {{ currentDayName }}</h2>
+          <table class="medication-table">
+            <thead>
+              <tr>
+                <th class="time-label">Uhrzeit</th>
+                <th>Medikament</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of medicationRows; track $index) {
+                <tr>
+                  <td class="time-label">{{ row.timeLabel }}</td>
+                  <td>{{ row.days[currentDayIndex] }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          <div class="action-buttons">
+            <button class="btn-primary" (click)="openPlanSelection()">ändern</button>
+            <button class="btn-secondary" (click)="exportMedicationPlan()">exportieren</button>
+          </div>
+        </div>
+        
+        <!-- Back: Plan-Auswahl -->
+        <div class="medication-back">
+          <div class="plan-selection-header">
+            <h2>Plan wählen</h2>
+            <button class="btn-close" (click)="closePlanSelection()">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          
+          <div class="plan-selection-content">
+            @for (plan of availablePlans; track plan.id) {
+              <div class="plan-option" 
+                   [class.selected]="plan.id === selectedPlanId"
+                   (click)="selectPlan(plan.id)">
+                <div class="plan-icon">
+                  <i class="fa-solid fa-pills"></i>
+                </div>
+                <div class="plan-info">
+                  <h3>{{ plan.name }}</h3>
+                  <p>{{ plan.patientName }}</p>
+                </div>
+                @if (plan.id === selectedPlanId) {
+                  <i class="fa-solid fa-check plan-check"></i>
+                }
+              </div>
+            }
+          </div>
+        </div>
       </div>
     </section>
   </div>
