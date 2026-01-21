@@ -217,6 +217,18 @@
                 }
               </div>
             }
+            
+            <!-- Neuen Plan erstellen -->
+            <div class="plan-option plan-create" (click)="openCreatePlanWizard()">
+              <div class="plan-icon plan-icon-create">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              <div class="plan-info">
+                <h3>Neuen Medikamentenplan erstellen</h3>
+                <p>Schritt-für-Schritt Assistent</p>
+              </div>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -276,9 +288,214 @@
                 }
               </div>
             }
+            
+            <!-- Neuen Plan erstellen -->
+            <div class="plan-option plan-create" (click)="openCreatePlanWizard()">
+              <div class="plan-icon plan-icon-create">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              <div class="plan-info">
+                <h3>Neuen Medikamentenplan erstellen</h3>
+                <p>Schritt-für-Schritt Assistent</p>
+              </div>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
           </div>
         </div>
       </div>
     </section>
   </div>
 </main>
+
+<!-- Create Plan Wizard Modal -->
+@if (showCreateWizard) {
+  <div class="wizard-overlay" (click)="closeCreateWizard()">
+    <div class="wizard-container" (click)="$event.stopPropagation()">
+      <div class="wizard-header">
+        <h2>Neuer Medikamentenplan</h2>
+        <button class="btn-close" (click)="closeCreateWizard()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      
+      <!-- Progress Stepper -->
+      <div class="wizard-stepper">
+        @for (step of wizardSteps; track $index) {
+          <div class="step" 
+               [class.active]="currentWizardStep === $index"
+               [class.completed]="currentWizardStep > $index">
+            <div class="step-number">
+              @if (currentWizardStep > $index) {
+                <i class="fa-solid fa-check"></i>
+              } @else {
+                {{ $index + 1 }}
+              }
+            </div>
+            <span class="step-label">{{ step }}</span>
+          </div>
+        }
+      </div>
+      
+      <!-- Wizard Content -->
+      <div class="wizard-content">
+        @switch (currentWizardStep) {
+          @case (0) {
+            <!-- Schritt 1: Patient auswählen -->
+            <div class="wizard-step">
+              <h3>Schritt 1: Patient auswählen</h3>
+              <p class="step-description">Wählen Sie den Patienten für den neuen Medikamentenplan</p>
+              
+              <div class="form-group">
+                <label>Patient</label>
+                <select [(ngModel)]="newPlan.patientId" class="form-control">
+                  <option [value]="null" disabled>Bitte wählen...</option>
+                  @for (plan of availablePlans; track plan.id) {
+                    <option [value]="plan.id">{{ plan.patientName }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+          @case (1) {
+            <!-- Schritt 2: Medikament auswählen -->
+            <div class="wizard-step">
+              <h3>Schritt 2: Medikament auswählen</h3>
+              <p class="step-description">Wählen Sie das Medikament aus</p>
+              
+              <div class="form-group">
+                <label>Medikament</label>
+                <input type="text" [(ngModel)]="newPlan.medicationName" 
+                       class="form-control" placeholder="z.B. Aspirin">
+              </div>
+              
+              <div class="form-group">
+                <label>Dosierung</label>
+                <div class="dosage-group">
+                  <input type="number" [(ngModel)]="newPlan.dosage" 
+                         class="form-control" placeholder="1" min="1">
+                  <select [(ngModel)]="newPlan.dosageUnit" class="form-control">
+                    <option value="Tablette(n)">Tablette(n)</option>
+                    <option value="Kapsel(n)">Kapsel(n)</option>
+                    <option value="ml">ml</option>
+                    <option value="Tropfen">Tropfen</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          }
+          @case (2) {
+            <!-- Schritt 3: Tageszeiten -->
+            <div class="wizard-step">
+              <h3>Schritt 3: Tageszeiten auswählen</h3>
+              <p class="step-description">Wann soll das Medikament eingenommen werden?</p>
+              
+              <div class="time-selection">
+                <div class="time-option" 
+                     [class.selected]="newPlan.timesOfDay.includes('MORNING')"
+                     (click)="toggleTimeOfDay('MORNING')">
+                  <i class="fa-solid fa-sun"></i>
+                  <span>Morgen</span>
+                  <small>08:00</small>
+                </div>
+                <div class="time-option" 
+                     [class.selected]="newPlan.timesOfDay.includes('NOON')"
+                     (click)="toggleTimeOfDay('NOON')">
+                  <i class="fa-solid fa-cloud-sun"></i>
+                  <span>Mittag</span>
+                  <small>12:00</small>
+                </div>
+                <div class="time-option" 
+                     [class.selected]="newPlan.timesOfDay.includes('AFTERNOON')"
+                     (click)="toggleTimeOfDay('AFTERNOON')">
+                  <i class="fa-solid fa-cloud"></i>
+                  <span>Nachmittag</span>
+                  <small>16:00</small>
+                </div>
+                <div class="time-option" 
+                     [class.selected]="newPlan.timesOfDay.includes('EVENING')"
+                     (click)="toggleTimeOfDay('EVENING')">
+                  <i class="fa-solid fa-moon"></i>
+                  <span>Abend</span>
+                  <small>20:00</small>
+                </div>
+              </div>
+            </div>
+          }
+          @case (3) {
+            <!-- Schritt 4: Wochentage -->
+            <div class="wizard-step">
+              <h3>Schritt 4: Wochentage auswählen</h3>
+              <p class="step-description">An welchen Tagen soll das Medikament eingenommen werden?</p>
+              
+              <div class="weekday-selection">
+                @for (day of weekdays; track day.value) {
+                  <div class="weekday-option" 
+                       [class.selected]="newPlan.weekdays.includes(day.value)"
+                       (click)="toggleWeekday(day.value)">
+                    <div class="weekday-circle" [style.background-color]="day.color">
+                      {{ day.short }}
+                    </div>
+                    <span>{{ day.name }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          @case (4) {
+            <!-- Schritt 5: Zusammenfassung -->
+            <div class="wizard-step">
+              <h3>Schritt 5: Zusammenfassung</h3>
+              <p class="step-description">Überprüfen Sie Ihre Angaben</p>
+              
+              <div class="summary-card">
+                <div class="summary-row">
+                  <strong>Patient:</strong>
+                  <span>{{ getPatientName(newPlan.patientId) }}</span>
+                </div>
+                <div class="summary-row">
+                  <strong>Medikament:</strong>
+                  <span>{{ newPlan.medicationName }}</span>
+                </div>
+                <div class="summary-row">
+                  <strong>Dosierung:</strong>
+                  <span>{{ newPlan.dosage }} {{ newPlan.dosageUnit }}</span>
+                </div>
+                <div class="summary-row">
+                  <strong>Tageszeiten:</strong>
+                  <span>{{ getTimeLabels() }}</span>
+                </div>
+                <div class="summary-row">
+                  <strong>Wochentage:</strong>
+                  <span>{{ getWeekdayLabels() }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+      
+      <!-- Wizard Footer -->
+      <div class="wizard-footer">
+        <button class="btn-secondary" 
+                (click)="previousWizardStep()"
+                [disabled]="currentWizardStep === 0">
+          <i class="fa-solid fa-arrow-left"></i> Zurück
+        </button>
+        
+        @if (currentWizardStep < wizardSteps.length - 1) {
+          <button class="btn-primary" 
+                  (click)="nextWizardStep()"
+                  [disabled]="!isCurrentStepValid()">
+            Weiter <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        } @else {
+          <button class="btn-primary" 
+                  (click)="createMedicationPlan()"
+                  [disabled]="!isCurrentStepValid()">
+            <i class="fa-solid fa-check"></i> Plan erstellen
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

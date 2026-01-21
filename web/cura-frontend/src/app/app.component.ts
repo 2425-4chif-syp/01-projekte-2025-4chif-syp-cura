@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { KeycloakService } from 'keycloak-angular';
 import { CalendarDay } from './models/calendar-day.model';
 import { MedicationPlan } from './models/medication-plan.model';
@@ -11,7 +12,7 @@ import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -48,6 +49,30 @@ export class AppComponent implements OnInit {
   currentTimeIndex = 0;
   touchStartX = 0;
   touchEndX = 0;
+
+  // Create Plan Wizard
+  showCreateWizard = false;
+  currentWizardStep = 0;
+  wizardSteps = ['Patient', 'Medikament', 'Tageszeiten', 'Wochentage', 'Zusammenfassung'];
+  
+  newPlan = {
+    patientId: null as number | null,
+    medicationName: '',
+    dosage: 1,
+    dosageUnit: 'Tablette(n)',
+    timesOfDay: [] as string[],
+    weekdays: [] as number[]
+  };
+  
+  weekdays = [
+    { value: 2, name: 'Montag', short: 'Mo', color: '#FF5252' },
+    { value: 4, name: 'Dienstag', short: 'Di', color: '#FF9800' },
+    { value: 8, name: 'Mittwoch', short: 'Mi', color: '#FFEB3B' },
+    { value: 16, name: 'Donnerstag', short: 'Do', color: '#4CAF50' },
+    { value: 32, name: 'Freitag', short: 'Fr', color: '#2196F3' },
+    { value: 64, name: 'Samstag', short: 'Sa', color: '#9C27B0' },
+    { value: 1, name: 'Sonntag', short: 'So', color: '#795548' }
+  ];
 
   constructor(
     private keycloak: KeycloakService,
@@ -422,5 +447,109 @@ export class AppComponent implements OnInit {
     // PDF speichern
     const fileName = `Medikamentenplan_${this.currentMonth.replace(' ', '_')}.pdf`;
     doc.save(fileName);
+  }
+
+  // Wizard Methods
+  openCreatePlanWizard() {
+    this.showCreateWizard = true;
+    this.showPlanSelection = false;
+    this.currentWizardStep = 0;
+    this.resetNewPlan();
+  }
+
+  closeCreateWizard() {
+    this.showCreateWizard = false;
+    this.resetNewPlan();
+  }
+
+  resetNewPlan() {
+    this.newPlan = {
+      patientId: null,
+      medicationName: '',
+      dosage: 1,
+      dosageUnit: 'Tablette(n)',
+      timesOfDay: [],
+      weekdays: []
+    };
+  }
+
+  nextWizardStep() {
+    if (this.currentWizardStep < this.wizardSteps.length - 1) {
+      this.currentWizardStep++;
+    }
+  }
+
+  previousWizardStep() {
+    if (this.currentWizardStep > 0) {
+      this.currentWizardStep--;
+    }
+  }
+
+  toggleTimeOfDay(time: string) {
+    const index = this.newPlan.timesOfDay.indexOf(time);
+    if (index > -1) {
+      this.newPlan.timesOfDay.splice(index, 1);
+    } else {
+      this.newPlan.timesOfDay.push(time);
+    }
+  }
+
+  toggleWeekday(day: number) {
+    const index = this.newPlan.weekdays.indexOf(day);
+    if (index > -1) {
+      this.newPlan.weekdays.splice(index, 1);
+    } else {
+      this.newPlan.weekdays.push(day);
+    }
+  }
+
+  isCurrentStepValid(): boolean {
+    switch (this.currentWizardStep) {
+      case 0: // Patient
+        return this.newPlan.patientId !== null;
+      case 1: // Medikament
+        return this.newPlan.medicationName.trim() !== '' && this.newPlan.dosage > 0;
+      case 2: // Tageszeiten
+        return this.newPlan.timesOfDay.length > 0;
+      case 3: // Wochentage
+        return this.newPlan.weekdays.length > 0;
+      case 4: // Zusammenfassung
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  getPatientName(patientId: number | null): string {
+    if (!patientId) return '-';
+    const plan = this.availablePlans.find(p => p.id === patientId);
+    return plan?.patientName || '-';
+  }
+
+  getTimeLabels(): string {
+    const labels = {
+      'MORNING': 'Morgen',
+      'NOON': 'Mittag',
+      'AFTERNOON': 'Nachmittag',
+      'EVENING': 'Abend'
+    };
+    return this.newPlan.timesOfDay.map(t => labels[t as keyof typeof labels]).join(', ') || '-';
+  }
+
+  getWeekdayLabels(): string {
+    const selectedDays = this.weekdays.filter(d => this.newPlan.weekdays.includes(d.value));
+    return selectedDays.map(d => d.short).join(', ') || '-';
+  }
+
+  createMedicationPlan() {
+    console.log('Erstelle Medikamentenplan:', this.newPlan);
+    
+    // TODO: API-Call zum Backend um Plan zu erstellen
+    // this.medicationPlanService.createPlan(this.newPlan).subscribe({...});
+    
+    // Vorerst nur schließen und Bestätigung zeigen
+    alert('Plan erstellt! (Backend-Integration folgt)');
+    this.closeCreateWizard();
+    this.loadAvailablePlans();
   }
 }
