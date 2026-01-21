@@ -119,30 +119,32 @@ jobs:
             # Warten bis PostgreSQL ready ist (kurz & schnell)
             echo "⏳ Waiting for database..."
             echo "🔍 DEBUG: Starting database readiness loop..."
+            DB_READY=false
             for i in {1..15}; do
               if docker compose exec -T postgres pg_isready > /dev/null 2>&1; then
                 echo "✅ Database is ready!"
-                break
+                DB_READY=true
               fi
+              [ "$DB_READY" = "true" ] && break
               sleep 1
             done
-            true  # Ensure zero exit code
-            echo "🔍 DEBUG: Database check loop finished (exit code: $?)"
+            echo "🔍 DEBUG: Database check loop finished (DB_READY=$DB_READY)"
             
             # 🩺 Backend health check (PRIORITÄT - vor Keycloak!)
             echo "🔍 DEBUG: About to start backend health check..."
             echo "🩺 Backend health check:"
+            BACKEND_READY=false
             for i in {1..4}; do
               echo "🔍 DEBUG: Backend check iteration $i/4 starting..."
               if curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1; then
                 echo "✅ Backend API is healthy!"
-                break
+                BACKEND_READY=true
               fi
+              [ "$BACKEND_READY" = "true" ] && break
               echo "⏳ Backend check $i/4..."
               sleep 3
             done
-            true  # Ensure zero exit code
-            echo "🔍 DEBUG: Backend health check loop finished (exit code: $?)"
+            echo "🔍 DEBUG: Backend health check loop finished (BACKEND_READY=$BACKEND_READY)"
             
             # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
             echo "🔍 DEBUG: About to start Keycloak import..."
