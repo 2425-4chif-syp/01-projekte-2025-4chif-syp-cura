@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   currentDayIndex = 0; // Index für aktuellen Wochentag (0=Mo, 6=So)
   userName: string = 'User';
   userRoles: string[] = [];
+  currentPatientId: number = 1; // ID des angemeldeten Patienten
   
   calendarDays: CalendarDay[] = [];
   medicationPlans: MedicationPlan[] = [];
@@ -53,13 +54,21 @@ export class AppComponent implements OnInit {
   // Create Plan Wizard
   showCreateWizard = false;
   currentWizardStep = 0;
-  wizardSteps = ['Patient', 'Medikament', 'Tageszeiten', 'Wochentage', 'Zusammenfassung'];
+  wizardSteps = ['Medikamente', 'Tageszeiten', 'Wochentage', 'Zusammenfassung'];
+  
+  medications: Array<{
+    name: string;
+    dosage: number;
+    dosageUnit: string;
+  }> = [];
+  
+  currentMedication = {
+    name: '',
+    dosage: 1,
+    dosageUnit: 'Tablette(n)'
+  };
   
   newPlan = {
-    patientId: null as number | null,
-    medicationName: '',
-    dosage: 1,
-    dosageUnit: 'Tablette(n)',
     timesOfDay: [] as string[],
     weekdays: [] as number[]
   };
@@ -94,6 +103,13 @@ export class AppComponent implements OnInit {
       const profile = await this.keycloak.loadUserProfile();
       this.userName = profile.firstName || 'User';
       this.userRoles = this.keycloak.getUserRoles();
+      
+      // Patient-ID aus Keycloak-Attributen holen (falls vorhanden)
+      const tokenParsed = this.keycloak.getKeycloakInstance().tokenParsed;
+      if (tokenParsed && tokenParsed['patientId']) {
+        this.currentPatientId = parseInt(tokenParsed['patientId'], 10);
+      }
+      console.log('Angemeldeter Patient ID:', this.currentPatientId);
     } catch (error) {
       console.error('Fehler beim Laden des User-Profils:', error);
     }
@@ -111,23 +127,12 @@ export class AppComponent implements OnInit {
 
   // Medication Plan Selection
   loadAvailablePlans() {
-    this.medicationPlanService.getAllAvailablePlans().subscribe({
-      next: (plans) => {
-        this.availablePlans = plans;
-        // Setze ersten Plan als Standard, falls vorhanden
-        if (plans.length > 0 && !this.selectedPlanId) {
-          this.selectedPlanId = plans[0].id;
-          this.loadMedicationPlans();
-        }
-      },
-      error: (error) => {
-        console.error('Fehler beim Laden der verfügbaren Pläne:', error);
-        // Fallback zu Default-Wert
-        this.availablePlans = [
-          { id: 1, name: 'Medikamentenplan 1', patientName: 'Standardpatient' }
-        ];
-      }
-    });
+    // Lade nur Pläne für den aktuellen Patienten
+    this.availablePlans = [
+      { id: this.currentPatientId, name: 'Mein Medikamentenplan', patientName: this.userName }
+    ];
+    this.selectedPlanId = this.currentPatientId;
+    this.loadMedicationPlans();
   }
 
   openPlanSelection() {
@@ -463,11 +468,13 @@ export class AppComponent implements OnInit {
   }
 
   resetNewPlan() {
-    this.newPlan = {
-      patientId: null,
-      medicationName: '',
+    this.medications = [];
+    this.currentMedication = {
+      name: '',
       dosage: 1,
-      dosageUnit: 'Tablette(n)',
+      dosageUnit: 'Tablette(n)'
+    };
+    this.newPlan = {
       timesOfDay: [],
       weekdays: []
     };
@@ -505,15 +512,13 @@ export class AppComponent implements OnInit {
 
   isCurrentStepValid(): boolean {
     switch (this.currentWizardStep) {
-      case 0: // Patient
-        return this.newPlan.patientId !== null;
-      case 1: // Medikament
-        return this.newPlan.medicationName.trim() !== '' && this.newPlan.dosage > 0;
-      case 2: // Tageszeiten
+      case 0: // Medikamente
+        return this.medications.length > 0;
+      case 1: // Tageszeiten
         return this.newPlan.timesOfDay.length > 0;
-      case 3: // Wochentage
+      case 2: // Wochentage
         return this.newPlan.weekdays.length > 0;
-      case 4: // Zusammenfassung
+      case 3: // Zusammenfassung
         return true;
       default:
         return false;
@@ -521,9 +526,26 @@ export class AppComponent implements OnInit {
   }
 
   getPatientName(patientId: number | null): string {
-    if (!patientId) return '-';
-    const plan = this.availablePlans.find(p => p.id === patientId);
-    return plan?.patientName || '-';
+    return this.userName;
+  }
+
+  addMedication() {
+    if (this.currentMedication.name.trim() && this.currentMedication.dosage > 0) {
+      this.medications.push({ ...this.currentMedication });
+      this.currentMedication = {
+        name: '',
+        dosage: 1,
+        dosageUnit: 'Tablette(n)'
+      };
+    }
+  }
+
+  removeMedication(index: number) {
+    this.medications.splice(index, 1);
+  }
+
+  getMedicationsList(): string {
+    return this.medications.map(m => `${m.name} (${m.dosage} ${m.dosageUnit})`).join(', ') || '-';
   }
 
   getTimeLabels(): string {
@@ -542,13 +564,20 @@ export class AppComponent implements OnInit {
   }
 
   createMedicationPlan() {
-    console.log('Erstelle Medikamentenplan:', this.newPlan);
+    const planData = {
+      patientId: this.currentPatientId,
+      medications: this.medications,
+      timesOfDay: this.newPlan.timesOfDay,
+      weekdays: this.newPlan.weekdays
+    };
+    
+    console.log('Erstelle Medikamentenplan:', planData);
     
     // TODO: API-Call zum Backend um Plan zu erstellen
-    // this.medicationPlanService.createPlan(this.newPlan).subscribe({...});
+    // this.medicationPlanService.createPlan(planData).subscribe({...});
     
     // Vorerst nur schließen und Bestätigung zeigen
-    alert('Plan erstellt! (Backend-Integration folgt)');
+    alert(`Plan erstellt mit ${this.medications.length} Medikament(en)! (Backend-Integration folgt)`);
     this.closeCreateWizard();
     this.loadAvailablePlans();
   }
