@@ -2,7 +2,6 @@ using Core.Contracts;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-// kommentar um den Workflow zu testen
 namespace WebApi.Services;
 
 public class EmailService : IEmailService

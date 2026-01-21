@@ -20,7 +20,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H vm12.htl-leonding.ac.at >> ~/.ssh/known_hosts
           
-          ssh -o StrictHostKeyChecking=no curaadm@vm12.htl-leonding.ac.at << 'EOF'
+          ssh -o StrictHostKeyChecking=no \
+              -o ServerAliveInterval=30 \
+              -o ServerAliveCountMax=10 \
+              curaadm@vm12.htl-leonding.ac.at << 'EOF'
             echo "� Starting full stack deployment (Database + Backend + pgAdmin)..."
             
             cd ~/cura-project
@@ -113,11 +116,18 @@ jobs:
             echo "⏳ Waiting for Keycloak to start (30 seconds)..."
             sleep 30
             
-            # 🔐 Import Keycloak realm if needed
-            echo "🔐 Checking and importing Keycloak realm..."
+            # 🔐 Import Keycloak realm if needed (run in background to avoid SSH timeout)
+            echo "🔐 Checking Keycloak realm..."
             cd ../keycloak-config
             chmod +x import-realm.sh
-            ./import-realm.sh || echo "⚠️ Keycloak realm import had issues (might already exist)"
+            # Check if realm exists before attempting import
+            if docker compose -f ../database/docker-compose.yaml exec -T keycloak /opt/keycloak/bin/kcadm.sh get realms/cura --no-config --server http://localhost:8080 --realm master --user admin --password passme > /dev/null 2>&1; then
+              echo "✅ Keycloak realm 'cura' already exists - skipping import"
+            else
+              echo "📦 Importing Keycloak realm (in background)..."
+              nohup ./import-realm.sh > /tmp/keycloak-import.log 2>&1 &
+              echo "⚠️ Keycloak realm import started in background - check /tmp/keycloak-import.log for details"
+            fi
             cd ../database
             
             echo "📋 Container status after startup:"
