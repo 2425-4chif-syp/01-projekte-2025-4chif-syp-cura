@@ -3,7 +3,6 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 namespace WebApi.Services;
-//deployment test
 
 public class EmailService : IEmailService
 {

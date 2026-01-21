@@ -138,9 +138,7 @@ jobs:
             
             # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
             echo "🔐 Starting Keycloak realm import in background..."
-            cd ../keycloak-config
-            nohup bash -c 'sleep 30 && ./import-realm.sh > /tmp/keycloak-import.log 2>&1' &
-            cd ../database
+            (cd ../keycloak-config && nohup bash -c 'sleep 30 && ./import-realm.sh > /tmp/keycloak-import.log 2>&1' &) || true
             
             echo "✅ Deployment completed!"
             echo "📋 Final container status:"
