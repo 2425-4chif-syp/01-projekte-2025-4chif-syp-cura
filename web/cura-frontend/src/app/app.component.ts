@@ -54,24 +54,27 @@ export class AppComponent implements OnInit {
   // Create Plan Wizard
   showCreateWizard = false;
   currentWizardStep = 0;
-  wizardSteps = ['Medikamente', 'Tageszeiten', 'Wochentage', 'Zusammenfassung'];
+  wizardSteps = ['Medikamente', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag', 'Zusammenfassung'];
+  
+  availableMedications: Array<{ id: number; name: string }> = [];
   
   medications: Array<{
+    medicationId: number;
     name: string;
     dosage: number;
     dosageUnit: string;
   }> = [];
   
   currentMedication = {
+    medicationId: null as number | null,
     name: '',
     dosage: 1,
     dosageUnit: 'Tablette(n)'
   };
   
-  newPlan = {
-    timesOfDay: [] as string[],
-    weekdays: [] as number[]
-  };
+  // Tageszeiten pro Wochentag und Medikament
+  // weekdaySchedule[medIndex][dayIndex] = ['MORNING', 'EVENING']
+  weekdaySchedule: Map<number, Map<number, string[]>> = new Map();
   
   weekdays = [
     { value: 2, name: 'Montag', short: 'Mo', color: '#FF5252' },
@@ -119,6 +122,7 @@ export class AppComponent implements OnInit {
     this.loadCalendar();
     this.loadAvailablePlans();
     this.loadMedicationPlans();
+    this.loadAvailableMedications();
   }
 
   logout() {
@@ -133,6 +137,18 @@ export class AppComponent implements OnInit {
     ];
     this.selectedPlanId = this.currentPatientId;
     this.loadMedicationPlans();
+  }
+
+  loadAvailableMedications() {
+    this.medicationPlanService.getAllMedications().subscribe({
+      next: (medications) => {
+        this.availableMedications = medications.map(m => ({ id: m.id, name: m.name }));
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der Medikamente:', error);
+        this.availableMedications = [];
+      }
+    });
   }
 
   openPlanSelection() {
@@ -470,14 +486,12 @@ export class AppComponent implements OnInit {
   resetNewPlan() {
     this.medications = [];
     this.currentMedication = {
+      medicationId: null,
       name: '',
       dosage: 1,
       dosageUnit: 'Tablette(n)'
     };
-    this.newPlan = {
-      timesOfDay: [],
-      weekdays: []
-    };
+    this.weekdaySchedule = new Map();
   }
 
   nextWizardStep() {
@@ -493,32 +507,51 @@ export class AppComponent implements OnInit {
   }
 
   toggleTimeOfDay(time: string) {
-    const index = this.newPlan.timesOfDay.indexOf(time);
-    if (index > -1) {
-      this.newPlan.timesOfDay.splice(index, 1);
-    } else {
-      this.newPlan.timesOfDay.push(time);
-    }
+    // Nicht mehr verwendet - jetzt Tag-spezifisch
   }
 
   toggleWeekday(day: number) {
-    const index = this.newPlan.weekdays.indexOf(day);
+    // Nicht mehr verwendet - jetzt Tag-spezifisch
+  }
+
+  // Toggle Tageszeit für spezifisches Medikament und Tag
+  toggleTimeForMedicationAndDay(medIndex: number, dayIndex: number, time: string) {
+    const daySchedule = this.weekdaySchedule.get(medIndex);
+    if (!daySchedule) return;
+    
+    const times = daySchedule.get(dayIndex) || [];
+    const index = times.indexOf(time);
+    
     if (index > -1) {
-      this.newPlan.weekdays.splice(index, 1);
+      times.splice(index, 1);
     } else {
-      this.newPlan.weekdays.push(day);
+      times.push(time);
     }
+    
+    daySchedule.set(dayIndex, times);
+  }
+
+  isTimeSelectedForMedicationAndDay(medIndex: number, dayIndex: number, time: string): boolean {
+    const daySchedule = this.weekdaySchedule.get(medIndex);
+    if (!daySchedule) return false;
+    
+    const times = daySchedule.get(dayIndex) || [];
+    return times.includes(time);
+  }
+
+  getCurrentDayIndex(): number {
+    // Schritt 0 = Medikamente, Schritt 1-7 = Mo-So, Schritt 8 = Zusammenfassung
+    return this.currentWizardStep - 1; // 0 = Montag, 6 = Sonntag
   }
 
   isCurrentStepValid(): boolean {
     switch (this.currentWizardStep) {
       case 0: // Medikamente
         return this.medications.length > 0;
-      case 1: // Tageszeiten
-        return this.newPlan.timesOfDay.length > 0;
-      case 2: // Wochentage
-        return this.newPlan.weekdays.length > 0;
-      case 3: // Zusammenfassung
+      case 1: case 2: case 3: case 4: case 5: case 6: case 7: // Wochentage Mo-So
+        // Optional: Kann übersprungen werden wenn kein Medikament an diesem Tag
+        return true;
+      case 8: // Zusammenfassung
         return true;
       default:
         return false;
@@ -530,9 +563,25 @@ export class AppComponent implements OnInit {
   }
 
   addMedication() {
-    if (this.currentMedication.name.trim() && this.currentMedication.dosage > 0) {
-      this.medications.push({ ...this.currentMedication });
+    if ((this.currentMedication.medicationId || this.currentMedication.name.trim()) && this.currentMedication.dosage > 0) {
+      const medIndex = this.medications.length;
+      
+      this.medications.push({
+        medicationId: this.currentMedication.medicationId || 0,
+        name: this.currentMedication.name,
+        dosage: this.currentMedication.dosage,
+        dosageUnit: this.currentMedication.dosageUnit
+      });
+      
+      // Initialisiere Schedule für dieses Medikament (7 Tage)
+      const daySchedule = new Map<number, string[]>();
+      for (let i = 0; i < 7; i++) {
+        daySchedule.set(i, []);
+      }
+      this.weekdaySchedule.set(medIndex, daySchedule);
+      
       this.currentMedication = {
+        medicationId: null,
         name: '',
         dosage: 1,
         dosageUnit: 'Tablette(n)'
@@ -542,33 +591,78 @@ export class AppComponent implements OnInit {
 
   removeMedication(index: number) {
     this.medications.splice(index, 1);
+    // Entferne Schedule und re-indexiere
+    this.weekdaySchedule.delete(index);
+    
+    // Re-indexiere alle Schedules
+    const newSchedule = new Map<number, Map<number, string[]>>();
+    let newIndex = 0;
+    this.weekdaySchedule.forEach((daySchedule, oldIndex) => {
+      if (oldIndex !== index) {
+        newSchedule.set(newIndex, daySchedule);
+        newIndex++;
+      }
+    });
+    this.weekdaySchedule = newSchedule;
+  }
+
+  onMedicationSelect() {
+    const selected = this.availableMedications.find(m => m.id === this.currentMedication.medicationId);
+    if (selected) {
+      this.currentMedication.name = selected.name;
+    }
   }
 
   getMedicationsList(): string {
     return this.medications.map(m => `${m.name} (${m.dosage} ${m.dosageUnit})`).join(', ') || '-';
   }
 
-  getTimeLabels(): string {
-    const labels = {
+  getScheduleSummary(): string {
+    const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    const timeLabels: { [key: string]: string } = {
       'MORNING': 'Morgen',
       'NOON': 'Mittag',
       'AFTERNOON': 'Nachmittag',
       'EVENING': 'Abend'
     };
-    return this.newPlan.timesOfDay.map(t => labels[t as keyof typeof labels]).join(', ') || '-';
+    
+    let summary = '';
+    this.medications.forEach((med, medIndex) => {
+      summary += `\n${med.name}:\n`;
+      const daySchedule = this.weekdaySchedule.get(medIndex);
+      if (daySchedule) {
+        daySchedule.forEach((times, dayIndex) => {
+          if (times.length > 0) {
+            const timeStr = times.map(t => timeLabels[t]).join(', ');
+            summary += `  ${dayNames[dayIndex]}: ${timeStr}\n`;
+          }
+        });
+      }
+    });
+    return summary || 'Keine Zeiten ausgewählt';
+  }
+
+  getTimeLabels(): string {
+    // Nicht mehr verwendet
+    return '-';
   }
 
   getWeekdayLabels(): string {
-    const selectedDays = this.weekdays.filter(d => this.newPlan.weekdays.includes(d.value));
-    return selectedDays.map(d => d.short).join(', ') || '-';
+    // Nicht mehr verwendet
+    return '-';
   }
 
   createMedicationPlan() {
     const planData = {
       patientId: this.currentPatientId,
       medications: this.medications,
-      timesOfDay: this.newPlan.timesOfDay,
-      weekdays: this.newPlan.weekdays
+      schedule: Array.from(this.weekdaySchedule.entries()).map(([medIndex, daySchedule]) => ({
+        medicationIndex: medIndex,
+        days: Array.from(daySchedule.entries()).map(([dayIndex, times]) => ({
+          dayIndex,
+          times
+        }))
+      }))
     };
     
     console.log('Erstelle Medikamentenplan:', planData);

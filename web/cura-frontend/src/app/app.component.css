@@ -1220,6 +1220,52 @@ main {
   cursor: not-allowed;
 }
 
+/* Medication Day Schedule */
+.medication-day-schedule {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+.medication-day-schedule h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.medication-day-schedule h4 small {
+  color: #6c757d;
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+.summary-schedule {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 2px solid #e9ecef;
+}
+
+.summary-schedule pre {
+  margin: 0;
+  line-height: 1.8;
+  color: #333;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Add Medication Form Updates */
+.add-medication-form .form-control:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 /* Mobile Wizard Anpassungen */
 @media (max-width: 768px) {
   .wizard-container {

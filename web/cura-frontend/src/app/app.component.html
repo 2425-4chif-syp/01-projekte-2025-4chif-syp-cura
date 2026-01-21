@@ -366,9 +366,22 @@
               @if (medications.length < 10) {
                 <div class="add-medication-form">
                   <div class="form-group">
-                    <label>Medikament</label>
+                    <label>Medikament auswählen</label>
+                    <select [(ngModel)]="currentMedication.medicationId" 
+                            (change)="onMedicationSelect()"
+                            class="form-control">
+                      <option [ngValue]="null">-- Oder neues Medikament eingeben --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>Medikamentenname (falls neu)</label>
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control" placeholder="z.B. Aspirin"
+                           [disabled]="currentMedication.medicationId !== null"
                            (keyup.enter)="addMedication()">
                   </div>
                   
@@ -387,7 +400,7 @@
                   </div>
                   
                   <button class="btn-add-med" (click)="addMedication()"
-                          [disabled]="!currentMedication.name.trim() || currentMedication.dosage <= 0">
+                          [disabled]="(!currentMedication.medicationId && !currentMedication.name.trim()) || currentMedication.dosage <= 0">
                     <i class="fa-solid fa-plus"></i> Medikament hinzufügen
                   </button>
                 </div>
@@ -400,67 +413,282 @@
             </div>
           }
           @case (1) {
-            <!-- Schritt 2: Tageszeiten -->
+            <!-- Schritt 2: Montag -->
             <div class="wizard-step">
-              <h3>Schritt 2: Tageszeiten auswählen</h3>
-              <p class="step-description">Wann sollen die Medikamente eingenommen werden?</p>
+              <h3>Montag</h3>
+              <p class="step-description">Wählen Sie die Tageszeiten für jedes Medikament</p>
               
-              <div class="time-selection">
-                <div class="time-option" 
-                     [class.selected]="newPlan.timesOfDay.includes('MORNING')"
-                     (click)="toggleTimeOfDay('MORNING')">
-                  <i class="fa-solid fa-sun"></i>
-                  <span>Morgen</span>
-                  <small>08:00</small>
+              @for (med of medications; track $index) {
+                <div class="medication-day-schedule">
+                  <h4>{{ med.name }} <small>({{ med.dosage }} {{ med.dosageUnit }})</small></h4>
+                  <div class="time-selection">
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 0, 'MORNING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 0, 'MORNING')">
+                      <i class="fa-solid fa-sun"></i>
+                      <span>Morgen</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 0, 'NOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 0, 'NOON')">
+                      <i class="fa-solid fa-cloud-sun"></i>
+                      <span>Mittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 0, 'AFTERNOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 0, 'AFTERNOON')">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span>Nachmittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 0, 'EVENING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 0, 'EVENING')">
+                      <i class="fa-solid fa-moon"></i>
+                      <span>Abend</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="time-option" 
-                     [class.selected]="newPlan.timesOfDay.includes('NOON')"
-                     (click)="toggleTimeOfDay('NOON')">
-                  <i class="fa-solid fa-cloud-sun"></i>
-                  <span>Mittag</span>
-                  <small>12:00</small>
-                </div>
-                <div class="time-option" 
-                     [class.selected]="newPlan.timesOfDay.includes('AFTERNOON')"
-                     (click)="toggleTimeOfDay('AFTERNOON')">
-                  <i class="fa-solid fa-cloud"></i>
-                  <span>Nachmittag</span>
-                  <small>16:00</small>
-                </div>
-                <div class="time-option" 
-                     [class.selected]="newPlan.timesOfDay.includes('EVENING')"
-                     (click)="toggleTimeOfDay('EVENING')">
-                  <i class="fa-solid fa-moon"></i>
-                  <span>Abend</span>
-                  <small>20:00</small>
-                </div>
-              </div>
+              }
             </div>
           }
           @case (2) {
-            <!-- Schritt 3: Wochentage -->
+            <!-- Schritt 3: Dienstag -->
             <div class="wizard-step">
-              <h3>Schritt 3: Wochentage auswählen</h3>
-              <p class="step-description">An welchen Tagen sollen die Medikamente eingenommen werden?</p>
+              <h3>Dienstag</h3>
+              <p class="step-description">Wählen Sie die Tageszeiten für jedes Medikament</p>
               
-              <div class="weekday-selection">
-                @for (day of weekdays; track day.value) {
-                  <div class="weekday-option" 
-                       [class.selected]="newPlan.weekdays.includes(day.value)"
-                       (click)="toggleWeekday(day.value)">
-                    <div class="weekday-circle" [style.background-color]="day.color">
-                      {{ day.short }}
+              @for (med of medications; track $index) {
+                <div class="medication-day-schedule">
+                  <h4>{{ med.name }} <small>({{ med.dosage }} {{ med.dosageUnit }})</small></h4>
+                  <div class="time-selection">
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 1, 'MORNING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 1, 'MORNING')">
+                      <i class="fa-solid fa-sun"></i>
+                      <span>Morgen</span>
                     </div>
-                    <span>{{ day.name }}</span>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 1, 'NOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 1, 'NOON')">
+                      <i class="fa-solid fa-cloud-sun"></i>
+                      <span>Mittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 1, 'AFTERNOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 1, 'AFTERNOON')">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span>Nachmittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 1, 'EVENING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 1, 'EVENING')">
+                      <i class="fa-solid fa-moon"></i>
+                      <span>Abend</span>
+                    </div>
                   </div>
-                }
-              </div>
+                </div>
+              }
             </div>
           }
           @case (3) {
-            <!-- Schritt 4: Zusammenfassung -->
+            <!-- Schritt 4: Mittwoch -->
             <div class="wizard-step">
-              <h3>Schritt 4: Zusammenfassung</h3>
+              <h3>Mittwoch</h3>
+              <p class="step-description">Wählen Sie die Tageszeiten für jedes Medikament</p>
+              
+              @for (med of medications; track $index) {
+                <div class="medication-day-schedule">
+                  <h4>{{ med.name }} <small>({{ med.dosage }} {{ med.dosageUnit }})</small></h4>
+                  <div class="time-selection">
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 2, 'MORNING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 2, 'MORNING')">
+                      <i class="fa-solid fa-sun"></i>
+                      <span>Morgen</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 2, 'NOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 2, 'NOON')">
+                      <i class="fa-solid fa-cloud-sun"></i>
+                      <span>Mittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 2, 'AFTERNOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 2, 'AFTERNOON')">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span>Nachmittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 2, 'EVENING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 2, 'EVENING')">
+                      <i class="fa-solid fa-moon"></i>
+                      <span>Abend</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (4) {
+            <!-- Schritt 5: Donnerstag -->
+            <div class="wizard-step">
+              <h3>Donnerstag</h3>
+              <p class="step-description">Wählen Sie die Tageszeiten für jedes Medikament</p>
+              
+              @for (med of medications; track $index) {
+                <div class="medication-day-schedule">
+                  <h4>{{ med.name }} <small>({{ med.dosage }} {{ med.dosageUnit }})</small></h4>
+                  <div class="time-selection">
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 3, 'MORNING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 3, 'MORNING')">
+                      <i class="fa-solid fa-sun"></i>
+                      <span>Morgen</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 3, 'NOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 3, 'NOON')">
+                      <i class="fa-solid fa-cloud-sun"></i>
+                      <span>Mittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 3, 'AFTERNOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 3, 'AFTERNOON')">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span>Nachmittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 3, 'EVENING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 3, 'EVENING')">
+                      <i class="fa-solid fa-moon"></i>
+                      <span>Abend</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (5) {
+            <!-- Schritt 6: Freitag -->
+            <div class="wizard-step">
+              <h3>Freitag</h3>
+              <p class="step-description">Wählen Sie die Tageszeiten für jedes Medikament</p>
+              
+              @for (med of medications; track $index) {
+                <div class="medication-day-schedule">
+                  <h4>{{ med.name }} <small>({{ med.dosage }} {{ med.dosageUnit }})</small></h4>
+                  <div class="time-selection">
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 4, 'MORNING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 4, 'MORNING')">
+                      <i class="fa-solid fa-sun"></i>
+                      <span>Morgen</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 4, 'NOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 4, 'NOON')">
+                      <i class="fa-solid fa-cloud-sun"></i>
+                      <span>Mittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 4, 'AFTERNOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 4, 'AFTERNOON')">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span>Nachmittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 4, 'EVENING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 4, 'EVENING')">
+                      <i class="fa-solid fa-moon"></i>
+                      <span>Abend</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (6) {
+            <!-- Schritt 7: Samstag -->
+            <div class="wizard-step">
+              <h3>Samstag</h3>
+              <p class="step-description">Wählen Sie die Tageszeiten für jedes Medikament</p>
+              
+              @for (med of medications; track $index) {
+                <div class="medication-day-schedule">
+                  <h4>{{ med.name }} <small>({{ med.dosage }} {{ med.dosageUnit }})</small></h4>
+                  <div class="time-selection">
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 5, 'MORNING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 5, 'MORNING')">
+                      <i class="fa-solid fa-sun"></i>
+                      <span>Morgen</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 5, 'NOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 5, 'NOON')">
+                      <i class="fa-solid fa-cloud-sun"></i>
+                      <span>Mittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 5, 'AFTERNOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 5, 'AFTERNOON')">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span>Nachmittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 5, 'EVENING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 5, 'EVENING')">
+                      <i class="fa-solid fa-moon"></i>
+                      <span>Abend</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (7) {
+            <!-- Schritt 8: Sonntag -->
+            <div class="wizard-step">
+              <h3>Sonntag</h3>
+              <p class="step-description">Wählen Sie die Tageszeiten für jedes Medikament</p>
+              
+              @for (med of medications; track $index) {
+                <div class="medication-day-schedule">
+                  <h4>{{ med.name }} <small>({{ med.dosage }} {{ med.dosageUnit }})</small></h4>
+                  <div class="time-selection">
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 6, 'MORNING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 6, 'MORNING')">
+                      <i class="fa-solid fa-sun"></i>
+                      <span>Morgen</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 6, 'NOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 6, 'NOON')">
+                      <i class="fa-solid fa-cloud-sun"></i>
+                      <span>Mittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 6, 'AFTERNOON')"
+                         (click)="toggleTimeForMedicationAndDay($index, 6, 'AFTERNOON')">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span>Nachmittag</span>
+                    </div>
+                    <div class="time-option" 
+                         [class.selected]="isTimeSelectedForMedicationAndDay($index, 6, 'EVENING')"
+                         (click)="toggleTimeForMedicationAndDay($index, 6, 'EVENING')">
+                      <i class="fa-solid fa-moon"></i>
+                      <span>Abend</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (8) {
+            <!-- Schritt 9: Zusammenfassung -->
+            <div class="wizard-step">
+              <h3>Zusammenfassung</h3>
               <p class="step-description">Überprüfen Sie Ihre Angaben</p>
               
               <div class="summary-card">
@@ -468,17 +696,8 @@
                   <strong>Patient:</strong>
                   <span>{{ userName }}</span>
                 </div>
-                <div class="summary-row">
-                  <strong>Medikamente:</strong>
-                  <span>{{ getMedicationsList() }}</span>
-                </div>
-                <div class="summary-row">
-                  <strong>Tageszeiten:</strong>
-                  <span>{{ getTimeLabels() }}</span>
-                </div>
-                <div class="summary-row">
-                  <strong>Wochentage:</strong>
-                  <span>{{ getWeekdayLabels() }}</span>
+                <div class="summary-schedule">
+                  <pre style="white-space: pre-wrap; font-family: inherit;">{{ getScheduleSummary() }}</pre>
                 </div>
               </div>
             </div>

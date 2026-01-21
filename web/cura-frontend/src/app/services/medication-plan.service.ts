@@ -33,6 +33,11 @@ export class MedicationPlanService {
     return this.http.get<MedicationPlan[]>(`${this.API_URL}/MedicationPlans/patient/${patientId}`);
   }
 
+  // Get all available medications
+  getAllMedications(): Observable<Medication[]> {
+    return this.http.get<Medication[]>(`${this.API_URL}/Medications`);
+  }
+
   getMedicationName(medicationId: number): Observable<string> {
     if (this.medicationCache.has(medicationId)) {
       return of(this.medicationCache.get(medicationId)!);
