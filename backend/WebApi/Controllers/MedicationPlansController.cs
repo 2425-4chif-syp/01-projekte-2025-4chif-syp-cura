@@ -27,6 +27,31 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Gets all patients with their medication plans (for plan selection).
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("patients-with-plans")]
+        public async Task<IActionResult> GetPatientsWithPlans()
+        {
+            var plans = await _unitOfWork.MedicationPlanRepository.GetAllAsync();
+            
+            // Gruppiere nach Patient
+            var patientsWithPlans = plans
+                .GroupBy(p => p.PatientId)
+                .Select(g => new
+                {
+                    Id = g.Key,
+                    Name = g.First().Patient?.Name ?? $"Patient {g.Key}",
+                    PlanCount = g.Count(),
+                    HasActivePlans = g.Any(p => p.IsActive)
+                })
+                .OrderBy(p => p.Id)
+                .ToList();
+            
+            return Ok(patientsWithPlans);
+        }
+
+        /// <summary>
         /// Gets all active medication plans.
         /// </summary>
         /// <returns></returns>

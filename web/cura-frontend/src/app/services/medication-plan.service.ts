@@ -16,6 +16,19 @@ export class MedicationPlanService {
 
   constructor(private http: HttpClient) {}
 
+  // Get all patients with medication plans for selection
+  getAllAvailablePlans(): Observable<{ id: number; name: string; patientName: string }[]> {
+    return this.http.get<{ id: number; name: string; planCount: number; hasActivePlans: boolean }[]>(
+      `${this.API_URL}/MedicationPlans/patients-with-plans`
+    ).pipe(
+      map(patients => patients.map(p => ({
+        id: p.id,
+        name: `Medikamentenplan ${p.id}`,
+        patientName: p.name
+      })))
+    );
+  }
+
   getMedicationPlans(patientId: number): Observable<MedicationPlan[]> {
     return this.http.get<MedicationPlan[]>(`${this.API_URL}/MedicationPlans/patient/${patientId}`);
   }

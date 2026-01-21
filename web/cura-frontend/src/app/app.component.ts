@@ -40,11 +40,7 @@ export class AppComponent implements OnInit {
   // Medication Plan Flip
   showPlanSelection = false;
   selectedPlanId = 1;
-  availablePlans = [
-    { id: 1, name: 'Medikamentenplan 1', patientName: 'Max Mustermann' },
-    { id: 2, name: 'Medikamentenplan 2', patientName: 'Anna Schmidt' },
-    { id: 3, name: 'Medikamentenplan 3', patientName: 'Hans Müller' }
-  ];
+  availablePlans: { id: number; name: string; patientName: string }[] = [];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
   expandedTimeGroups = new Set<string>();
   
@@ -80,6 +76,7 @@ export class AppComponent implements OnInit {
     // Rest des Codes
     this.currentMonth = this.calendarService.getCurrentMonth();
     this.loadCalendar();
+    this.loadAvailablePlans();
     this.loadMedicationPlans();
   }
 
@@ -88,6 +85,26 @@ export class AppComponent implements OnInit {
   }
 
   // Medication Plan Selection
+  loadAvailablePlans() {
+    this.medicationPlanService.getAllAvailablePlans().subscribe({
+      next: (plans) => {
+        this.availablePlans = plans;
+        // Setze ersten Plan als Standard, falls vorhanden
+        if (plans.length > 0 && !this.selectedPlanId) {
+          this.selectedPlanId = plans[0].id;
+          this.loadMedicationPlans();
+        }
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der verfügbaren Pläne:', error);
+        // Fallback zu Default-Wert
+        this.availablePlans = [
+          { id: 1, name: 'Medikamentenplan 1', patientName: 'Standardpatient' }
+        ];
+      }
+    });
+  }
+
   openPlanSelection() {
     this.showPlanSelection = true;
   }
@@ -99,8 +116,9 @@ export class AppComponent implements OnInit {
   selectPlan(planId: number) {
     this.selectedPlanId = planId;
     this.closePlanSelection();
-    // Hier würdest du dann den Plan neu laden
-    // this.loadMedicationPlans(planId);
+    // Lade Medikamentenpläne für den ausgewählten Patienten neu
+    this.loadMedicationPlans();
+    this.loadCalendar();
   }
 
   get selectedPlanName(): string {
@@ -112,8 +130,9 @@ export class AppComponent implements OnInit {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
+    const patientId = this.selectedPlanId || 1;
 
-    this.calendarService.getDailyStatus(1, year, month).subscribe({
+    this.calendarService.getDailyStatus(patientId, year, month).subscribe({
       next: (statusData) => {
         this.calendarDays = this.calendarService.generateCalendarFromStatus(statusData);
         this.intakeQuote = this.calendarService.calculateIntakeQuote(statusData);
@@ -130,12 +149,16 @@ export class AppComponent implements OnInit {
   }
 
   loadMedicationPlans() {
-    this.medicationPlanService.getMedicationPlans(1).subscribe({
+    // Verwende selectedPlanId (= patientId) statt hardcoded 1
+    const patientId = this.selectedPlanId || 1;
+    
+    this.medicationPlanService.getMedicationPlans(patientId).subscribe({
       next: (plans) => {
         this.medicationPlans = plans;
         this.loadMedicationNames(plans);
       },
-      error: () => {
+      error: (error) => {
+        console.error('Fehler beim Laden der Medikamentenpläne:', error);
         this.medicationRows = this.medicationPlanService.buildMedicationTable([], new Map());
       }
     });
@@ -203,9 +226,10 @@ export class AppComponent implements OnInit {
     // Parse date (format: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)
     const dateOnly = date.split('T')[0]; // Remove time part if present
     const [year, month, day] = dateOnly.split('-').map(Number);
+    const patientId = this.selectedPlanId || 1;
     
     // Load all scheduled and taken medications for this day
-    this.medicationPlanService.getDayDetails(1, year, month, day).subscribe({
+    this.medicationPlanService.getDayDetails(patientId, year, month, day).subscribe({
       next: (details) => {
         console.log('Day details from backend:', details);
         
