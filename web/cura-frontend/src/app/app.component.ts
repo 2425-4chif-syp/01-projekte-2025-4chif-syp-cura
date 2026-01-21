@@ -477,7 +477,7 @@ export class AppComponent implements OnInit {
   }
 
   // Wizard Methods
-  openCreatePlanWizard() {
+  openCreateWizard() {
     this.showCreateWizard = true;
     this.showPlanSelection = false;
     this.currentWizardStep = 0;
