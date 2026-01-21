@@ -114,9 +114,11 @@ jobs:
             
             echo "📋 Container status after startup:"
             docker compose ps
+            echo "🔍 DEBUG: Container status check completed (exit code: $?)"
             
             # Warten bis PostgreSQL ready ist (kurz & schnell)
             echo "⏳ Waiting for database..."
+            echo "🔍 DEBUG: Starting database readiness loop..."
             for i in {1..15}; do
               if docker compose exec -T postgres pg_isready > /dev/null 2>&1; then
                 echo "✅ Database is ready!"
@@ -124,10 +126,14 @@ jobs:
               fi
               sleep 1
             done
+            true  # Ensure zero exit code
+            echo "🔍 DEBUG: Database check loop finished (exit code: $?)"
             
             # 🩺 Backend health check (PRIORITÄT - vor Keycloak!)
+            echo "🔍 DEBUG: About to start backend health check..."
             echo "🩺 Backend health check:"
             for i in {1..4}; do
+              echo "🔍 DEBUG: Backend check iteration $i/4 starting..."
               if curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1; then
                 echo "✅ Backend API is healthy!"
                 break
@@ -135,10 +141,14 @@ jobs:
               echo "⏳ Backend check $i/4..."
               sleep 3
             done
+            true  # Ensure zero exit code
+            echo "🔍 DEBUG: Backend health check loop finished (exit code: $?)"
             
             # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
+            echo "🔍 DEBUG: About to start Keycloak import..."
             echo "🔐 Starting Keycloak realm import in background..."
             (cd ../keycloak-config && nohup bash -c 'sleep 30 && ./import-realm.sh > /tmp/keycloak-import.log 2>&1' &) || true
+            echo "🔍 DEBUG: Keycloak import command finished (exit code: $?)"
             
             echo "✅ Deployment completed!"
             echo "📋 Final container status:"
