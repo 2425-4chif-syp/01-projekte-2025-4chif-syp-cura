@@ -125,32 +125,32 @@ jobs:
                 break
               fi
               sleep 1
-          done || true
-          echo "🔍 DEBUG: Database check loop finished (exit code: $?)"
-          
-          # 🩺 Backend health check (PRIORITÄT - vor Keycloak!)
-          echo "🔍 DEBUG: About to start backend health check..."
-          echo "🩺 Backend health check:"
-          for i in {1..4}; do
-            echo "🔍 DEBUG: Backend check iteration $i/4 starting..."
-            if curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1; then
-              echo "✅ Backend API is healthy!"
-              break
-            fi
-            echo "⏳ Backend check $i/4..."
-            sleep 3
-          done || true
-          echo "🔍 DEBUG: Backend health check loop finished (exit code: $?)"
-          
-          # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
-          echo "🔍 DEBUG: About to start Keycloak import..."
-          echo "🔐 Starting Keycloak realm import in background..."
-          (cd ../keycloak-config && nohup bash -c 'sleep 30 && ./import-realm.sh > /tmp/keycloak-import.log 2>&1' &) || true
-          echo "🔍 DEBUG: Keycloak import command finished (exit code: $?)"
-          
-          echo "✅ Deployment completed!"
-          echo "📋 Final container status:"
-          docker compose ps
+            done || true
+            echo "🔍 DEBUG: Database check loop finished (exit code: $?)"
+            
+            # 🩺 Backend health check (PRIORITÄT - vor Keycloak!)
+            echo "🔍 DEBUG: About to start backend health check..."
+            echo "🩺 Backend health check:"
+            for i in {1..4}; do
+              echo "🔍 DEBUG: Backend check iteration $i/4 starting..."
+              if curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1; then
+                echo "✅ Backend API is healthy!"
+                break
+              fi
+              echo "⏳ Backend check $i/4..."
+              sleep 3
+            done || true
+            echo "🔍 DEBUG: Backend health check loop finished (exit code: $?)"
+            
+            # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
+            echo "🔍 DEBUG: About to start Keycloak import..."
+            echo "🔐 Starting Keycloak realm import in background..."
+            (cd ../keycloak-config && nohup bash -c 'sleep 30 && ./import-realm.sh > /tmp/keycloak-import.log 2>&1' &) || true
+            echo "🔍 DEBUG: Keycloak import command finished (exit code: $?)"
+            
+            echo "✅ Deployment completed!"
+            echo "📋 Final container status:"
+            docker compose ps
             
             echo "🌐 Services available at:"
             echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:8081"
