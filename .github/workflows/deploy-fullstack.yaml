@@ -168,8 +168,8 @@ jobs:
             docker compose ps
             
             echo "� Services available at:"
-            echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:5257"
-            echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:5257/swagger/index.html"
+            echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:8081"
+            echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:8081/swagger/index.html"
             echo "  🔧 pgAdmin: http://vm12.htl-leonding.ac.at:8080"
             echo "  🗄️ PostgreSQL: vm12.htl-leonding.ac.at:5434"
             

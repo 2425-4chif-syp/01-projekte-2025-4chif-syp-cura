@@ -64,8 +64,34 @@ app.UseCors("AllowAngular");
 app.UseAuthorization();
 app.MapControllers();
 
-// Start MQTT Service
+// Start MQTT Service asynchronously (don't block app startup)
 var mqttService = app.Services.GetRequiredService<IMqttService>();
-await mqttService.StartAsync();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+_ = Task.Run(async () =>
+{
+    for (int attempt = 1; attempt <= 10; attempt++)
+    {
+        try
+        {
+            logger.LogInformation("MQTT connection attempt {Attempt}/10...", attempt);
+            await mqttService.StartAsync();
+            logger.LogInformation("✅ MQTT client connected successfully");
+            break;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "MQTT connection attempt {Attempt}/10 failed: {Message}", attempt, ex.Message);
+            if (attempt < 10)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                logger.LogError("❌ Failed to connect to MQTT broker after 10 attempts. MQTT features will be unavailable.");
+            }
+        }
+    }
+});
 
 app.Run();
