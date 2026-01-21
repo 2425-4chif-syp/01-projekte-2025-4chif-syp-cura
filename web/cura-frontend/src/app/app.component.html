@@ -367,9 +367,16 @@
                             <strong>{{ med.name }}</strong>
                             <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
                           </div>
-                          <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       }
                     </div>
@@ -388,10 +395,12 @@
                     
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control-inline" placeholder="Oder neu eingeben"
-                           [disabled]="currentMedication.medicationId !== null">
+                           [disabled]="currentMedication.medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <input type="number" [(ngModel)]="currentMedication.dosage" 
-                           class="form-control-inline dosage-input" placeholder="1" min="1">
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <select [(ngModel)]="currentMedication.dosageUnit" class="form-control-inline unit-select">
                       <option value="Tablette(n)">Tablette(n)</option>
@@ -436,9 +445,16 @@
                             <strong>{{ med.name }}</strong>
                             <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
                           </div>
-                          <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       }
                     </div>
@@ -456,10 +472,12 @@
                     
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control-inline" placeholder="Oder neu eingeben"
-                           [disabled]="currentMedication.medicationId !== null">
+                           [disabled]="currentMedication.medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <input type="number" [(ngModel)]="currentMedication.dosage" 
-                           class="form-control-inline dosage-input" placeholder="1" min="1">
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <select [(ngModel)]="currentMedication.dosageUnit" class="form-control-inline unit-select">
                       <option value="Tablette(n)">Tablette(n)</option>
@@ -504,9 +522,16 @@
                             <strong>{{ med.name }}</strong>
                             <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
                           </div>
-                          <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       }
                     </div>
@@ -524,10 +549,12 @@
                     
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control-inline" placeholder="Oder neu eingeben"
-                           [disabled]="currentMedication.medicationId !== null">
+                           [disabled]="currentMedication.medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <input type="number" [(ngModel)]="currentMedication.dosage" 
-                           class="form-control-inline dosage-input" placeholder="1" min="1">
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <select [(ngModel)]="currentMedication.dosageUnit" class="form-control-inline unit-select">
                       <option value="Tablette(n)">Tablette(n)</option>
@@ -572,9 +599,16 @@
                             <strong>{{ med.name }}</strong>
                             <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
                           </div>
-                          <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       }
                     </div>
@@ -592,10 +626,12 @@
                     
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control-inline" placeholder="Oder neu eingeben"
-                           [disabled]="currentMedication.medicationId !== null">
+                           [disabled]="currentMedication.medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <input type="number" [(ngModel)]="currentMedication.dosage" 
-                           class="form-control-inline dosage-input" placeholder="1" min="1">
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <select [(ngModel)]="currentMedication.dosageUnit" class="form-control-inline unit-select">
                       <option value="Tablette(n)">Tablette(n)</option>
@@ -640,9 +676,16 @@
                             <strong>{{ med.name }}</strong>
                             <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
                           </div>
-                          <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       }
                     </div>
@@ -660,10 +703,12 @@
                     
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control-inline" placeholder="Oder neu eingeben"
-                           [disabled]="currentMedication.medicationId !== null">
+                           [disabled]="currentMedication.medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <input type="number" [(ngModel)]="currentMedication.dosage" 
-                           class="form-control-inline dosage-input" placeholder="1" min="1">
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <select [(ngModel)]="currentMedication.dosageUnit" class="form-control-inline unit-select">
                       <option value="Tablette(n)">Tablette(n)</option>
@@ -708,9 +753,16 @@
                             <strong>{{ med.name }}</strong>
                             <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
                           </div>
-                          <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       }
                     </div>
@@ -728,10 +780,12 @@
                     
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control-inline" placeholder="Oder neu eingeben"
-                           [disabled]="currentMedication.medicationId !== null">
+                           [disabled]="currentMedication.medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <input type="number" [(ngModel)]="currentMedication.dosage" 
-                           class="form-control-inline dosage-input" placeholder="1" min="1">
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <select [(ngModel)]="currentMedication.dosageUnit" class="form-control-inline unit-select">
                       <option value="Tablette(n)">Tablette(n)</option>
@@ -776,9 +830,16 @@
                             <strong>{{ med.name }}</strong>
                             <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
                           </div>
-                          <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       }
                     </div>
@@ -796,10 +857,12 @@
                     
                     <input type="text" [(ngModel)]="currentMedication.name" 
                            class="form-control-inline" placeholder="Oder neu eingeben"
-                           [disabled]="currentMedication.medicationId !== null">
+                           [disabled]="currentMedication.medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <input type="number" [(ngModel)]="currentMedication.dosage" 
-                           class="form-control-inline dosage-input" placeholder="1" min="1">
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
                     
                     <select [(ngModel)]="currentMedication.dosageUnit" class="form-control-inline unit-select">
                       <option value="Tablette(n)">Tablette(n)</option>

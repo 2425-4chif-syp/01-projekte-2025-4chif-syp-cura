@@ -573,13 +573,52 @@ export class AppComponent implements OnInit {
       
       dayMap.set(timeOfDay, medications);
       
-      this.currentMedication = {
-        medicationId: null,
-        name: '',
-        dosage: 1,
-        dosageUnit: 'Tablette(n)'
-      };
+      // Formular komplett zurücksetzen
+      this.resetCurrentMedication();
     }
+  }
+
+  // Medikament für andere Tage zur gleichen Tageszeit wiederholen
+  repeatMedicationForOtherDays(sourceDayIndex: number, timeOfDay: string, medIndex: number) {
+    const sourceDayMap = this.weekSchedule.get(sourceDayIndex);
+    if (!sourceDayMap) return;
+    
+    const medications = sourceDayMap.get(timeOfDay);
+    if (!medications || !medications[medIndex]) return;
+    
+    const medToRepeat = medications[medIndex];
+    
+    // Frage welche Tage
+    const dayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    const selectedDays: number[] = [];
+    
+    // Zeige Auswahl-Dialog (vereinfacht: alle anderen Tage)
+    for (let i = 0; i < 7; i++) {
+      if (i !== sourceDayIndex) {
+        const targetDayMap = this.weekSchedule.get(i);
+        if (targetDayMap) {
+          const targetMedications = targetDayMap.get(timeOfDay) || [];
+          targetMedications.push({
+            medicationId: medToRepeat.medicationId,
+            name: medToRepeat.name,
+            dosage: medToRepeat.dosage,
+            dosageUnit: medToRepeat.dosageUnit
+          });
+          targetDayMap.set(timeOfDay, targetMedications);
+        }
+      }
+    }
+    
+    alert(`${medToRepeat.name} wurde für alle anderen Tage zur gleichen Tageszeit (${this.timeLabels[timeOfDay]}) übernommen!`);
+  }
+
+  resetCurrentMedication() {
+    this.currentMedication = {
+      medicationId: null,
+      name: '',
+      dosage: 1,
+      dosageUnit: 'Tablette(n)'
+    };
   }
 
   removeMedicationFromTimeSlot(dayIndex: number, timeOfDay: string, medIndex: number) {
@@ -601,6 +640,9 @@ export class AppComponent implements OnInit {
     const selected = this.availableMedications.find(m => m.id === this.currentMedication.medicationId);
     if (selected) {
       this.currentMedication.name = selected.name;
+    } else if (this.currentMedication.medicationId === null) {
+      // Wenn "neu eingeben" gewählt wurde, Name leeren
+      this.currentMedication.name = '';
     }
   }
 

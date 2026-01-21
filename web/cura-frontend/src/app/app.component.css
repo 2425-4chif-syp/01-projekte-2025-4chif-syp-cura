@@ -1300,6 +1300,38 @@ main {
   margin-bottom: 0.5rem;
   border-radius: 8px;
   border: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.medication-time-list .med-info {
+  flex: 1;
+}
+
+.medication-time-list .med-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-repeat {
+  padding: 0.5rem 0.75rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.btn-repeat:hover {
+  background: #218838;
+  transform: scale(1.05);
+}
+
+.btn-repeat i {
+  font-size: 0.9rem;
 }
 
 /* Inline Add Form */
