@@ -103,6 +103,11 @@ export class AppComponent implements OnInit {
     // this.loadMedicationPlans(planId);
   }
 
+  get selectedPlanName(): string {
+    const plan = this.availablePlans.find(p => p.id === this.selectedPlanId);
+    return plan?.name || 'Medikamentenplan';
+  }
+
   loadCalendar() {
     const now = new Date();
     const year = now.getFullYear();

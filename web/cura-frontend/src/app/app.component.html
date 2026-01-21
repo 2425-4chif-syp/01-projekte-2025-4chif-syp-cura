@@ -160,7 +160,7 @@
       <div class="medication-inner">
         <!-- Front: Medikamentenplan -->
         <div class="medication-front">
-          <h2>{{ availablePlans.find(p => p.id === selectedPlanId)?.name || 'Medikamentenplan' }}</h2>
+          <h2>{{ selectedPlanName }}</h2>
           <table class="medication-table">
             <thead>
               <tr>
@@ -227,7 +227,7 @@
       <div class="medication-inner">
         <!-- Front: Medikamentenplan -->
         <div class="medication-front">
-          <h2>{{ availablePlans.find(p => p.id === selectedPlanId)?.name || 'Medikamentenplan' }} - {{ currentDayName }}</h2>
+          <h2>{{ selectedPlanName }} - {{ currentDayName }}</h2>
           <table class="medication-table">
             <thead>
               <tr>
