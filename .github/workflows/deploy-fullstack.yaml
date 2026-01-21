@@ -120,13 +120,15 @@ jobs:
             echo "⏳ Waiting for database..."
             echo "🔍 DEBUG: Starting database readiness loop..."
             DB_READY=false
-            for i in {1..15}; do
+            i=0
+            while [ $i -lt 15 ] && [ "$DB_READY" = "false" ]; do
               if docker compose exec -T postgres pg_isready > /dev/null 2>&1; then
                 echo "✅ Database is ready!"
                 DB_READY=true
+              else
+                sleep 1
               fi
-              [ "$DB_READY" = "true" ] && break
-              sleep 1
+              i=$((i + 1))
             done
             echo "🔍 DEBUG: Database check loop finished (DB_READY=$DB_READY)"
             
@@ -134,15 +136,17 @@ jobs:
             echo "🔍 DEBUG: About to start backend health check..."
             echo "🩺 Backend health check:"
             BACKEND_READY=false
-            for i in {1..4}; do
+            i=1
+            while [ $i -le 4 ] && [ "$BACKEND_READY" = "false" ]; do
               echo "🔍 DEBUG: Backend check iteration $i/4 starting..."
               if curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1; then
                 echo "✅ Backend API is healthy!"
                 BACKEND_READY=true
+              else
+                echo "⏳ Backend check $i/4..."
+                sleep 3
               fi
-              [ "$BACKEND_READY" = "true" ] && break
-              echo "⏳ Backend check $i/4..."
-              sleep 3
+              i=$((i + 1))
             done
             echo "🔍 DEBUG: Backend health check loop finished (BACKEND_READY=$BACKEND_READY)"
             
