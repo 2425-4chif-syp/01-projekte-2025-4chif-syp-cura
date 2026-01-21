@@ -1266,6 +1266,104 @@ main {
   opacity: 0.65;
 }
 
+/* Time Slot Sections */
+.time-slot-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+.time-slot-section h4 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-slot-section h4 i {
+  color: #6c757d;
+}
+
+/* Medication Time List */
+.medication-time-list {
+  margin-bottom: 1rem;
+}
+
+.medication-time-list .medication-item {
+  background: white;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+/* Inline Add Form */
+.add-medication-inline {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+}
+
+.form-control-inline {
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  flex: 1;
+  min-width: 120px;
+}
+
+.form-control-inline:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dosage-input {
+  max-width: 80px;
+  flex: 0 0 auto;
+}
+
+.unit-select {
+  max-width: 130px;
+  flex: 0 0 auto;
+}
+
+.btn-add-inline {
+  padding: 0.5rem 1rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 0 0 auto;
+}
+
+.btn-add-inline:hover:not(:disabled) {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+.btn-add-inline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-add-inline i {
+  font-size: 1rem;
+}
+
 /* Mobile Wizard Anpassungen */
 @media (max-width: 768px) {
   .wizard-container {
