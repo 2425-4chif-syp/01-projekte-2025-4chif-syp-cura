@@ -640,7 +640,7 @@ export class AppComponent implements OnInit {
     const selected = this.availableMedications.find(m => m.id === this.currentMedication.medicationId);
     if (selected) {
       this.currentMedication.name = selected.name;
-    } else if (this.currentMedication.medicationId === null) {
+    } else {
       // Wenn "neu eingeben" gewählt wurde, Name leeren
       this.currentMedication.name = '';
     }
