@@ -116,27 +116,38 @@ jobs:
             # Warten bis PostgreSQL ready ist (kurz & schnell)
             echo "⏳ Waiting for database..."
             echo "🔍 DEBUG: Starting database readiness loop..."
+            set +e  # Temporarily disable exit-on-error
             DB_READY=false
             i=0
             while [ $i -lt 15 ] && [ "$DB_READY" = "false" ]; do
-              if docker compose exec -T postgres pg_isready > /dev/null 2>&1; then
+              docker compose exec -T postgres pg_isready > /dev/null 2>&1
+              if [ $? -eq 0 ]; then
                 echo "✅ Database is ready!"
                 DB_READY=true
               else
+                echo "🔍 DEBUG: Database not ready yet (attempt $i/15), waiting..."
                 sleep 1
               fi
               i=$((i + 1))
             done
+            set -e  # Re-enable exit-on-error
             echo "🔍 DEBUG: Database check loop finished (DB_READY=$DB_READY)"
+            
+            if [ "$DB_READY" = "false" ]; then
+              echo "❌ ERROR: Database did not become ready in time!"
+              exit 1
+            fi
             
             # 🩺 Backend health check (PRIORITÄT - vor Keycloak!)
             echo "🔍 DEBUG: About to start backend health check..."
             echo "🩺 Backend health check:"
+            set +e  # Temporarily disable exit-on-error
             BACKEND_READY=false
             i=1
             while [ $i -le 4 ] && [ "$BACKEND_READY" = "false" ]; do
               echo "🔍 DEBUG: Backend check iteration $i/4 starting..."
-              if curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1; then
+              curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1
+              if [ $? -eq 0 ]; then
                 echo "✅ Backend API is healthy!"
                 BACKEND_READY=true
               else
@@ -145,7 +156,12 @@ jobs:
               fi
               i=$((i + 1))
             done
+            set -e  # Re-enable exit-on-error
             echo "🔍 DEBUG: Backend health check loop finished (BACKEND_READY=$BACKEND_READY)"
+            
+            if [ "$BACKEND_READY" = "false" ]; then
+              echo "⚠️ WARNING: Backend did not respond to health check, but deployment continues..."
+            fi
             
             # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
             echo "🔍 DEBUG: About to start Keycloak import..."
