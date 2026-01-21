@@ -28,9 +28,6 @@ jobs:
             
             cd ~/cura-project
             
-            # Fix ownership
-            sudo chown -R curaadm:curaadm .
-            
             # 🔍 DEBUG: Show current state before changes
             echo "🔍 DEBUG: Current directory: $(pwd)"
             echo "🔍 DEBUG: Current user: $(whoami)"
