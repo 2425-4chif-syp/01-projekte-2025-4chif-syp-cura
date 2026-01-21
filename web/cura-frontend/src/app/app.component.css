@@ -1412,22 +1412,23 @@ main {
   }
 
   .wizard-stepper {
-    padding: var(--space-md) var(--space-sm);
-    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-xs);
+    gap: 4px;
   }
 
   .step {
-    min-width: 40px;
+    min-width: 32px;
+    flex: 0 0 auto;
   }
 
   .step-number {
-    width: 32px;
-    height: 32px;
-    font-size: var(--text-xs);
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
   }
 
   .step-label {
-    font-size: 0.65rem;
+    display: none;
   }
 
   .time-selection {

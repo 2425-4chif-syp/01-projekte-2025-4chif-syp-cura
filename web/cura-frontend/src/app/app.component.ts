@@ -688,22 +688,6 @@ export class AppComponent implements OnInit {
   }
 
   createMedicationPlan() {
-    const planData = {
-      patientId: this.currentPatientId,
-      schedule: Array.from(this.weekSchedule.entries()).map(([dayIndex, dayMap]) => ({
-        dayIndex,
-        times: Array.from(dayMap.entries()).map(([timeOfDay, medications]) => ({
-          timeOfDay,
-          medications
-        }))
-      }))
-    };
-    
-    console.log('Erstelle Medikamentenplan:', planData);
-    
-    // TODO: API-Call zum Backend um Plan zu erstellen
-    // this.medicationPlanService.createPlan(planData).subscribe({...});
-    
     // Zähle Gesamtanzahl Medikamente
     let totalMeds = 0;
     this.weekSchedule.forEach(dayMap => {
@@ -711,9 +695,25 @@ export class AppComponent implements OnInit {
         totalMeds += medications.length;
       });
     });
-    
-    alert(`Plan erstellt mit ${totalMeds} Medikamenten-Einnahmen! (Backend-Integration folgt)`);
-    this.closeCreateWizard();
-    this.loadAvailablePlans();
+
+    if (totalMeds === 0) {
+      alert('Bitte fügen Sie mindestens ein Medikament hinzu!');
+      return;
+    }
+
+    console.log('Erstelle Medikamentenplan mit', totalMeds, 'Einnahmen...');
+
+    this.medicationPlanService.createWeeklyMedicationPlans(this.weekSchedule, this.currentPatientId).subscribe({
+      next: (createdPlans) => {
+        console.log('Erfolgreich erstellt:', createdPlans);
+        alert(`✓ Medikamentenplan erfolgreich erstellt!\n${createdPlans.length} Einträge gespeichert.`);
+        this.closeCreateWizard();
+        this.loadMedicationPlans();
+      },
+      error: (error) => {
+        console.error('Fehler beim Erstellen des Plans:', error);
+        alert('⚠ Fehler beim Speichern des Medikamentenplans!\nDetails in der Konsole.');
+      }
+    });
   }
 }

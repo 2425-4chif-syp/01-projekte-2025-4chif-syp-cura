@@ -132,4 +132,90 @@ export class MedicationPlanService {
 
     return rows;
   }
+
+  /**
+   * Erstellt mehrere Medikamentenpläne aus dem Wizard-Schedule
+   * @param weekSchedule Map von Tag-Index -> Map von Tageszeit -> Medikamente
+   * @param patientId Patient ID
+   * @returns Observable der erstellten Pläne
+   */
+  createWeeklyMedicationPlans(
+    weekSchedule: Map<number, Map<string, Array<{ medicationId: number | null; name: string; dosage: number; dosageUnit: string }>>>,
+    patientId: number
+  ): Observable<any[]> {
+    const timeOfDayMap: { [key: string]: number } = {
+      'MORNING': 1,
+      'NOON': 2,
+      'AFTERNOON': 4,
+      'EVENING': 8
+    };
+
+    const weekdayFlagsArray = [2, 4, 8, 16, 32, 64, 1]; // Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64, So=1
+
+    // Gruppiere Medikamente nach medicationId + dosage + timeOfDay Kombination
+    const medicationGroups = new Map<string, { 
+      medicationId: number; 
+      medicationName: string;
+      dosage: number; 
+      dosageUnit: string;
+      weekdayFlags: number; 
+      dayTimeFlags: number 
+    }>();
+
+    weekSchedule.forEach((dayMap, dayIndex) => {
+      const weekdayFlag = weekdayFlagsArray[dayIndex];
+      
+      dayMap.forEach((medications, timeOfDay) => {
+        const dayTimeFlag = timeOfDayMap[timeOfDay];
+        
+        medications.forEach(med => {
+          if (!med.medicationId && !med.name.trim()) return;
+          
+          // Erstelle eindeutigen Key
+          const key = `${med.medicationId || med.name}_${med.dosage}_${med.dosageUnit}_${timeOfDay}`;
+          
+          if (medicationGroups.has(key)) {
+            // Füge Wochentag hinzu
+            const existing = medicationGroups.get(key)!;
+            existing.weekdayFlags |= weekdayFlag;
+          } else {
+            // Neuer Eintrag
+            medicationGroups.set(key, {
+              medicationId: med.medicationId || 0,
+              medicationName: med.name,
+              dosage: med.dosage,
+              dosageUnit: med.dosageUnit,
+              weekdayFlags: weekdayFlag,
+              dayTimeFlags: dayTimeFlag
+            });
+          }
+        });
+      });
+    });
+
+    // Konvertiere zu MedicationPlan Objekten
+    const planRequests: Observable<any>[] = [];
+    const validFrom = new Date();
+    validFrom.setHours(0, 0, 0, 0);
+
+    medicationGroups.forEach((group) => {
+      const plan = {
+        patientId: patientId,
+        medicationId: group.medicationId,
+        caregiverId: null,
+        weekdayFlags: group.weekdayFlags,
+        dayTimeFlags: group.dayTimeFlags,
+        quantity: group.dosage,
+        validFrom: validFrom.toISOString(),
+        validTo: null,
+        notes: `${group.dosageUnit}`,
+        isActive: true
+      };
+      
+      planRequests.push(this.http.post(`${this.API_URL}/MedicationPlans`, plan));
+    });
+
+    return planRequests.length > 0 ? forkJoin(planRequests) : of([]);
+  }
 }
+
