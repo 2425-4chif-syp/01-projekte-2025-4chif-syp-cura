@@ -340,54 +340,70 @@
       <div class="wizard-content">
         @switch (currentWizardStep) {
           @case (0) {
-            <!-- Schritt 1: Patient auswählen -->
+            <!-- Schritt 1: Medikamente hinzufügen -->
             <div class="wizard-step">
-              <h3>Schritt 1: Patient auswählen</h3>
-              <p class="step-description">Wählen Sie den Patienten für den neuen Medikamentenplan</p>
+              <h3>Schritt 1: Medikamente hinzufügen</h3>
+              <p class="step-description">Fügen Sie alle Medikamente hinzu (bis zu 10)</p>
               
-              <div class="form-group">
-                <label>Patient</label>
-                <select [(ngModel)]="newPlan.patientId" class="form-control">
-                  <option [value]="null" disabled>Bitte wählen...</option>
-                  @for (plan of availablePlans; track plan.id) {
-                    <option [value]="plan.id">{{ plan.patientName }}</option>
+              <!-- Medikamenten-Liste -->
+              @if (medications.length > 0) {
+                <div class="medications-list">
+                  @for (med of medications; track $index) {
+                    <div class="medication-item">
+                      <div class="med-info">
+                        <strong>{{ med.name }}</strong>
+                        <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                      </div>
+                      <button class="btn-remove" (click)="removeMedication($index)">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
                   }
-                </select>
-              </div>
+                </div>
+              }
+              
+              <!-- Neues Medikament hinzufügen -->
+              @if (medications.length < 10) {
+                <div class="add-medication-form">
+                  <div class="form-group">
+                    <label>Medikament</label>
+                    <input type="text" [(ngModel)]="currentMedication.name" 
+                           class="form-control" placeholder="z.B. Aspirin"
+                           (keyup.enter)="addMedication()">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>Dosierung</label>
+                    <div class="dosage-group">
+                      <input type="number" [(ngModel)]="currentMedication.dosage" 
+                             class="form-control" placeholder="1" min="1">
+                      <select [(ngModel)]="currentMedication.dosageUnit" class="form-control">
+                        <option value="Tablette(n)">Tablette(n)</option>
+                        <option value="Kapsel(n)">Kapsel(n)</option>
+                        <option value="ml">ml</option>
+                        <option value="Tropfen">Tropfen</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <button class="btn-add-med" (click)="addMedication()"
+                          [disabled]="!currentMedication.name.trim() || currentMedication.dosage <= 0">
+                    <i class="fa-solid fa-plus"></i> Medikament hinzufügen
+                  </button>
+                </div>
+              } @else {
+                <p class="info-message">
+                  <i class="fa-solid fa-info-circle"></i>
+                  Maximale Anzahl von 10 Medikamenten erreicht
+                </p>
+              }
             </div>
           }
           @case (1) {
-            <!-- Schritt 2: Medikament auswählen -->
+            <!-- Schritt 2: Tageszeiten -->
             <div class="wizard-step">
-              <h3>Schritt 2: Medikament auswählen</h3>
-              <p class="step-description">Wählen Sie das Medikament aus</p>
-              
-              <div class="form-group">
-                <label>Medikament</label>
-                <input type="text" [(ngModel)]="newPlan.medicationName" 
-                       class="form-control" placeholder="z.B. Aspirin">
-              </div>
-              
-              <div class="form-group">
-                <label>Dosierung</label>
-                <div class="dosage-group">
-                  <input type="number" [(ngModel)]="newPlan.dosage" 
-                         class="form-control" placeholder="1" min="1">
-                  <select [(ngModel)]="newPlan.dosageUnit" class="form-control">
-                    <option value="Tablette(n)">Tablette(n)</option>
-                    <option value="Kapsel(n)">Kapsel(n)</option>
-                    <option value="ml">ml</option>
-                    <option value="Tropfen">Tropfen</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          }
-          @case (2) {
-            <!-- Schritt 3: Tageszeiten -->
-            <div class="wizard-step">
-              <h3>Schritt 3: Tageszeiten auswählen</h3>
-              <p class="step-description">Wann soll das Medikament eingenommen werden?</p>
+              <h3>Schritt 2: Tageszeiten auswählen</h3>
+              <p class="step-description">Wann sollen die Medikamente eingenommen werden?</p>
               
               <div class="time-selection">
                 <div class="time-option" 
@@ -421,11 +437,11 @@
               </div>
             </div>
           }
-          @case (3) {
-            <!-- Schritt 4: Wochentage -->
+          @case (2) {
+            <!-- Schritt 3: Wochentage -->
             <div class="wizard-step">
-              <h3>Schritt 4: Wochentage auswählen</h3>
-              <p class="step-description">An welchen Tagen soll das Medikament eingenommen werden?</p>
+              <h3>Schritt 3: Wochentage auswählen</h3>
+              <p class="step-description">An welchen Tagen sollen die Medikamente eingenommen werden?</p>
               
               <div class="weekday-selection">
                 @for (day of weekdays; track day.value) {
@@ -441,24 +457,20 @@
               </div>
             </div>
           }
-          @case (4) {
-            <!-- Schritt 5: Zusammenfassung -->
+          @case (3) {
+            <!-- Schritt 4: Zusammenfassung -->
             <div class="wizard-step">
-              <h3>Schritt 5: Zusammenfassung</h3>
+              <h3>Schritt 4: Zusammenfassung</h3>
               <p class="step-description">Überprüfen Sie Ihre Angaben</p>
               
               <div class="summary-card">
                 <div class="summary-row">
                   <strong>Patient:</strong>
-                  <span>{{ getPatientName(newPlan.patientId) }}</span>
+                  <span>{{ userName }}</span>
                 </div>
                 <div class="summary-row">
-                  <strong>Medikament:</strong>
-                  <span>{{ newPlan.medicationName }}</span>
-                </div>
-                <div class="summary-row">
-                  <strong>Dosierung:</strong>
-                  <span>{{ newPlan.dosage }} {{ newPlan.dosageUnit }}</span>
+                  <strong>Medikamente:</strong>
+                  <span>{{ getMedicationsList() }}</span>
                 </div>
                 <div class="summary-row">
                   <strong>Tageszeiten:</strong>
