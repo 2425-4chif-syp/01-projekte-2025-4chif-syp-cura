@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map, of } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
 import { MedicationPlan } from '../models/medication-plan.model';
 import { Medication } from '../models/medication.model';
 import { MedicationIntake } from '../models/medication-intake.model';
@@ -152,9 +152,13 @@ export class MedicationPlanService {
 
     const weekdayFlagsArray = [2, 4, 8, 16, 32, 64, 1]; // Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64, So=1
 
+    // Sammle alle neuen Medikamente die erstellt werden müssen
+    const newMedicationsToCreate = new Set<string>();
+    const medicationNameToIdMap = new Map<string, number>();
+
     // Gruppiere Medikamente nach medicationId + dosage + timeOfDay Kombination
     const medicationGroups = new Map<string, { 
-      medicationId: number; 
+      medicationId: number | null;
       medicationName: string;
       dosage: number; 
       dosageUnit: string;
@@ -171,8 +175,14 @@ export class MedicationPlanService {
         medications.forEach(med => {
           if (!med.medicationId && !med.name.trim()) return;
           
+          // Wenn kein medicationId, merke Name für spätere Erstellung
+          if (!med.medicationId && med.name.trim()) {
+            newMedicationsToCreate.add(med.name.trim());
+          }
+          
           // Erstelle eindeutigen Key
-          const key = `${med.medicationId || med.name}_${med.dosage}_${med.dosageUnit}_${timeOfDay}`;
+          const medKey = med.medicationId ? `id_${med.medicationId}` : `name_${med.name.trim()}`;
+          const key = `${medKey}_${med.dosage}_${med.dosageUnit}_${timeOfDay}`;
           
           if (medicationGroups.has(key)) {
             // Füge Wochentag hinzu
@@ -181,8 +191,8 @@ export class MedicationPlanService {
           } else {
             // Neuer Eintrag
             medicationGroups.set(key, {
-              medicationId: med.medicationId || 0,
-              medicationName: med.name,
+              medicationId: med.medicationId,
+              medicationName: med.name.trim(),
               dosage: med.dosage,
               dosageUnit: med.dosageUnit,
               weekdayFlags: weekdayFlag,
@@ -193,29 +203,57 @@ export class MedicationPlanService {
       });
     });
 
-    // Konvertiere zu MedicationPlan Objekten
-    const planRequests: Observable<any>[] = [];
-    const validFrom = new Date();
-    validFrom.setHours(0, 0, 0, 0);
+    // Erstelle zuerst neue Medikamente
+    const createMedicationRequests = Array.from(newMedicationsToCreate).map(name =>
+      this.http.post<Medication>(`${this.API_URL}/Medications`, { name, activeIngredient: null }).pipe(
+        map(createdMed => {
+          medicationNameToIdMap.set(name, createdMed.id);
+          return createdMed;
+        })
+      )
+    );
 
-    medicationGroups.forEach((group) => {
-      const plan = {
-        patientId: patientId,
-        medicationId: group.medicationId,
-        caregiverId: null,
-        weekdayFlags: group.weekdayFlags,
-        dayTimeFlags: group.dayTimeFlags,
-        quantity: group.dosage,
-        validFrom: validFrom.toISOString(),
-        validTo: null,
-        notes: `${group.dosageUnit}`,
-        isActive: true
-      };
-      
-      planRequests.push(this.http.post(`${this.API_URL}/MedicationPlans`, plan));
-    });
+    // Wenn es neue Medikamente gibt, erstelle sie zuerst
+    const medicationCreation$ = createMedicationRequests.length > 0 
+      ? forkJoin(createMedicationRequests) 
+      : of([]);
 
-    return planRequests.length > 0 ? forkJoin(planRequests) : of([]);
+    return medicationCreation$.pipe(
+      map(() => {
+        // Jetzt haben wir IDs für alle neuen Medikamente
+        const planRequests: Observable<any>[] = [];
+        const validFrom = new Date();
+        validFrom.setHours(0, 0, 0, 0);
+
+        medicationGroups.forEach((group) => {
+          // Hole die richtige medicationId
+          const medId = group.medicationId || medicationNameToIdMap.get(group.medicationName) || 0;
+          
+          if (medId === 0) {
+            console.error('Keine gültige Medication ID für', group.medicationName);
+            return;
+          }
+
+          const plan = {
+            patientId: patientId,
+            medicationId: medId,
+            caregiverId: null,
+            weekdayFlags: group.weekdayFlags,
+            dayTimeFlags: group.dayTimeFlags,
+            quantity: group.dosage,
+            validFrom: validFrom.toISOString(),
+            validTo: null,
+            notes: `${group.dosageUnit}`,
+            isActive: true
+          };
+          
+          planRequests.push(this.http.post(`${this.API_URL}/MedicationPlans`, plan));
+        });
+
+        return planRequests;
+      }),
+      switchMap(planRequests => planRequests.length > 0 ? forkJoin(planRequests) : of([]))
+    );
   }
 }
 
