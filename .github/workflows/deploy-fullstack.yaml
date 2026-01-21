@@ -112,152 +112,44 @@ jobs:
             echo "🏗️ Building and starting containers..."
             docker compose up -d --build
             
-            # ⏳ Wait for Keycloak to be ready (reduced to prevent SSH timeout)
-            echo "⏳ Waiting for Keycloak to start (30 seconds)..."
-            sleep 30
-            
-            # 🔐 Import Keycloak realm if needed (run in background to avoid SSH timeout)
-            echo "🔐 Checking Keycloak realm..."
-            cd ../keycloak-config
-            chmod +x import-realm.sh
-            # Check if realm exists before attempting import
-            if docker compose -f ../database/docker-compose.yaml exec -T keycloak /opt/keycloak/bin/kcadm.sh get realms/cura --no-config --server http://localhost:8080 --realm master --user admin --password passme > /dev/null 2>&1; then
-              echo "✅ Keycloak realm 'cura' already exists - skipping import"
-            else
-              echo "📦 Importing Keycloak realm (in background)..."
-              nohup ./import-realm.sh > /tmp/keycloak-import.log 2>&1 &
-              echo "⚠️ Keycloak realm import started in background - check /tmp/keycloak-import.log for details"
-            fi
-            cd ../database
-            
             echo "📋 Container status after startup:"
             docker compose ps
             
-            # 🔍 DEBUG: Show detailed container information
-            echo "🔍 DEBUG: Container details:"
-            for container in cura_postgres cura_backend cura_pgadmin; do
-              echo "  📦 $container:"
-              if docker inspect $container > /dev/null 2>&1; then
-                echo "    - Status: $(docker inspect --format='{{.State.Status}}' $container 2>/dev/null || echo 'Unknown')"
-                echo "    - Health: $(docker inspect --format='{{.State.Health.Status}}' $container 2>/dev/null || echo 'No health check')"
-                echo "    - Restart Count: $(docker inspect --format='{{.RestartCount}}' $container 2>/dev/null || echo 'Unknown')"
-              else
-                echo "    - Container not found!"
-              fi
-            done
-            
-            # Warten bis PostgreSQL ready ist
-            echo "⏳ Waiting for database (with detailed debugging)..."
-            for i in {1..30}; do
-              echo "🔍 DEBUG: Database check attempt $i/30"
-              
-              # Check if container is running
-              if ! docker compose ps postgres | grep -q "Up"; then
-                echo "❌ PostgreSQL container is not running!"
-                docker compose logs postgres | tail -20
-                sleep 2
-                continue
-              fi
-              
-              # Check if database is ready
+            # Warten bis PostgreSQL ready ist (kurz & schnell)
+            echo "⏳ Waiting for database..."
+            for i in {1..15}; do
               if docker compose exec -T postgres pg_isready > /dev/null 2>&1; then
                 echo "✅ Database is ready!"
                 break
-              else
-                echo "⏳ Database not ready yet... (attempt $i/30)"
-                if [ $((i % 5)) -eq 0 ]; then
-                  echo "🔍 DEBUG: PostgreSQL logs (last 10 lines):"
-                  docker compose logs postgres | tail -10
-                fi
               fi
-              sleep 2
+              sleep 1
             done
+            
+            # 🩺 Backend health check (PRIORITÄT - vor Keycloak!)
+            echo "🩺 Backend health check:"
+            for i in {1..4}; do
+              if curl -f -s http://localhost:8081/api/Medications > /dev/null 2>&1; then
+                echo "✅ Backend API is healthy!"
+                break
+              fi
+              echo "⏳ Backend check $i/4..."
+              sleep 3
+            done
+            
+            # 🔐 Keycloak realm import (im Hintergrund, nicht blockierend)
+            echo "🔐 Starting Keycloak realm import in background..."
+            cd ../keycloak-config
+            nohup bash -c 'sleep 30 && ./import-realm.sh > /tmp/keycloak-import.log 2>&1' &
+            cd ../database
             
             echo "✅ Deployment completed!"
             echo "📋 Final container status:"
             docker compose ps
             
-            echo "� Services available at:"
+            echo "🌐 Services available at:"
             echo "  🚀 Backend API: http://vm12.htl-leonding.ac.at:8081"
             echo "  📖 Swagger UI: http://vm12.htl-leonding.ac.at:8081/swagger/index.html"
             echo "  🔧 pgAdmin: http://vm12.htl-leonding.ac.at:8080"
             echo "  🗄️ PostgreSQL: vm12.htl-leonding.ac.at:5434"
-            
-            echo "�📊 Database tables:"
-            docker compose exec -T postgres psql -U admin -d cura -c "\dt" 2>/dev/null || echo "Database not ready yet"
-            
-            echo "🩺 Backend health check with detailed debugging:"
-            for i in {1..6}; do
-              echo "🔍 DEBUG: Backend check attempt $i/6"
-              
-              # Check if backend container is running
-              if ! docker compose ps backend | grep -q "Up"; then
-                echo "❌ Backend container is not running!"
-                echo "🔍 DEBUG: Backend container status:"
-                docker compose ps backend
-                echo "🔍 DEBUG: Backend logs (last 20 lines):"
-                docker compose logs backend | tail -20 || echo "No backend logs available"
-                sleep 10
-                continue
-              fi
-              
-              # Check specific endpoints
-              echo "🔍 DEBUG: Testing backend endpoints..."
-              
-              # Test Swagger UI
-              if curl -f -s http://localhost:8081/swagger/index.html > /dev/null; then
-                echo "✅ Swagger UI is accessible"
-              else
-                echo "❌ Swagger UI not accessible"
-              fi
-              
-              # Test API endpoint
-              if curl -f -s http://localhost:8081/api/Medications > /dev/null; then
-                echo "✅ Backend API is healthy!"
-                break
-              else
-                echo "⏳ Backend API not ready yet... (attempt $i/6)"
-                
-                # Show detailed curl response every 2nd attempt
-                if [ $((i % 2)) -eq 0 ]; then
-                  echo "🔍 DEBUG: Detailed curl response:"
-                  curl -v http://localhost:8081/api/Medications 2>&1 | head -20 || echo "Curl failed"
-                fi
-              fi
-              
-              sleep 10
-              
-              if [ $i -eq 6 ]; then
-                echo "❌ Backend health check failed! Final debugging:"
-                echo "🔍 DEBUG: All container statuses:"
-                docker compose ps
-                echo "🔍 DEBUG: Backend logs (last 50 lines):"
-                docker compose logs backend | tail -50 || echo "No backend logs available"
-                echo "🔍 DEBUG: Network connectivity test:"
-                docker compose exec -T postgres ping -c 3 backend || echo "Network ping failed"
-              fi
-            done
-            
-            # 🔍 DEBUG: Final system state
-            echo "🔍 DEBUG: Final deployment state:"
-            echo "  📊 Container statuses:"
-            docker compose ps
-            echo "  🔗 Port bindings:"
-            docker compose port postgres 5432 2>/dev/null || echo "PostgreSQL port not bound"
-            docker compose port backend 8080 2>/dev/null || echo "Backend port not bound"
-            docker compose port pgadmin 80 2>/dev/null || echo "pgAdmin port not bound"
-            
-            echo "🌐 Testing external connectivity..."
-            echo "🔍 Testing Backend from external:"
-            timeout 10 curl -f http://vm12.htl-leonding.ac.at:8081/swagger/index.html && echo "✅ Backend externally accessible" || echo "❌ Backend not externally accessible"
-            
-            echo "🔍 Testing Backend from localhost:"
-            timeout 10 curl -f http://localhost:8081/swagger/index.html && echo "✅ Backend locally accessible" || echo "❌ Backend not locally accessible"
-            
-            echo "🔍 Testing pgAdmin:"
-            timeout 10 curl -f http://vm12.htl-leonding.ac.at:8080 && echo "✅ pgAdmin externally accessible" || echo "❌ pgAdmin not externally accessible"
-            
-            echo "🔍 Server network info:"
-            echo "  - Server IP: $(hostname -I | awk '{print $1}')"
-            echo "  - Listening ports: $(ss -tuln | grep -E ':(8081|8080|5434)' || echo 'None found')"
+            echo "  🔐 Keycloak: http://vm12.htl-leonding.ac.at:8180 (realm import in progress)"
           EOF
