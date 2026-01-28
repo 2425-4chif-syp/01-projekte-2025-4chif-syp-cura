@@ -235,18 +235,19 @@ export class MedicationPlanService {
           }
 
           const plan = {
-            patientId: patientId,
-            medicationId: medId,
-            caregiverId: null,
-            weekdayFlags: group.weekdayFlags,
-            dayTimeFlags: group.dayTimeFlags,
-            quantity: group.dosage,
-            validFrom: validFrom.toISOString(),
-            validTo: null,
-            notes: `${group.dosageUnit}`,
-            isActive: true
+            PatientId: patientId,
+            MedicationId: medId,
+            CaregiverId: null,
+            WeekdayFlags: group.weekdayFlags,
+            DayTimeFlags: group.dayTimeFlags,
+            Quantity: group.dosage,
+            ValidFrom: validFrom.toISOString(),
+            ValidTo: null,
+            Notes: `${group.dosageUnit}`,
+            IsActive: true
           };
           
+          console.log('Erstelle Plan:', plan);
           planRequests.push(this.http.post(`${this.API_URL}/MedicationPlans`, plan));
         });
 
