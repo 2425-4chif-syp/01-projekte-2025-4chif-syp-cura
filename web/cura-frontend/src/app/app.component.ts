@@ -712,7 +712,18 @@ export class AppComponent implements OnInit {
       },
       error: (error) => {
         console.error('Fehler beim Erstellen des Plans:', error);
-        alert('⚠ Fehler beim Speichern des Medikamentenplans!\nDetails in der Konsole.');
+        console.error('Error Details:', error.error);
+        if (error.error?.errors) {
+          console.error('Validation Errors:', error.error.errors);
+        }
+        
+        let errorMsg = '⚠ Fehler beim Speichern des Medikamentenplans!\n\n';
+        if (error.error?.errors) {
+          Object.keys(error.error.errors).forEach(key => {
+            errorMsg += `${key}: ${error.error.errors[key].join(', ')}\n`;
+          });
+        }
+        alert(errorMsg);
       }
     });
   }
