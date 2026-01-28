@@ -29,25 +29,8 @@ export class MedicationPlanService {
     );
   }
 
-  // Get all plan groups for a specific patient (grouped by ValidFrom date)
-  getPatientPlanGroups(patientId: number): Observable<{ id: string; name: string; patientName: string; validFrom: string; medicationCount: number }[]> {
-    return this.http.get<{ id: string; name: string; patientName: string; validFrom: string; medicationCount: number }[]>(
-      `${this.API_URL}/MedicationPlans/patient/${patientId}/plan-groups`
-    );
-  }
-
   getMedicationPlans(patientId: number): Observable<MedicationPlan[]> {
     return this.http.get<MedicationPlan[]>(`${this.API_URL}/MedicationPlans/patient/${patientId}`);
-  }
-
-  // Get medication plans for a specific date (plan group)
-  getMedicationPlansByDate(patientId: number, validFromDate: string): Observable<MedicationPlan[]> {
-    return this.getMedicationPlans(patientId).pipe(
-      map(plans => plans.filter(p => {
-        const planDate = new Date(p.validFrom).toISOString().split('T')[0];
-        return planDate === validFromDate && p.isActive;
-      }))
-    );
   }
 
   // Get all available medications

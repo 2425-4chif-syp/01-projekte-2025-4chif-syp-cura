@@ -53,35 +53,6 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Gets all distinct medication plan groups for a patient (grouped by ValidFrom date).
-        /// </summary>
-        /// <param name="patientId">Patient ID</param>
-        /// <returns></returns>
-        [HttpGet("patient/{patientId}/plan-groups")]
-        public async Task<IActionResult> GetPatientPlanGroups(int patientId)
-        {
-            var plans = await _unitOfWork.MedicationPlanRepository.GetByPatientIdAsync(patientId);
-            
-            // Gruppiere nach ValidFrom-Datum (nur Datum, ohne Zeit)
-            var planGroups = plans
-                .Where(p => p.IsActive)
-                .GroupBy(p => p.ValidFrom.Date)
-                .Select((g, index) => new
-                {
-                    Id = g.Key.ToString("yyyy-MM-dd"), // Verwende Datum als eindeutige ID
-                    Name = $"Plan vom {g.Key:dd.MM.yyyy}",
-                    PatientName = g.First().Patient?.Name ?? $"Patient {patientId}",
-                    ValidFrom = g.Key,
-                    MedicationCount = g.Count(),
-                    IsActive = true
-                })
-                .OrderByDescending(p => p.ValidFrom)
-                .ToList();
-            
-            return Ok(planGroups);
-        }
-
-        /// <summary>
         /// Gets all active medication plans.
         /// </summary>
         /// <returns></returns>
