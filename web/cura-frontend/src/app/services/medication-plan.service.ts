@@ -244,7 +244,9 @@ export class MedicationPlanService {
             ValidFrom: validFrom.toISOString(),
             ValidTo: null,
             Notes: `${group.dosageUnit}`,
-            IsActive: true
+            IsActive: true,
+            Patient: {} as any,  // Leeres Objekt für Navigation Property
+            Medication: {} as any  // Leeres Objekt für Navigation Property
           };
           
           console.log('Erstelle Plan:', plan);
