@@ -41,8 +41,9 @@ export class AppComponent implements OnInit {
   
   // Medication Plan Flip
   showPlanSelection = false;
-  selectedPlanId = 1;
-  availablePlans: { id: number; name: string; patientName: string }[] = [];
+  selectedPlanId: string = ''; // Jetzt String (Datum im Format YYYY-MM-DD)
+  selectedPlanName: string = 'Mein Medikamentenplan';
+  availablePlans: { id: string; name: string; patientName: string; validFrom: string; medicationCount: number }[] = [];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
   expandedTimeGroups = new Set<string>();
   
@@ -166,17 +167,17 @@ export class AppComponent implements OnInit {
     this.showPlanSelection = false;
   }
 
-  selectPlan(planId: number) {
+  selectPlan(planId: string) {
     this.selectedPlanId = planId;
+    const plan = this.availablePlans.find(p => p.id === planId);
+    if (plan) {
+      this.selectedPlanName = plan.name;
+    }
     this.closePlanSelection();
-    // Lade Medikamentenpläne für den ausgewählten Patienten neu
-    this.loadMedicationPlans();
+    // Lade Medikamentenpläne für den ausgewählten Plan neu
+    this.loadMedicationPlanData(planId);
     this.loadCalendar();
   }
-
-  get selectedPlanName(): string {
-    const plan = this.availablePlans.find(p => p.id === this.selectedPlanId);
-    return plan?.name || 'Medikamentenplan';
   }
 
   loadCalendar() {
@@ -202,10 +203,31 @@ export class AppComponent implements OnInit {
   }
 
   loadMedicationPlans() {
-    // Verwende selectedPlanId (= patientId) statt hardcoded 1
-    const patientId = this.selectedPlanId || 1;
-    
-    this.medicationPlanService.getMedicationPlans(patientId).subscribe({
+    // Lade Plan-Gruppen für den Patienten
+    this.medicationPlanService.getPatientPlanGroups(this.currentPatientId).subscribe({
+      next: (planGroups) => {
+        this.availablePlans = planGroups;
+        
+        // Wähle neuesten Plan automatisch aus, wenn noch keiner gewählt
+        if (!this.selectedPlanId && planGroups.length > 0) {
+          this.selectedPlanId = planGroups[0].id;
+          this.selectedPlanName = planGroups[0].name;
+        }
+        
+        // Lade die Medikamente für den ausgewählten Plan
+        if (this.selectedPlanId) {
+          this.loadMedicationPlanData(this.selectedPlanId);
+        }
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der Plan-Gruppen:', error);
+        this.medicationRows = this.medicationPlanService.buildMedicationTable([], new Map());
+      }
+    });
+  }
+
+  loadMedicationPlanData(planDateId: string) {
+    this.medicationPlanService.getMedicationPlansByDate(this.currentPatientId, planDateId).subscribe({
       next: (plans) => {
         this.medicationPlans = plans;
         this.loadMedicationNames(plans);
