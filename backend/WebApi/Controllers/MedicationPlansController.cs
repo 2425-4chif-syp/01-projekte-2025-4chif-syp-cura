@@ -1,6 +1,7 @@
 using Core.Contracts;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.DTOs;
 
 namespace WebApi.Controllers
 {
@@ -116,13 +117,28 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a new medication plan.
         /// </summary>
-        /// <param name="medicationPlan">Medication plan data</param>
+        /// <param name="dto">Medication plan data</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateMedicationPlan([FromBody] MedicationPlan medicationPlan)
+        public async Task<IActionResult> CreateMedicationPlan([FromBody] CreateMedicationPlanDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            // Map DTO to Entity
+            var medicationPlan = new MedicationPlan
+            {
+                PatientId = dto.PatientId,
+                MedicationId = dto.MedicationId,
+                CaregiverId = dto.CaregiverId,
+                WeekdayFlags = dto.WeekdayFlags,
+                DayTimeFlags = dto.DayTimeFlags,
+                Quantity = dto.Quantity,
+                ValidFrom = dto.ValidFrom,
+                ValidTo = dto.ValidTo,
+                Notes = dto.Notes,
+                IsActive = dto.IsActive
+            };
 
             await _unitOfWork.MedicationPlanRepository.AddAsync(medicationPlan);
             await _unitOfWork.SaveChangesAsync();
