@@ -193,7 +193,7 @@ public class MedicationCalendarController : ControllerBase
             {
                 PatientId = request.PatientId,
                 MedicationPlanId = request.MedicationPlanId,
-                IntakeTime = request.IntakeTime ?? DateTime.UtcNow,
+                IntakeTime = request.IntakeTime ?? DateTime.Now,
                 Quantity = request.Quantity > 0 ? request.Quantity : plan.Quantity,
                 Notes = request.Notes,
                 RfidTag = request.RfidTag
