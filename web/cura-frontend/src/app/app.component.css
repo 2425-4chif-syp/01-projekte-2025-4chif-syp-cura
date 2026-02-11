@@ -196,19 +196,7 @@ main {
 }
 
 .day.partial {
-<<<<<<< HEAD
   background: var(--error);
-=======
-  background: #F44336;
-  color: white;
-}
-
-.day.partial i {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
->>>>>>> 009b279 (feat: new colors for frontend)
   color: white;
 }
 
@@ -336,14 +324,10 @@ main {
   background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%);
 }
 
-<<<<<<< HEAD
-.status-dot.partial,
-=======
 .status-dot.partial {
   background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
 }
 
->>>>>>> 009b279 (feat: new colors for frontend)
 .status-dot.missed {
   background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
 }
@@ -364,14 +348,10 @@ main {
   background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%);
 }
 
-<<<<<<< HEAD
-.progress-segment.partial,
-=======
 .progress-segment.partial {
   background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
 }
 
->>>>>>> 009b279 (feat: new colors for frontend)
 .progress-segment.missed {
   background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
 }
