@@ -214,7 +214,7 @@ namespace WebApi.Controllers
 
             // 5. Medication Plans für diesen Patienten, Wochentag und Tageszeit finden
             var medicationPlans = await _unitOfWork.MedicationPlanRepository
-                .GetByPatientWeekdayAndDayTimeAsync(chip.PatientId, weekdayFlag, dayTimeFlag, now.Date);
+                .GetByPatientWeekdayAndDayTimeAsync(chip.PatientId, weekdayFlag, dayTimeFlag, DateTime.SpecifyKind(now.Date, DateTimeKind.Utc));
 
             if (!medicationPlans.Any())
             {
@@ -256,7 +256,7 @@ namespace WebApi.Controllers
                     {
                         PatientId = chip.PatientId,
                         MedicationPlanId = plan.Id,
-                        IntakeTime = now,
+                        IntakeTime = now.ToUniversalTime(),
                         Quantity = plan.Quantity,
                         RfidTag = request.ChipId,
                         Notes = $"Auto-recorded via RFID scan at {dayTimeName}"
