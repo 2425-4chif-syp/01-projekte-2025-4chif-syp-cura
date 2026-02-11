@@ -1,0 +1,150 @@
+1759865179: mosquitto version 2.0.22 starting
+1759865179: Config loaded from /mosquitto/config/mosquitto.conf.
+1759865179: Opening ipv4 listen socket on port 1883.
+1759865179: Opening ipv6 listen socket on port 1883.
+1759865179: Opening websockets listen socket on port 9001.
+1759865179: mosquitto version 2.0.22 running
+1759865185: New connection from 172.21.0.1:59816 on port 1883.
+1759865185: New client connected from 172.21.0.1:59816 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759865290: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759865300: New connection from 172.21.0.1:57996 on port 1883.
+1759865300: New client connected from 172.21.0.1:57996 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759865316: New connection from 172.21.0.1:63656 on port 1883.
+1759865316: New client connected from 172.21.0.1:63656 as mqtt-explorer-8577989a (p2, c1, k60).
+1759865325: Client mqtt-explorer-8577989a disconnected.
+1759865403: New connection from 172.21.0.1:62084 on port 1883.
+1759865403: New client connected from 172.21.0.1:62084 as mqtt-explorer-8577989a (p2, c1, k60).
+1759865593: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759865603: New connection from 172.21.0.1:58412 on port 1883.
+1759865603: New client connected from 172.21.0.1:58412 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759866068: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759866265: New connection from 172.21.0.1:56232 on port 1883.
+1759866265: New client connected from 172.21.0.1:56232 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759866311: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759866314: New connection from 172.21.0.1:59466 on port 1883.
+1759866314: New client connected from 172.21.0.1:59466 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759866980: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759868781: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759870581: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759872383: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759874184: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759875985: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759877786: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759879586: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759881387: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759883189: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759884990: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759886790: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759888591: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759890393: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759892193: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759893994: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759895795: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759897596: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759899397: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759900464: Client mqtt-explorer-8577989a disconnected.
+1759903119: mosquitto version 2.0.22 starting
+1759903119: Config loaded from /mosquitto/config/mosquitto.conf.
+1759903119: Opening ipv4 listen socket on port 1883.
+1759903119: Opening ipv6 listen socket on port 1883.
+1759903119: Opening websockets listen socket on port 9001.
+1759903119: mosquitto version 2.0.22 running
+1759904131: mosquitto version 2.0.22 terminating
+1759904131: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759904132: mosquitto version 2.0.22 starting
+1759904132: Config loaded from /mosquitto/config/mosquitto.conf.
+1759904132: Opening ipv4 listen socket on port 1883.
+1759904132: Opening ipv6 listen socket on port 1883.
+1759904132: Opening websockets listen socket on port 9001.
+1759904132: mosquitto version 2.0.22 running
+1759904215: New connection from 172.21.0.1:65406 on port 1883.
+1759904215: New client connected from 172.21.0.1:65406 as mqtt-explorer-8577989a (p2, c1, k60, u'user').
+1759904406: Client mqtt-explorer-8577989a has exceeded timeout, disconnecting.
+1759904413: New connection from 172.21.0.1:55972 on port 1883.
+1759904413: New client connected from 172.21.0.1:55972 as mqtt-explorer-8577989a (p2, c1, k60, u'user').
+1759904417: New connection from 172.21.0.1:64016 on port 1883.
+1759904417: New client connected from 172.21.0.1:64016 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759904545: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759904557: New connection from 172.21.0.1:59096 on port 1883.
+1759904557: New client connected from 172.21.0.1:59096 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759905694: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759905704: New connection from 172.21.0.1:63274 on port 1883.
+1759905704: New client connected from 172.21.0.1:63274 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759905760: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759905772: New connection from 172.21.0.1:61650 on port 1883.
+1759905772: New client connected from 172.21.0.1:61650 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759905933: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759907315: Client mqtt-explorer-8577989a disconnected.
+1759919396: mosquitto version 2.0.22 starting
+1759919396: Config loaded from /mosquitto/config/mosquitto.conf.
+1759919396: Opening ipv4 listen socket on port 1883.
+1759919396: Opening ipv6 listen socket on port 1883.
+1759919396: Opening websockets listen socket on port 9001.
+1759919396: mosquitto version 2.0.22 running
+1759919404: New connection from 172.21.0.1:60724 on port 1883.
+1759919404: New client connected from 172.21.0.1:60724 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759920932: mosquitto version 2.0.22 starting
+1759920932: Config loaded from /mosquitto/config/mosquitto.conf.
+1759920932: Opening ipv4 listen socket on port 1883.
+1759920932: Opening ipv6 listen socket on port 1883.
+1759920932: Opening websockets listen socket on port 9001.
+1759920932: mosquitto version 2.0.22 running
+1759920947: New connection from 172.21.0.1:56712 on port 1883.
+1759920947: New client connected from 172.21.0.1:56712 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759921019: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759921025: New connection from 172.21.0.1:62064 on port 1883.
+1759921025: New client connected from 172.21.0.1:62064 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759921096: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759921109: New connection from 172.21.0.1:61004 on port 1883.
+1759921109: New client connected from 172.21.0.1:61004 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759921217: New connection from 172.21.0.1:62460 on port 1883.
+1759921217: New client connected from 172.21.0.1:62460 as mqtt-explorer-3f697489 (p2, c1, k60).
+1759921355: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759921366: New connection from 172.21.0.1:55724 on port 1883.
+1759921366: New client connected from 172.21.0.1:55724 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759928569: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759928569: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759928569: Client mqtt-explorer-3f697489 has exceeded timeout, disconnecting.
+1759928577: New connection from 172.21.0.1:55314 on port 1883.
+1759928577: New client connected from 172.21.0.1:55314 as mqtt-explorer-3f697489 (p2, c1, k60).
+1759928587: New connection from 172.21.0.1:58200 on port 1883.
+1759928587: New client connected from 172.21.0.1:58200 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759930370: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759930853: New connection from 172.21.0.1:58708 on port 1883.
+1759930853: New client connected from 172.21.0.1:58708 as auto-653515E0-3CDA-D56F-08AE-10A6B554DD1D (p2, c1, k60).
+1759930889: Client auto-653515E0-3CDA-D56F-08AE-10A6B554DD1D disconnected.
+1759932171: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759933972: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759935281: Client rfid-scan-mqtt-7821849aaeac has exceeded timeout, disconnecting.
+1759935289: New connection from 172.21.0.1:55448 on port 1883.
+1759935289: New client connected from 172.21.0.1:55448 as rfid-scan-mqtt-7821849aaeac (p2, c0, k15).
+1759935773: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1759935909: Client mqtt-explorer-3f697489 disconnected.
+1760075915: mosquitto version 2.0.22 starting
+1760075915: Config loaded from /mosquitto/config/mosquitto.conf.
+1760075915: Opening ipv4 listen socket on port 1883.
+1760075915: Opening ipv6 listen socket on port 1883.
+1760075915: Opening websockets listen socket on port 9001.
+1760075915: mosquitto version 2.0.22 running
+1760077716: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1760079516: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1760081317: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1760083457: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1760085257: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1760087058: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1760088875: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1761236604: mosquitto version 2.0.22 starting
+1761236604: Config loaded from /mosquitto/config/mosquitto.conf.
+1761236604: Opening ipv4 listen socket on port 1883.
+1761236604: Opening ipv6 listen socket on port 1883.
+1761236604: Opening websockets listen socket on port 9001.
+1761236604: mosquitto version 2.0.22 running
+1761238404: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1762720953: mosquitto version 2.0.22 starting
+1762720953: Config loaded from /mosquitto/config/mosquitto.conf.
+1762720953: Opening ipv4 listen socket on port 1883.
+1762720953: Opening ipv6 listen socket on port 1883.
+1762720953: Opening websockets listen socket on port 9001.
+1762720953: mosquitto version 2.0.22 running
+1762721022: mosquitto version 2.0.22 terminating
+1762721022: Saving in-memory database to /mosquitto/data//mosquitto.db.

@@ -1,5 +1,45 @@
+<<<<<<< HEAD
 # Gitignore settings for ESPHome
 # This is an example and may include too much for your use-case.
 # You can modify this file to suit your needs.
 /.esphome/
 /secrets.yaml
+=======
+# ESPHome Build Files
+.esphome/
+**/.esphome/
+
+# Compiled firmware
+*.bin
+*.elf
+*.map
+
+
+# ESPHome cache
+.pioenvs/
+.piolibdeps/
+.pio/
+
+# Python Virtual Environment
+venv/
+.venv/
+env/
+.env/
+
+# Secrets - WICHTIG: Niemals committen!
+secrets.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+>>>>>>> 28b28d1 (feat: new display)
