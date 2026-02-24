@@ -111,28 +111,49 @@ export class AppComponent implements OnInit {
     // User-Info von Keycloak laden
     try {
       // Patient-ID und User-Info direkt aus Token holen (ohne Account API)
-      const tokenParsed = this.keycloak.getKeycloakInstance().tokenParsed;
+      const keycloakInstance = this.keycloak.getKeycloakInstance();
+      const tokenParsed = keycloakInstance.tokenParsed;
       
-      // DEBUG: Komplettes Token ausgeben
-      console.log('🔍 DEBUG: Keycloak Token:', tokenParsed);
-      console.log('🔍 DEBUG: patientId im Token:', tokenParsed?.['patientId']);
+      // DEBUG: Komplettes Token ausgeben (ALLE Felder!)
+      console.log('='.repeat(80));
+      console.log('🔍 KEYCLOAK DEBUG - KOMPLETTES TOKEN:');
+      console.log('='.repeat(80));
+      console.log(JSON.stringify(tokenParsed, null, 2));
+      console.log('='.repeat(80));
+      
+      // Alle möglichen Varianten von patientId prüfen
+      const patientIdVariants = [
+        tokenParsed?.['patientId'],
+        tokenParsed?.['patient_id'],
+        tokenParsed?.['PatientId'],
+        tokenParsed?.['PATIENT_ID']
+      ];
+      
+      console.log('🔍 DEBUG: Alle patientId Varianten:');
+      console.log('  - patientId:', patientIdVariants[0]);
+      console.log('  - patient_id:', patientIdVariants[1]);
+      console.log('  - PatientId:', patientIdVariants[2]);
+      console.log('  - PATIENT_ID:', patientIdVariants[3]);
       
       // User Name aus Token
       this.userName = tokenParsed?.['given_name'] || tokenParsed?.['preferred_username'] || 'User';
       this.userRoles = this.keycloak.getUserRoles();
       
-      // Patient-ID aus Token holen
-      if (tokenParsed && tokenParsed['patientId']) {
-        this.currentPatientId = parseInt(tokenParsed['patientId'], 10);
-        console.log('✅ Patient-ID aus Token geladen:', this.currentPatientId);
+      // Patient-ID aus Token holen (alle Varianten versuchen)
+      const foundPatientId = patientIdVariants.find(v => v !== undefined && v !== null);
+      
+      if (foundPatientId) {
+        this.currentPatientId = parseInt(String(foundPatientId), 10);
+        console.log('✅ Patient-ID aus Token gefunden:', this.currentPatientId);
       } else {
         console.warn('⚠️ WARNUNG: Keine patientId im Token gefunden!');
         console.warn('⚠️ Fallback zu patientId = 1');
-        console.warn('⚠️ Lösung: Keycloak User-Attribut "patientId" setzen und Client Scope aktivieren!');
+        console.warn('⚠️ Das Token enthält folgende Felder:', Object.keys(tokenParsed || {}));
       }
       
       console.log('👤 Angemeldeter Benutzer:', this.userName);
       console.log('🏥 Verwendete Patient-ID:', this.currentPatientId);
+      console.log('='.repeat(80));
     } catch (error) {
       console.error('❌ Fehler beim Laden der User-Info:', error);
     }
