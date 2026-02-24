@@ -21,7 +21,9 @@ namespace WebApi.Controllers
         [HttpGet("should-alert/{patientId}")]
         public async Task<IActionResult> ShouldAlert(int patientId)
         {
-            var now = DateTime.Now;
+            // Local time für Österreich (UTC+1 oder UTC+2 bei Sommerzeit)
+            var austriaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Vienna");
+            var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, austriaTimeZone);
             var today = now.Date;
             var hour = now.Hour;
 
