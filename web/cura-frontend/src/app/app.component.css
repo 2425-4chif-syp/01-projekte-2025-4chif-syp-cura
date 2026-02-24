@@ -99,6 +99,7 @@ main {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  max-height: calc(100vh - 120px);
 }
 
 .calendar-card {
@@ -1418,7 +1419,7 @@ main {
   }
 
   .wizard-stepper {
-    padding: var(--space-sm) var(--space-xs);
+    padding: var(--space-md) var(--space-xs) var(--space-sm);
     gap: 4px;
   }
 
