@@ -110,23 +110,24 @@ export class AppComponent implements OnInit {
 
     // User-Info von Keycloak laden
     try {
-      // Patient-ID und User-Info direkt aus Token holen (ohne Account API)
+      // WICHTIG: ID Token verwenden, nicht Access Token!
+      // ID Token enthält User-Attribute und Custom Claims
       const keycloakInstance = this.keycloak.getKeycloakInstance();
-      const tokenParsed = keycloakInstance.tokenParsed;
+      const idTokenParsed = keycloakInstance.idTokenParsed;
       
-      // DEBUG: Komplettes Token ausgeben (ALLE Felder!)
+      // DEBUG: Komplettes ID Token ausgeben
       console.log('='.repeat(80));
-      console.log('🔍 KEYCLOAK DEBUG - KOMPLETTES TOKEN:');
+      console.log('🔍 KEYCLOAK DEBUG - ID TOKEN:');
       console.log('='.repeat(80));
-      console.log(JSON.stringify(tokenParsed, null, 2));
+      console.log(JSON.stringify(idTokenParsed, null, 2));
       console.log('='.repeat(80));
       
       // Alle möglichen Varianten von patientId prüfen
       const patientIdVariants = [
-        tokenParsed?.['patientId'],
-        tokenParsed?.['patient_id'],
-        tokenParsed?.['PatientId'],
-        tokenParsed?.['PATIENT_ID']
+        idTokenParsed?.['patientId'],
+        idTokenParsed?.['patient_id'],
+        idTokenParsed?.['PatientId'],
+        idTokenParsed?.['PATIENT_ID']
       ];
       
       console.log('🔍 DEBUG: Alle patientId Varianten:');
@@ -135,20 +136,20 @@ export class AppComponent implements OnInit {
       console.log('  - PatientId:', patientIdVariants[2]);
       console.log('  - PATIENT_ID:', patientIdVariants[3]);
       
-      // User Name aus Token
-      this.userName = tokenParsed?.['given_name'] || tokenParsed?.['preferred_username'] || 'User';
+      // User Name aus ID Token
+      this.userName = idTokenParsed?.['given_name'] || idTokenParsed?.['preferred_username'] || 'User';
       this.userRoles = this.keycloak.getUserRoles();
       
-      // Patient-ID aus Token holen (alle Varianten versuchen)
+      // Patient-ID aus ID Token holen (alle Varianten versuchen)
       const foundPatientId = patientIdVariants.find(v => v !== undefined && v !== null);
       
       if (foundPatientId) {
         this.currentPatientId = parseInt(String(foundPatientId), 10);
-        console.log('✅ Patient-ID aus Token gefunden:', this.currentPatientId);
+        console.log('✅ Patient-ID aus ID Token gefunden:', this.currentPatientId);
       } else {
-        console.warn('⚠️ WARNUNG: Keine patientId im Token gefunden!');
+        console.warn('⚠️ WARNUNG: Keine patientId im ID Token gefunden!');
         console.warn('⚠️ Fallback zu patientId = 1');
-        console.warn('⚠️ Das Token enthält folgende Felder:', Object.keys(tokenParsed || {}));
+        console.warn('⚠️ Das ID Token enthält folgende Felder:', Object.keys(idTokenParsed || {}));
       }
       
       console.log('👤 Angemeldeter Benutzer:', this.userName);
