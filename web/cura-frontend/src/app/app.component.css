@@ -828,7 +828,7 @@ main {
   background: white;
   border-radius: var(--radius-xl);
   width: 100%;
-  max-width: 600px;
+  max-width: 900px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -879,7 +879,7 @@ main {
   align-items: center;
   justify-content: center;
   font-weight: var(--weight-semibold);
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
   color: var(--text-secondary);
   transition: all 0.3s ease;
 }
@@ -1419,7 +1419,7 @@ main {
   }
 
   .wizard-stepper {
-    padding: var(--space-md) var(--space-xs) var(--space-md);
+    padding: var(--space-lg) var(--space-xs) var(--space-lg);
     gap: 4px;
   }
 
