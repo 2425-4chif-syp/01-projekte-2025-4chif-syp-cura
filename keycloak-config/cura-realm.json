@@ -50,10 +50,34 @@
       "firstName": "Pali",
       "lastName": "Test",
       "email": "pali@cura.local",
+      "attributes": {
+        "patientId": ["1"]
+      },
       "credentials": [
         {
           "type": "password",
           "value": "pali123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "patient"
+      ]
+    },
+    {
+      "username": "elisabeth",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Elisabeth",
+      "lastName": "Gruber",
+      "email": "elisabeth.gruber@email.at",
+      "attributes": {
+        "patientId": ["2"]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "elisabeth123",
           "temporary": false
         }
       ],
@@ -77,8 +101,8 @@
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-attribute-mapper",
           "config": {
-            "user.attribute": "patient_id",
-            "claim.name": "patient_id",
+            "user.attribute": "patientId",
+            "claim.name": "patientId",
             "jsonType.label": "int",
             "id.token.claim": "true",
             "access.token.claim": "true",
