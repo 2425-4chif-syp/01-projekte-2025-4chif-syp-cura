@@ -31,7 +31,21 @@
       "protocol": "openid-connect",
       "attributes": {
         "post.logout.redirect.uris": "https://vm12.htl-leonding.ac.at/*##http://localhost:4200/*"
-      }
+      },
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email",
+        "patient_id"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
     }
   ],
   "roles": {

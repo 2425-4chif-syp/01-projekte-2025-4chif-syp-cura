@@ -116,10 +116,22 @@ export class AppComponent implements OnInit {
       
       // Patient-ID aus Keycloak-Attributen holen (falls vorhanden)
       const tokenParsed = this.keycloak.getKeycloakInstance().tokenParsed;
+      
+      // DEBUG: Komplettes Token ausgeben
+      console.log('🔍 DEBUG: Keycloak Token:', tokenParsed);
+      console.log('🔍 DEBUG: patientId im Token:', tokenParsed?.['patientId']);
+      
       if (tokenParsed && tokenParsed['patientId']) {
         this.currentPatientId = parseInt(tokenParsed['patientId'], 10);
+        console.log('✅ Patient-ID aus Token geladen:', this.currentPatientId);
+      } else {
+        console.warn('⚠️ WARNUNG: Keine patientId im Token gefunden!');
+        console.warn('⚠️ Fallback zu patientId = 1');
+        console.warn('⚠️ Lösung: Keycloak User-Attribut "patientId" setzen!');
       }
-      console.log('Angemeldeter Patient ID:', this.currentPatientId);
+      
+      console.log('👤 Angemeldeter Benutzer:', this.userName);
+      console.log('🏥 Verwendete Patient-ID:', this.currentPatientId);
     } catch (error) {
       console.error('Fehler beim Laden des User-Profils:', error);
     }
