@@ -91,3 +91,9 @@ docs/slides/revealjs
 
 # ESPHome - kompletter Ordner
 esphome/
+
+# ATEM Python venv
+ATEM/venv/
+ATEM/__pycache__/
+ATEM/*.pyc
+ATEM/*.log
