@@ -7,6 +7,7 @@ import { MedicationPlan } from './models/medication-plan.model';
 import { DayDetail } from './models/day-detail.model';
 import { CalendarService } from './services/calendar.service';
 import { MedicationPlanService } from './services/medication-plan.service';
+import { PatientService } from './services/patient.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -96,7 +97,8 @@ export class AppComponent implements OnInit {
   constructor(
     private keycloak: KeycloakService,
     private calendarService: CalendarService,
-    private medicationPlanService: MedicationPlanService
+    private medicationPlanService: MedicationPlanService,
+    private patientService: PatientService
   ) {}
 
   async ngOnInit() {
@@ -135,32 +137,6 @@ export class AppComponent implements OnInit {
       console.log('  - patient_id:', patientIdVariants[1]);
       console.log('  - PatientId:', patientIdVariants[2]);
       console.log('  - PATIENT_ID:', patientIdVariants[3]);
-      
-      // User Name aus ID Token
-      const givenName = idTokenParsed?.['given_name'];
-      const familyName = idTokenParsed?.['family_name'];
-      const fullName = idTokenParsed?.['name'];
-      const preferredUsername = idTokenParsed?.['preferred_username'];
-      
-      // Versuche verschiedene Kombinationen
-      if (fullName) {
-        this.userName = fullName;
-      } else if (givenName && familyName) {
-        this.userName = `${givenName} ${familyName}`;
-      } else if (givenName) {
-        this.userName = givenName;
-      } else if (preferredUsername) {
-        this.userName = preferredUsername;
-      } else {
-        this.userName = 'User';
-      }
-      
-      console.log('👤 DEBUG Name-Felder:');
-      console.log('  - name (vollständig):', fullName);
-      console.log('  - given_name (Vorname):', givenName);
-      console.log('  - family_name (Nachname):', familyName);
-      console.log('  - preferred_username:', preferredUsername);
-      console.log('  - Verwendeter Name:', this.userName);
       
       this.userRoles = this.keycloak.getUserRoles();
       
@@ -202,9 +178,20 @@ export class AppComponent implements OnInit {
       { id: this.currentPatientId, name: 'Mein Medikamentenplan', patientName: this.userName }
     ];
     this.selectedPlanId = this.currentPatientId;
-    this.loadMedicationPlans();
-  }
-
+    this.loadMedica🏥 Verwendete Patient-ID:', this.currentPatientId);
+      console.log('='.repeat(80));
+      
+      // Patientendaten vom Backend laden
+      this.patientService.getPatientById(this.currentPatientId).subscribe({
+        next: (patient) => {
+          this.userName = patient.name;
+          console.log('✅ Patientenname vom Backend geladen:', this.userName);
+        },
+        error: (error) => {
+          console.error('❌ Fehler beim Laden des Patientennamens:', error);
+          this.userName = 'User';
+        }
+      }
   loadAvailableMedications() {
     this.medicationPlanService.getAllMedications().subscribe({
       next: (medications) => {
