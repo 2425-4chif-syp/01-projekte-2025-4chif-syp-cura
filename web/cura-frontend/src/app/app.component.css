@@ -446,7 +446,7 @@ main {
 
 .medication-table {
   width: 100%;
-  min-width: 600px;
+  min-width: 500px;
   border-collapse: collapse;
 }
 
@@ -455,7 +455,7 @@ main {
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
-  padding: var(--space-sm);
+  padding: var(--space-xs) 4px;
   text-align: center;
   border-bottom: 2px solid var(--primary-teal);
   white-space: nowrap;
@@ -463,17 +463,17 @@ main {
 
 .medication-table th.time-label {
   text-align: left;
-  min-width: 80px;
-  max-width: 100px;
+  min-width: 70px;
+  max-width: 90px;
 }
 
 .medication-table td {
-  padding: var(--space-sm);
+  padding: var(--space-xs) 4px;
   text-align: center;
   font-size: var(--text-sm);
   color: var(--text-primary);
   border-bottom: 1px solid var(--bg-hover);
-  max-width: 150px;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   word-wrap: break-word;
@@ -530,23 +530,22 @@ main {
 /* Medium screens - optimize table for smaller displays */
 @media (max-width: 1400px) {
   .medication-table {
-    min-width: 550px;
+    min-width: 480px;
   }
   
   .medication-table th,
   .medication-table td {
-    padding: var(--space-xs) 4px;
+    padding: var(--space-xs) 3px;
     font-size: 0.8rem;
   }
   
   .medication-table th.time-label {
-    min-width: 70px;
-    max-width: 85px;
-    font-size: 0.75rem;
+    min-width: 65px;
+    max-width: 80px;
   }
   
   .medication-table td {
-    max-width: 100px;
+    max-width: 90px;
   }
 }
 
@@ -559,6 +558,10 @@ main {
     flex: 0 0 40%;
   }
   
+  .medication-table {
+    min-width: 450px;
+  }
+  
   .medication-table th,
   .medication-table td {
     padding: 4px 2px;
@@ -567,25 +570,24 @@ main {
   
   .medication-table th.time-label {
     min-width: 60px;
-    max-width: 75px;
-    font-size: 0.7rem;
+    max-width: 70px;
   }
 }
 
 @media (max-width: 900px) {
   .medication-table {
-    min-width: 500px;
+    min-width: 420px;
   }
   
   .medication-table th,
   .medication-table td {
-    padding: 4px 2px;
+    padding: 3px 2px;
     font-size: 0.7rem;
   }
   
   .medication-table th.time-label {
     min-width: 55px;
-    max-width: 65px;
+    max-width: 60px;
   }
   
   .medication-card h2 {
