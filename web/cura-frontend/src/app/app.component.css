@@ -60,7 +60,7 @@ main {
   flex-wrap: wrap;
   gap: var(--space-lg);
   padding: var(--space-lg);
-  padding-bottom: var(--space-3xl);
+  padding-bottom: var(--space-lg);
   max-width: 100vw;
   height: calc(100vh - 100px);
   margin: 0;
@@ -355,7 +355,7 @@ main {
   display: flex;
   flex-direction: column;
   height: fit-content;
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 100px);
   box-shadow: 0 4px 12px rgba(74,87,89,0.08);
   perspective: 1000px;
   position: relative;
@@ -396,7 +396,7 @@ main {
   left: 0;
   transform: rotateY(180deg);
   overflow-y: auto;
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 100px);
 }
 
 .medication-card h2 {
