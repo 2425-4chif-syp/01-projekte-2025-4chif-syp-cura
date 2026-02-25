@@ -290,7 +290,7 @@ main {
 .no-data-message {
   text-align: center;
   padding: var(--space-xl);
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-style: italic;
   font-size: var(--text-sm);
 }
