@@ -456,8 +456,8 @@ main {
 
 .medication-table th.time-label {
   text-align: left;
-  min-width: 100px;
-  max-width: 130px;
+  min-width: 70px;
+  max-width: 90px;
 }
 
 .medication-table td {
@@ -479,7 +479,7 @@ main {
   font-family: var(--font-heading);
   font-weight: var(--weight-semibold);
   color: var(--primary-teal);
-  font-size: var(--text-lg);
+  font-size: var(--text-xs);
 }
 
 .medication-table tr:last-child td {
