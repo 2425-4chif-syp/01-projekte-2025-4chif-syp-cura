@@ -135,23 +135,29 @@
       <div class="income-quote">
         <h3>Einnahme quote {{ currentMonth }}</h3>
 
-        <div class="progress-bar">
-          <div class="progress-segment checked" [style.width.%]="checkedPercentage"></div>
-          <div class="progress-segment partial" [style.width.%]="partialPercentage"></div>
-          <div class="progress-segment missed" [style.width.%]="missedPercentage"></div>
-        </div>
-        <p></p>
-        <div class="status-labels">
-          <span class="status-label">
-            <span class="status-dot checked"></span> Eingenommen: {{ checkedPercentage }}%
-          </span>
-          <!--<span class="status-label">
-            <span class="status-dot partial"></span> Teilweise: {{ partialPercentage }}%
-          </span> -->
-          <span class="status-label">
-            <span class="status-dot missed"></span> Verpasst: {{ missedPercentage }}%
-          </span>
-        </div>
+        @if (checkedPercentage === 0 && missedPercentage === 0) {
+          <div class="no-data-message">
+            <p>Keine Daten vorhanden</p>
+          </div>
+        } @else {
+          <div class="progress-bar">
+            <div class="progress-segment checked" [style.width.%]="checkedPercentage"></div>
+            <div class="progress-segment partial" [style.width.%]="partialPercentage"></div>
+            <div class="progress-segment missed" [style.width.%]="missedPercentage"></div>
+          </div>
+          <p></p>
+          <div class="status-labels">
+            <span class="status-label">
+              <span class="status-dot checked"></span> Eingenommen: {{ checkedPercentage }}%
+            </span>
+            <!--<span class="status-label">
+              <span class="status-dot partial"></span> Teilweise: {{ partialPercentage }}%
+            </span> -->
+            <span class="status-label">
+              <span class="status-dot missed"></span> Verpasst: {{ missedPercentage }}%
+            </span>
+          </div>
+        }
       </div>
     </div>
 

@@ -287,6 +287,14 @@ main {
   margin-bottom: var(--space-md);
 }
 
+.no-data-message {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: var(--text-sm);
+}
+
 .status-labels {
   display: flex;
   gap: var(--space-md);
