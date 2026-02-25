@@ -53,8 +53,8 @@ namespace WebApi.Controllers
                 var dayOfWeek = (int)date.DayOfWeek;
                 var weekdayFlag = dayOfWeek == 0 ? 1 : (1 << dayOfWeek);
 
-                // Count total scheduled medications for this day
-                var scheduledCount = 0;
+                // Get all scheduled medications for this specific day (count each medication * timeslot combination)
+                var scheduledMedications = new List<(int planId, int timeSlot)>();
                 
                 foreach (var plan in activePlans)
                 {
@@ -62,20 +62,43 @@ namespace WebApi.Controllers
                         && plan.ValidFrom <= date
                         && (!plan.ValidTo.HasValue || plan.ValidTo >= date))
                     {
-                        // Count each time slot this plan covers
-                        if ((plan.DayTimeFlags & 1) != 0) scheduledCount++; // Morning
-                        if ((plan.DayTimeFlags & 2) != 0) scheduledCount++; // Noon
-                        if ((plan.DayTimeFlags & 4) != 0) scheduledCount++; // Afternoon
-                        if ((plan.DayTimeFlags & 8) != 0) scheduledCount++; // Evening
+                        // For each time slot this plan covers, add an entry
+                        if ((plan.DayTimeFlags & 1) != 0) scheduledMedications.Add((plan.Id, 1)); // Morning
+                        if ((plan.DayTimeFlags & 2) != 0) scheduledMedications.Add((plan.Id, 2)); // Noon
+                        if ((plan.DayTimeFlags & 4) != 0) scheduledMedications.Add((plan.Id, 4)); // Afternoon
+                        if ((plan.DayTimeFlags & 8) != 0) scheduledMedications.Add((plan.Id, 8)); // Evening
                     }
                 }
 
-                // Count how many intakes were recorded
-                var takenCount = monthIntakes.Count(i => i.IntakeTime.Date == date);
+                var scheduledCount = scheduledMedications.Count;
+
+                // Get actual intakes for this day
+                var dayIntakes = monthIntakes.Where(i => i.IntakeTime.Date == date).ToList();
+
+                // Count how many scheduled medications were actually taken
+                var takenCount = 0;
+                foreach (var (planId, timeSlot) in scheduledMedications)
+                {
+                    // Check if there's an intake for this specific plan in the correct time slot
+                    var hasIntake = dayIntakes.Any(intake =>
+                    {
+                        if (intake.MedicationPlanId != planId) return false;
+                        
+                        var hour = intake.IntakeTime.Hour;
+                        var intakeTimeSlot = 0;
+                        if (hour >= 6 && hour < 11) intakeTimeSlot = 1;
+                        else if (hour >= 11 && hour < 14) intakeTimeSlot = 2;
+                        else if (hour >= 14 && hour < 18) intakeTimeSlot = 4;
+                        else if (hour >= 18 && hour < 24) intakeTimeSlot = 8;
+                        
+                        return intakeTimeSlot == timeSlot;
+                    });
+                    
+                    if (hasIntake) takenCount++;
+                }
 
                 var status = scheduledCount == 0 ? "empty" 
-                           : takenCount >= scheduledCount ? "checked"
-                           : takenCount > 0 ? "partial"
+                           : takenCount == scheduledCount ? "checked"
                            : "missed";
 
                 result.Add(new DailyStatusDto
