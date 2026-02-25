@@ -445,7 +445,7 @@ main {
 
 .medication-table th {
   font-family: var(--font-heading);
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
   padding: var(--space-md) var(--space-sm);
