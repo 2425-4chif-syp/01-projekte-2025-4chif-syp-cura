@@ -137,10 +137,31 @@ export class AppComponent implements OnInit {
       console.log('  - PATIENT_ID:', patientIdVariants[3]);
       
       // User Name aus ID Token
-      this.userName = idTokenParsed?.['name'] || 
-                      idTokenParsed?.['given_name'] || 
-                      idTokenParsed?.['preferred_username'] || 
-                      'User';
+      const givenName = idTokenParsed?.['given_name'];
+      const familyName = idTokenParsed?.['family_name'];
+      const fullName = idTokenParsed?.['name'];
+      const preferredUsername = idTokenParsed?.['preferred_username'];
+      
+      // Versuche verschiedene Kombinationen
+      if (fullName) {
+        this.userName = fullName;
+      } else if (givenName && familyName) {
+        this.userName = `${givenName} ${familyName}`;
+      } else if (givenName) {
+        this.userName = givenName;
+      } else if (preferredUsername) {
+        this.userName = preferredUsername;
+      } else {
+        this.userName = 'User';
+      }
+      
+      console.log('👤 DEBUG Name-Felder:');
+      console.log('  - name (vollständig):', fullName);
+      console.log('  - given_name (Vorname):', givenName);
+      console.log('  - family_name (Nachname):', familyName);
+      console.log('  - preferred_username:', preferredUsername);
+      console.log('  - Verwendeter Name:', this.userName);
+      
       this.userRoles = this.keycloak.getUserRoles();
       
       // Patient-ID aus ID Token holen (alle Varianten versuchen)
