@@ -328,6 +328,10 @@ main {
   background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
 }
 
+.status-dot.empty {
+  background-color: var(--text-secondary);
+}
+
 .progress-bar {
   height: 20px;
   background: var(--bg-hover);
@@ -350,6 +354,10 @@ main {
 
 .progress-segment.missed {
   background: linear-gradient(90deg, #F44336 0%, #EF5350 100%);
+}
+
+.progress-segment.empty {
+  background-color: var(--text-secondary);
 }
 
 .medication-card {

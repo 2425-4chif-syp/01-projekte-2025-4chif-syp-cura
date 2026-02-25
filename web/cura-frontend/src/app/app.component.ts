@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   checkedPercentage = 0;
   partialPercentage = 0;
   missedPercentage = 0;
+  emptyPercentage = 0;
   
   // Day Detail View
   showDayDetail = false;
@@ -242,6 +243,7 @@ export class AppComponent implements OnInit {
         this.checkedPercentage = 0;
         this.partialPercentage = 0;
         this.missedPercentage = 0;
+        this.emptyPercentage = 0;
       }
     });
   }
@@ -295,15 +297,18 @@ export class AppComponent implements OnInit {
       this.checkedPercentage = 0;
       this.partialPercentage = 0;
       this.missedPercentage = 0;
+      this.emptyPercentage = 0;
       return;
     }
 
     const checkedDays = this.calendarDays.filter(d => d.checked).length;
     const partialDays = this.calendarDays.filter(d => d.partial).length;
     const missedDays = this.calendarDays.filter(d => d.missed).length;
+    const emptyDays = this.calendarDays.filter(d => d.day > 0 && !d.checked && !d.partial && !d.missed).length;
 
     this.checkedPercentage = Math.round((checkedDays / totalDays) * 100);
     this.missedPercentage = Math.round((missedDays / totalDays) * 100) + Math.round((partialDays / totalDays) * 100);
+    this.emptyPercentage = Math.round((emptyDays / totalDays) * 100);
   }
 
   openDayDetail(day: CalendarDay) {
