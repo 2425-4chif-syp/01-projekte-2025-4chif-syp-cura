@@ -364,7 +364,7 @@ main {
   border: 2px solid var(--primary-teal);
   border-radius: var(--radius-xl);
   padding: 0;
-  overflow: visible;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   height: fit-content;
@@ -372,6 +372,7 @@ main {
   box-shadow: 0 4px 12px rgba(74,87,89,0.08);
   perspective: 1000px;
   position: relative;
+  box-sizing: border-box;
 }
 
 .medication-card .medication-inner {
@@ -393,10 +394,13 @@ main {
   backface-visibility: hidden;
   position: relative;
   padding: var(--space-lg);
+  box-sizing: border-box;
 }
 
 .medication-front {
   z-index: 2;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .medication-back {
@@ -420,9 +424,11 @@ main {
   overflow-x: auto;
   margin-bottom: var(--space-lg);
   width: 100%;
+  max-width: 100%;
   /* Smooth scrolling */
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 
 /* Scrollbar styling */
@@ -446,8 +452,9 @@ main {
 
 .medication-table {
   width: 100%;
-  min-width: 500px;
+  min-width: 450px;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 .medication-table th {
@@ -476,7 +483,9 @@ main {
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-wrap: break-word;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.3;
 }
 
 .medication-table td.time-label {
