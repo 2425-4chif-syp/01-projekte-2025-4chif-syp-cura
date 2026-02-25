@@ -4,4 +4,5 @@ export interface CalendarDay {
   checked?: boolean;
   partial?: boolean;
   missed?: boolean;
+  empty?: boolean;
 }

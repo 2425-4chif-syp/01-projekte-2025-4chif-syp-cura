@@ -38,7 +38,7 @@
                      [class.checked]="day.checked" 
                      [class.partial]="day.partial" 
                      [class.missed]="day.missed" 
-                     [class.no-data]="!day.checked && !day.partial && !day.missed && day.day > 0"
+                     [class.no-data]="day.empty"
                      (click)="openDayDetail(day)">
                   @if (day.day > 0) {
                     <span>{{ day.day }}</span>
