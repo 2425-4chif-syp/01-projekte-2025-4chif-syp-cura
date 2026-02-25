@@ -354,8 +354,7 @@ main {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 130px);
-  max-height: calc(100vh - 130px);
+  height: fit-content;
   box-shadow: 0 4px 12px rgba(74,87,89,0.08);
   perspective: 1000px;
   position: relative;
