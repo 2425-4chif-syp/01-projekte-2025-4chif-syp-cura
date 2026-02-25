@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   
   calendarDays: CalendarDay[] = [];
   medicationPlans: MedicationPlan[] = [];
-  medicationRows: { timeLabel: string; days: string[] }[] = [];
+  medicationRows: { dayLabel: string; times: string[] }[] = [];
   intakeQuote = 85;
   checkedPercentage = 0;
   partialPercentage = 0;
@@ -259,7 +259,7 @@ export class AppComponent implements OnInit {
       },
       error: (error) => {
         console.error('Fehler beim Laden der Medikamentenpläne:', error);
-        this.medicationRows = this.medicationPlanService.buildMedicationTable([], new Map());
+        this.medicationRows = this.medicationPlanService.buildMedicationTableTransposed([], new Map());
       }
     });
   }
@@ -271,7 +271,7 @@ export class AppComponent implements OnInit {
     );
 
     if (medicationRequests.length === 0) {
-      this.medicationRows = this.medicationPlanService.buildMedicationTable(plans, new Map());
+      this.medicationRows = this.medicationPlanService.buildMedicationTableTransposed(plans, new Map());
       return;
     }
 
@@ -282,10 +282,10 @@ export class AppComponent implements OnInit {
           uniqueMedicationIds.forEach((id, index) => {
             medicationNames.set(id, names[index]);
           });
-          this.medicationRows = this.medicationPlanService.buildMedicationTable(plans, medicationNames);
+          this.medicationRows = this.medicationPlanService.buildMedicationTableTransposed(plans, medicationNames);
         },
         error: () => {
-          this.medicationRows = this.medicationPlanService.buildMedicationTable(plans, new Map());
+          this.medicationRows = this.medicationPlanService.buildMedicationTableTransposed(plans, new Map());
         }
       });
     });
