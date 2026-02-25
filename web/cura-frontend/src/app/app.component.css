@@ -355,7 +355,7 @@ main {
   display: flex;
   flex-direction: column;
   height: fit-content;
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 65px);
   box-shadow: 0 4px 12px rgba(74,87,89,0.08);
   perspective: 1000px;
   position: relative;
@@ -396,7 +396,7 @@ main {
   left: 0;
   transform: rotateY(180deg);
   overflow-y: auto;
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 65px);
 }
 
 .medication-card h2 {
