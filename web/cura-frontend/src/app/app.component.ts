@@ -495,11 +495,11 @@ export class AppComponent implements OnInit {
     doc.setFontSize(12);
     doc.text(this.currentMonth, 14, 28);
     
-    // Tabellendaten vorbereiten
-    const headers = [['Zeit', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']];
+    // Tabellendaten vorbereiten (transponiert: Tage als Zeilen, Zeiten als Spalten)
+    const headers = [['Tag', 'Morgen', 'Mittag', 'Nachmittag', 'Abend']];
     const data = this.medicationRows.map(row => [
-      row.timeLabel,
-      ...row.days
+      row.dayLabel,
+      ...row.times
     ]);
     
     // Tabelle erstellen
@@ -518,7 +518,7 @@ export class AppComponent implements OnInit {
         fontStyle: 'bold'
       },
       columnStyles: {
-        0: { halign: 'left', cellWidth: 30 }
+        0: { halign: 'left', cellWidth: 20 }
       }
     });
     

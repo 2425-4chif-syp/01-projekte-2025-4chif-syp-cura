@@ -176,20 +176,17 @@
               <thead>
                 <tr>
                   <th class="time-label"></th>
-                  <th>Mo</th>
-                  <th>Di</th>
-                  <th>Mi</th>
-                  <th>Do</th>
-                  <th>Fr</th>
-                  <th>Sa</th>
-                  <th>So</th>
+                  <th>Morgen</th>
+                  <th>Mittag</th>
+                  <th>Nachmittag</th>
+                  <th>Abend</th>
                 </tr>
               </thead>
               <tbody>
                 @for (row of medicationRows; track $index) {
                   <tr>
-                    <td class="time-label">{{ row.timeLabel }}</td>
-                    @for (cell of row.days; track $index) {
+                    <td class="time-label">{{ row.dayLabel }}</td>
+                    @for (cell of row.times; track $index) {
                       <td>{{ cell }}</td>
                     }
                   </tr>
@@ -260,10 +257,10 @@
               </tr>
             </thead>
             <tbody>
-              @for (row of medicationRows; track $index) {
+              @for (time of ['Morgen', 'Mittag', 'Nachmittag', 'Abend']; track $index) {
                 <tr>
-                  <td class="time-label">{{ row.timeLabel }}</td>
-                  <td>{{ row.days[currentDayIndex] }}</td>
+                  <td class="time-label">{{ time }}</td>
+                  <td>{{ medicationRows[currentDayIndex]?.times?.[$index] ?? '-' }}</td>
                 </tr>
               }
             </tbody>
