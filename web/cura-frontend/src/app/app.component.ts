@@ -152,9 +152,20 @@ export class AppComponent implements OnInit {
         console.warn('⚠️ Das ID Token enthält folgende Felder:', Object.keys(idTokenParsed || {}));
       }
       
-      console.log('👤 Angemeldeter Benutzer:', this.userName);
       console.log('🏥 Verwendete Patient-ID:', this.currentPatientId);
       console.log('='.repeat(80));
+      
+      // Patientendaten vom Backend laden
+      this.patientService.getPatientById(this.currentPatientId).subscribe({
+        next: (patient) => {
+          this.userName = patient.name;
+          console.log('✅ Patientenname vom Backend geladen:', this.userName);
+        },
+        error: (error) => {
+          console.error('❌ Fehler beim Laden des Patientennamens:', error);
+          this.userName = 'User';
+        }
+      });
     } catch (error) {
       console.error('❌ Fehler beim Laden der User-Info:', error);
     }
@@ -178,20 +189,8 @@ export class AppComponent implements OnInit {
       { id: this.currentPatientId, name: 'Mein Medikamentenplan', patientName: this.userName }
     ];
     this.selectedPlanId = this.currentPatientId;
-    this.loadMedica🏥 Verwendete Patient-ID:', this.currentPatientId);
-      console.log('='.repeat(80));
-      
-      // Patientendaten vom Backend laden
-      this.patientService.getPatientById(this.currentPatientId).subscribe({
-        next: (patient) => {
-          this.userName = patient.name;
-          console.log('✅ Patientenname vom Backend geladen:', this.userName);
-        },
-        error: (error) => {
-          console.error('❌ Fehler beim Laden des Patientennamens:', error);
-          this.userName = 'User';
-        }
-      }
+  }
+
   loadAvailableMedications() {
     this.medicationPlanService.getAllMedications().subscribe({
       next: (medications) => {
