@@ -161,30 +161,32 @@
         <!-- Front: Medikamentenplan -->
         <div class="medication-front">
           <h2>{{ selectedPlanName }}</h2>
-          <table class="medication-table">
-            <thead>
-              <tr>
-                <th class="time-label"></th>
-                <th>Mo</th>
-                <th>Di</th>
-                <th>Mi</th>
-                <th>Do</th>
-                <th>Fr</th>
-                <th>Sa</th>
-                <th>So</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (row of medicationRows; track $index) {
+          <div class="table-scroll-container">
+            <table class="medication-table">
+              <thead>
                 <tr>
-                  <td class="time-label">{{ row.timeLabel }}</td>
-                  @for (cell of row.days; track $index) {
-                    <td>{{ cell }}</td>
-                  }
+                  <th class="time-label"></th>
+                  <th>Mo</th>
+                  <th>Di</th>
+                  <th>Mi</th>
+                  <th>Do</th>
+                  <th>Fr</th>
+                  <th>Sa</th>
+                  <th>So</th>
                 </tr>
-              }
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @for (row of medicationRows; track $index) {
+                  <tr>
+                    <td class="time-label">{{ row.timeLabel }}</td>
+                    @for (cell of row.days; track $index) {
+                      <td>{{ cell }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
           <div class="action-buttons">
             <button class="btn-primary" (click)="openPlanSelection()">ändern</button>
             <button class="btn-secondary" (click)="exportMedicationPlan()">exportieren</button>
