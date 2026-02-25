@@ -446,10 +446,10 @@ main {
 
 .medication-table th {
   font-family: var(--font-heading);
-  font-size: var(--text-sm);
+  font-size: var(--text-lg);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
-  padding: var(--space-xs) 4px;
+  padding: var(--space-md) var(--space-sm);
   text-align: center;
   border-bottom: 2px solid var(--primary-teal);
   white-space: nowrap;
@@ -457,22 +457,22 @@ main {
 
 .medication-table th.time-label {
   text-align: left;
-  min-width: 70px;
-  max-width: 90px;
+  min-width: 100px;
+  max-width: 130px;
 }
 
 .medication-table td {
-  padding: var(--space-xs) 4px;
+  padding: var(--space-md) var(--space-sm);
   text-align: center;
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--text-primary);
   border-bottom: 1px solid var(--bg-hover);
-  max-width: 120px;
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
   word-break: break-word;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
 .medication-table td.time-label {
@@ -480,7 +480,7 @@ main {
   font-family: var(--font-heading);
   font-weight: var(--weight-semibold);
   color: var(--primary-teal);
-  font-size: var(--text-sm);
+  font-size: var(--text-lg);
 }
 
 .medication-table tr:last-child td {
