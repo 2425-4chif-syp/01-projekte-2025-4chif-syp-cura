@@ -329,7 +329,7 @@ main {
 }
 
 .status-dot.empty {
-  background-color: var(--text-secondary);
+  background-color: #D3D3D3;
 }
 
 .progress-bar {
@@ -357,7 +357,7 @@ main {
 }
 
 .progress-segment.empty {
-  background-color: var(--text-secondary);
+  background-color: #D3D3D3;
 }
 
 .medication-card {
