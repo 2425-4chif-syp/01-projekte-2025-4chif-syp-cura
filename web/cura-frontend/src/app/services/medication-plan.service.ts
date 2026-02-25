@@ -134,6 +134,60 @@ export class MedicationPlanService {
   }
 
   /**
+   * Erstellt eine transponierte Medikamententabelle (Tage als Zeilen, Zeiten als Spalten)
+   */
+  buildMedicationTableTransposed(plans: MedicationPlan[], medicationNames: Map<number, string>): { dayLabel: string; times: string[] }[] {
+    const timeLabels = [
+      { flag: 1, label: 'Morgen' },
+      { flag: 2, label: 'Mittag' },
+      { flag: 4, label: 'Nachmittag' },
+      { flag: 8, label: 'Abend' }
+    ];
+
+    // WICHTIG: Reihenfolge muss Mo, Di, Mi, Do, Fr, Sa, So sein!
+    // Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64, So=1
+    const weekdays = [
+      { flag: 2, label: 'Mo' },
+      { flag: 4, label: 'Di' },
+      { flag: 8, label: 'Mi' },
+      { flag: 16, label: 'Do' },
+      { flag: 32, label: 'Fr' },
+      { flag: 64, label: 'Sa' },
+      { flag: 1, label: 'So' }
+    ];
+
+    const rows: { dayLabel: string; times: string[] }[] = [];
+
+    // Für jeden Wochentag
+    for (const dayConfig of weekdays) {
+      const times: string[] = [];
+
+      // Für jede Tageszeit (Morgen, Mittag, Nachmittag, Abend)
+      for (const timeConfig of timeLabels) {
+        const medicationSet = new Set<string>();
+
+        // Sammle alle Medikamente für diese Tag + Zeit Kombination
+        for (const plan of plans) {
+          const hasTime = (plan.dayTimeFlags & timeConfig.flag) !== 0;
+          const hasDay = (plan.weekdayFlags & dayConfig.flag) !== 0;
+          
+          if (hasTime && hasDay) {
+            const medName = medicationNames.get(plan.medicationId) || `Med${plan.medicationId}`;
+            medicationSet.add(medName);
+          }
+        }
+
+        // Konvertiere Set zu Array und verbinde mit Komma, oder "-" wenn leer
+        times.push(medicationSet.size > 0 ? Array.from(medicationSet).join(', ') : '-');
+      }
+
+      rows.push({ dayLabel: dayConfig.label, times });
+    }
+
+    return rows;
+  }
+
+  /**
    * Erstellt mehrere Medikamentenpläne aus dem Wizard-Schedule
    * @param weekSchedule Map von Tag-Index -> Map von Tageszeit -> Medikamente
    * @param patientId Patient ID
