@@ -194,7 +194,7 @@ main {
 }
 
 .day.no-data {
-  background: var(--text-muted);
+  background: #D3D3D3;
   color: white;
 }
 
