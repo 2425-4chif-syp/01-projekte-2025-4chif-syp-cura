@@ -89,19 +89,6 @@ main {
   order: 1;
 }
 
-.medication-card {
-  flex: 0 0 calc(65% - var(--space-lg));
-  order: 2;
-  background: var(--bg-card);
-  border: 2px solid var(--primary-teal);
-  border-radius: var(--radius-xl);
-  padding: var(--space-lg);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  max-height: calc(100vh - 120px);
-}
-
 .calendar-card {
   background: linear-gradient(135deg, rgba(237,175,184,0.4) 0%, rgba(247,225,215,0.6) 100%);
   border: 2px solid var(--primary-pink);
@@ -358,7 +345,7 @@ main {
 }
 
 .medication-card {
-  flex: 0 0 calc(72% - var(--space-lg));
+  flex: 0 0 calc(65% - var(--space-lg));
   order: 2;
   background: linear-gradient(135deg, rgba(176,196,177,0.4) 0%, rgba(222,219,210,0.5) 100%);
   border: 2px solid var(--primary-teal);
@@ -393,7 +380,7 @@ main {
   min-height: fit-content;
   backface-visibility: hidden;
   position: relative;
-  padding: var(--space-lg);
+  padding: var(--space-sm);
   box-sizing: border-box;
 }
 
@@ -417,12 +404,12 @@ main {
   color: var(--text-primary);
   font-size: var(--text-lg);
   font-weight: var(--weight-semibold);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
 .table-scroll-container {
   overflow-x: auto;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-sm);
   width: 100%;
   max-width: 100%;
   /* Smooth scrolling */
