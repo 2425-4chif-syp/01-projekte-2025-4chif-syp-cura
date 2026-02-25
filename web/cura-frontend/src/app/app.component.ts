@@ -137,7 +137,10 @@ export class AppComponent implements OnInit {
       console.log('  - PATIENT_ID:', patientIdVariants[3]);
       
       // User Name aus ID Token
-      this.userName = idTokenParsed?.['given_name'] || idTokenParsed?.['preferred_username'] || 'User';
+      this.userName = idTokenParsed?.['name'] || 
+                      idTokenParsed?.['given_name'] || 
+                      idTokenParsed?.['preferred_username'] || 
+                      'User';
       this.userRoles = this.keycloak.getUserRoles();
       
       // Patient-ID aus ID Token holen (alle Varianten versuchen)
