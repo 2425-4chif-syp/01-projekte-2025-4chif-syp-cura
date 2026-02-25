@@ -395,7 +395,7 @@ main {
   min-height: fit-content;
   backface-visibility: hidden;
   position: relative;
-  padding: var(--space-sm);
+  padding: var(--space-md);
   box-sizing: border-box;
 }
 
@@ -461,10 +461,10 @@ main {
 
 .medication-table th {
   font-family: var(--font-heading);
-  font-size: var(--text-sm);
+  font-size: var(--text-lg);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
-  padding: var(--space-sm) var(--space-xs);
+  padding: var(--space-md) var(--space-sm);
   text-align: center;
   border-bottom: 2px solid var(--primary-teal);
   white-space: nowrap;
@@ -477,9 +477,9 @@ main {
 }
 
 .medication-table td {
-  padding: var(--space-md) var(--space-sm);
+  padding: var(--space-lg) var(--space-md);
   text-align: center;
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   color: var(--text-primary);
   border-bottom: 1px solid var(--bg-hover);
   max-width: 150px;
@@ -495,7 +495,7 @@ main {
   font-family: var(--font-heading);
   font-weight: var(--weight-semibold);
   color: var(--primary-teal);
-  font-size: var(--text-sm);
+  font-size: var(--text-lg);
 }
 
 .medication-table tr:last-child td {
