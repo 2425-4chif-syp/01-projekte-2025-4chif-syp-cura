@@ -1,0 +1,21 @@
+[Unit]
+Description=ATEM Medication Alert Daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/atem
+ExecStart=/home/pi/atem/venv/bin/python3 /home/pi/atem/atem_medication_daemon.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

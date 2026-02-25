@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medikamenten-Erinnerung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            padding: 40px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1200px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .alert-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        h1 {
+            font-size: 64px;
+            margin-bottom: 50px;
+            font-weight: 700;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .medications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .medication-card {
+            background: white;
+            color: #333;
+            padding: 35px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .medication-info {
+            text-align: center;
+        }
+
+        .medication-name {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .medication-quantity {
+            font-size: 32px;
+            color: #666;
+        }
+
+        .medication-category {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            padding: 20px;
+        }
+
+        /* Medikamentengruppen Farben */
+        .category-blutverduenner {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .category-schmerzmittel {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .category-antibiotika {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .category-blutdruck {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .category-diabetes {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .category-herz {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .category-default {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .time-slot {
+            font-size: 36px;
+            margin-top: 40px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .loading {
+            font-size: 48px;
+            opacity: 0.8;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 32px;
+            margin-top: 30px;
+        }
+
+        .no-alert {
+            font-size: 48px;
+            opacity: 0.9;
+        }
+
+        /* Blinken für dringende Medikamente */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .urgent {
+            animation: blink 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="loading">⏳ Lade...</div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://vm12.htl-leonding.ac.at/api/MedicationAlert/should-alert/1';
+        const REFRESH_INTERVAL = 10000; // 10 Sekunden
+
+        // Medikamentengruppen zu Kategorie-Mapping
+        const medicationCategories = {
+            'aspirin': 'blutverduenner',
+            'marcumar': 'blutverduenner',
+            'xarelto': 'blutverduenner',
+            'ibuprofen': 'schmerzmittel',
+            'paracetamol': 'schmerzmittel',
+            'novalgin': 'schmerzmittel',
+            'amoxicillin': 'antibiotika',
+            'azithromycin': 'antibiotika',
+            'ramipril': 'blutdruck',
+            'bisoprolol': 'blutdruck',
+            'metformin': 'diabetes',
+            'insulin': 'diabetes',
+            'digitalis': 'herz',
+            'digoxin': 'herz',
+        };
+
+        const categoryLabels = {
+            'blutverduenner': 'Blutverdünner',
+            'schmerzmittel': 'Schmerzmittel',
+            'antibiotika': 'Antibiotikum',
+            'blutdruck': 'Blutdruck',
+            'diabetes': 'Diabetes',
+            'herz': 'Herzmedikament',
+            'default': 'Medikament'
+        };
+
+        function getCategoryForMedication(medicationName) {
+            const nameLower = medicationName.toLowerCase();
+            for (const [keyword, category] of Object.entries(medicationCategories)) {
+                if (nameLower.includes(keyword)) {
+                    return category;
+                }
+            }
+            return 'default';
+        }
+
+        function getTimeSlotLabel(timeSlot) {
+            const labels = {
+                'Morning': 'Morgens (6:00 - 11:00)',
+                'Noon': 'Mittags (11:00 - 14:00)',
+                'Afternoon': 'Nachmittags (14:00 - 18:00)',
+                'Evening': 'Abends (18:00 - 23:00)'
+            };
+            return labels[timeSlot] || timeSlot;
+        }
+
+        async function fetchMedicationStatus() {
+            try {
+                const response = await fetch(BACKEND_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Fehler beim Abrufen:', error);
+                return { error: error.message };
+            }
+        }
+
+        function renderAlert(data) {
+            const app = document.getElementById('app');
+            
+            if (data.error) {
+                app.innerHTML = `
+                    <div class="alert-icon">⚠️</div>
+                    <h1>Verbindungsfehler</h1>
+                    <div class="error">Backend nicht erreichbar: ${data.error}</div>
+                `;
+                return;
+            }
+
+            if (!data.shouldAlert) {
+                app.innerHTML = `
+                    <div class="alert-icon">✅</div>
+                    <h1>Alles in Ordnung</h1>
+                    <div class="no-alert">Keine Medikamente fällig</div>
+                    <div class="time-slot">${getTimeSlotLabel(data.timeSlot)}</div>
+                `;
+                return;
+            }
+
+            // Alert aktiv - Medikamente anzeigen
+            const medications = data.medications || [];
+            const plural = medications.length > 1;
+            
+            let html = `
+                <div class="alert-icon urgent">💊</div>
+                <h1>Bitte nehmen Sie ${plural ? 'folgende Medikamente' : 'folgendes Medikament'} ein</h1>
+                <div class="medications-list">
+            `;
+
+            medications.forEach(med => {
+                const category = getCategoryForMedication(med.name);
+                const categoryLabel = categoryLabels[category] || categoryLabels['default'];
+                const quantity = med.quantity || 1;
+                const quantityText = quantity > 1 ? `${quantity}x` : '1 Tablette';
+
+                html += `
+                    <div class="medication-card">
+                        <div class="medication-info">
+                            <div class="medication-name">${med.name}</div>
+                            <div class="medication-quantity">${quantityText}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="time-slot">${getTimeSlotLabel(data.timeSlot)}</div>
+            `;
+
+            app.innerHTML = html;
+        }
+
+        async function update() {
+            const data = await fetchMedicationStatus();
+            renderAlert(data);
+        }
+
+        // Initial load
+        update();
+
+        // Auto-refresh
+        setInterval(update, REFRESH_INTERVAL);
+
+        // Reload bei Tab-Fokus (falls Browser pausiert)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                update();
+            }
+        });
+    </script>
+</body>
+</html>
