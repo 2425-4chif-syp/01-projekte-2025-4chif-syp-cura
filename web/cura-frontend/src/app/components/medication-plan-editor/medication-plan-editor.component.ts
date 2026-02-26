@@ -114,8 +114,28 @@ export class MedicationPlanEditorComponent implements OnInit {
                  (!validTo || validTo >= now);
         });
         
-        console.log('📅 Lade aktive Pläne:', activePlans.length, 'von', plans.length);
-        this.populatePlanFromBackend(activePlans);
+        console.log('� Geladene Pläne (alle):', plans.length);
+        console.log('📥 Aktive Pläne:', activePlans.length);
+        
+        // DEDUPLIZIERUNG: Gruppiere und kombiniere Pläne
+        const dedupMap = new Map<string, MedicationPlan>();
+        activePlans.forEach(p => {
+          const key = `${p.medicationId}_${p.dayTimeFlags}_${p.quantity}`;
+          
+          if (dedupMap.has(key)) {
+            // Kombiniere weekdayFlags (OR-Verknüpfung)
+            const existing = dedupMap.get(key)!;
+            existing.weekdayFlags |= p.weekdayFlags;
+          } else {
+            // Neuer Eintrag
+            dedupMap.set(key, { ...p });
+          }
+        });
+        
+        const deduplicatedPlans = Array.from(dedupMap.values());
+        console.log('📥 Nach Deduplizierung:', deduplicatedPlans.length, 'Pläne');
+        
+        this.populatePlanFromBackend(deduplicatedPlans);
       },
       error: (err) => console.error('Fehler beim Laden des Plans:', err)
     });
@@ -129,19 +149,13 @@ export class MedicationPlanEditorComponent implements OnInit {
       });
     });
 
-    // Gruppiere Pläne nach Medikament + Tageszeit + Menge
-    const processedKeys = new Set<string>();
-
+    // Pläne sind bereits dedupliziert, einfach einfügen
     plans.forEach(plan => {
       const medication = this.availableMedications.find(m => m.id === plan.medicationId);
-      if (!medication) return;
-
-      // Eindeutiger Key für dieses Medikament + Tageszeit + Menge
-      const key = `${plan.medicationId}_${plan.dayTimeFlags}_${plan.quantity}`;
-      
-      // Überspringe wenn schon verarbeitet (verhindert Duplikate)
-      if (processedKeys.has(key)) return;
-      processedKeys.add(key);
+      if (!medication) {
+        console.warn('⚠️ Medikament nicht gefunden:', plan.medicationId);
+        return;
+      }
 
       const medItem: MedicationItem = {
         id: medication.id,
@@ -150,26 +164,22 @@ export class MedicationPlanEditorComponent implements OnInit {
         isNew: false
       };
 
-      // Für jeden Wochentag
+      // Für jeden Wochentag der im Plan enthalten ist
       this.weekdayPlans.forEach(dayPlan => {
         const hasDay = (plan.weekdayFlags & dayPlan.flag) !== 0;
         if (!hasDay) return;
 
-        // Für jede Tageszeit
+        // Für jede Tageszeit die im Plan enthalten ist
         dayPlan.timeSlots.forEach(slot => {
           const hasTime = (plan.dayTimeFlags & slot.flag) !== 0;
           if (hasTime) {
-            // Prüfe ob Medikament bereits existiert
-            const exists = slot.medications.find(m => m.id === medItem.id);
-            if (!exists) {
-              slot.medications.push({ ...medItem });
-            }
+            slot.medications.push({ ...medItem });
           }
         });
       });
     });
     
-    console.log('📥 Pläne geladen. Verarbeitete Keys:', processedKeys.size);
+    console.log('✅ Pläne in UI geladen');
   }
 
   drop(event: CdkDragDrop<any>) {
