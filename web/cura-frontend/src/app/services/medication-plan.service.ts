@@ -313,7 +313,19 @@ export class MedicationPlanService {
 
   // Delete all medication plans for a patient
   deleteAllPlansForPatient(patientId: number): Observable<any> {
-    return this.http.delete(`${this.API_URL}/MedicationPlans/patient/${patientId}`);
+    // Zuerst alle Pläne des Patienten laden
+    return this.getMedicationPlans(patientId).pipe(
+      switchMap(plans => {
+        if (plans.length === 0) {
+          return of(null);
+        }
+        // Jeden Plan einzeln löschen
+        const deleteRequests = plans.map(plan => 
+          this.http.delete(`${this.API_URL}/MedicationPlans/${plan.id}`)
+        );
+        return forkJoin(deleteRequests);
+      })
+    );
   }
 
   // Create multiple medication plans at once
