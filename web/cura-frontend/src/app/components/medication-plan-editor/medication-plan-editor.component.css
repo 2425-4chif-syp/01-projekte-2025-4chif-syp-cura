@@ -592,3 +592,122 @@
   text-align: center;
 }
 
+
+/* Copy-Mode Banner */
+.copy-mode-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #78350f;
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(251, 191, 36, 0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.banner-content i {
+  font-size: 20px;
+}
+
+.banner-content strong {
+  color: #78350f;
+  font-weight: 800;
+}
+
+.btn-cancel-copy {
+  padding: 8px 16px;
+  background: rgba(120, 53, 15, 0.2);
+  color: #78350f;
+  border: 2px solid rgba(120, 53, 15, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-cancel-copy:hover {
+  background: rgba(120, 53, 15, 0.3);
+  transform: scale(1.05);
+}
+
+/* Copy-Mode Styling */
+.time-row.copy-source {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.time-label-cell.is-copy-source {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #78350f;
+  border-color: #f59e0b;
+  cursor: default;
+}
+
+.time-label-cell.is-copy-source h4 {
+  color: #78350f;
+}
+
+.time-label-cell.is-copy-target {
+  cursor: pointer;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border-color: #10b981;
+  color: #065f46;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.time-label-cell.is-copy-target h4 {
+  color: #065f46;
+}
+
+.time-label-cell.is-copy-target:hover {
+  background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+}
+
+.time-label-cell.is-copy-target::after {
+  content: '👆 Hierher einfügen';
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 12px;
+  opacity: 0.8;
+}
+
+.time-row.copy-target .time-slot-cell {
+  border-color: #10b981;
+  opacity: 0.6;
+}
+

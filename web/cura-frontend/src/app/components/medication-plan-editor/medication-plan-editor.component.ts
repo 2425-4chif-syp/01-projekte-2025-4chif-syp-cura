@@ -41,6 +41,10 @@ export class MedicationPlanEditorComponent implements OnInit {
   showAddMedicationForm: boolean = false;
   patientId: number = 1; // TODO: Get from auth service
   
+  // Copy-Paste Modus
+  copyMode: boolean = false;
+  copiedDayPlan: WeekdayPlan | null = null;
+  
   // Plan Gültigkeit
   validFrom: string = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   validTo: string = ''; // Leer = unbegrenzt
@@ -342,19 +346,26 @@ export class MedicationPlanEditorComponent implements OnInit {
   }
 
   copyDayPlan(fromDay: WeekdayPlan) {
-    const toIndices = prompt(`In welche Tage kopieren? (z.B. 2,3,5 für Di,Mi,Fr):\n1=Mo, 2=Di, 3=Mi, 4=Do, 5=Fr, 6=Sa, 7=So`);
-    if (!toIndices) return;
+    this.copyMode = true;
+    this.copiedDayPlan = fromDay;
+    console.log('📋 Copy-Modus aktiviert für:', fromDay.label);
+  }
 
-    const indices = toIndices.split(',').map(s => parseInt(s.trim()) - 1);
+  pasteToDday(targetDay: WeekdayPlan) {
+    if (!this.copyMode || !this.copiedDayPlan) return;
     
-    indices.forEach(idx => {
-      if (idx >= 0 && idx < 7) {
-        const targetDay = this.weekdayPlans[idx];
-        targetDay.timeSlots.forEach((targetSlot, slotIdx) => {
-          targetSlot.medications = [...fromDay.timeSlots[slotIdx].medications.map(m => ({ ...m }))];
-        });
-      }
+    // Kopiere alle Medikamente von jedem TimeSlot
+    targetDay.timeSlots.forEach((targetSlot, slotIdx) => {
+      targetSlot.medications = [...this.copiedDayPlan!.timeSlots[slotIdx].medications.map(m => ({ ...m }))];
     });
+    
+    console.log('✅ Medikamente kopiert von', this.copiedDayPlan.label, 'nach', targetDay.label);
+  }
+
+  cancelCopyMode() {
+    this.copyMode = false;
+    this.copiedDayPlan = null;
+    console.log('❌ Copy-Modus abgebrochen');
   }
 
   getDropListIds(): string[] {

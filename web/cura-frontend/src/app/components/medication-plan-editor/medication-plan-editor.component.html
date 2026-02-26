@@ -67,6 +67,19 @@
 
     <!-- Rechte Seite: Wochenplan -->
     <main class="week-plan">
+      <!-- Copy-Mode Banner -->
+      @if (copyMode && copiedDayPlan) {
+        <div class="copy-mode-banner">
+          <div class="banner-content">
+            <i class="fas fa-copy"></i>
+            <span>Kopiere <strong>{{ copiedDayPlan.label }}</strong> - Klicke auf einen Ziel-Tag</span>
+          </div>
+          <button class="btn-cancel-copy" (click)="cancelCopyMode()">
+            <i class="fas fa-times"></i> Abbrechen
+          </button>
+        </div>
+      }
+
       <!-- Kopfzeile: Tageszeiten -->
       <div class="weekdays-header">
         <div class="weekday-column"></div> <!-- Leere Ecke links oben -->
@@ -81,12 +94,19 @@
 
       <!-- Wochentage (Zeilen) -->
       @for (dayPlan of weekdayPlans; track dayPlan.label; let dayIdx = $index) {
-        <div class="time-row">
-          <div class="time-label-cell">
+        <div class="time-row" 
+             [class.copy-source]="copyMode && copiedDayPlan === dayPlan"
+             [class.copy-target]="copyMode && copiedDayPlan !== dayPlan">
+          <div class="time-label-cell"
+               [class.is-copy-source]="copyMode && copiedDayPlan === dayPlan"
+               [class.is-copy-target]="copyMode && copiedDayPlan !== dayPlan"
+               (click)="copyMode && copiedDayPlan !== dayPlan ? pasteToDday(dayPlan) : null">
             <h4>{{ dayPlan.label }}</h4>
-            <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
-              <i class="fas fa-copy"></i>
-            </button>
+            @if (!copyMode) {
+              <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
+                <i class="fas fa-copy"></i>
+              </button>
+            }
           </div>
           
           @for (slotTemplate of timeSlotTemplates; track slotTemplate.id; let slotIdx = $index) {
