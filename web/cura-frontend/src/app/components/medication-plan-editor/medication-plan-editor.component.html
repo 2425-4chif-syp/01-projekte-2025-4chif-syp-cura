@@ -1,6 +1,9 @@
 <div class="medication-plan-editor">
   <header class="editor-header">
-    <h1>Medikamentenplan bearbeiten</h1>
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">← Zurück</button>
+      <h1>Medikamentenplan bearbeiten</h1>
+    </div>
     <button class="btn-save" (click)="savePlan()">💾 Plan speichern</button>
   </header>
 

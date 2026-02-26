@@ -18,10 +18,32 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .editor-header h1 {
   margin: 0;
   color: #2c3e50;
   font-size: 28px;
+}
+
+.btn-back {
+  padding: 10px 20px;
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-back:hover {
+  background: #7f8c8d;
 }
 
 .btn-save {

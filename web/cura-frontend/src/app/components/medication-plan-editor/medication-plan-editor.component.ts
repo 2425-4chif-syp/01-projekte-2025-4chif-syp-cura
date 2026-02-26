@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MedicationPlanService } from '../../services/medication-plan.service';
 import { Medication } from '../../models/medication.model';
@@ -57,12 +58,19 @@ export class MedicationPlanEditorComponent implements OnInit {
     { id: 'night', label: 'Nachts', flag: 16 }
   ];
 
-  constructor(private medicationPlanService: MedicationPlanService) {}
+  constructor(
+    private medicationPlanService: MedicationPlanService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadAvailableMedications();
     this.initializeWeekdayPlans();
     this.loadExistingPlan();
+  }
+
+  goBack() {
+    this.router.navigate(['/']);
   }
 
   initializeWeekdayPlans() {

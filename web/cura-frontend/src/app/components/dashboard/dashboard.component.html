@@ -1,0 +1,936 @@
+<header>
+  <h1>CURA</h1>
+  <div class="user-info">
+    <div class="user-line">
+      <i class="fa-solid fa-user"></i>
+      <span class="user-name">{{ userName }}</span>
+    </div>
+    <div class="date-line">
+      <span class="user-date">{{ currentDate }}</span>
+      <button (click)="logout()" class="btn-logout" title="Abmelden">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="main-layout">
+    <!-- Left Column: Kalender und Einnahmequote -->
+    <div class="left-column">
+      <aside class="calendar-card" [class.flipped]="showDayDetail">
+        <div class="calendar-inner">
+          <!-- Calendar Front -->
+          <div class="calendar-front">
+            <h2>{{ currentMonth }}</h2>
+            <div class="weekdays">
+              <span>Mo</span>
+              <span>Di</span>
+              <span>Mi</span>
+              <span>Do</span>
+              <span>Fr</span>
+              <span>Sa</span>
+              <span>So</span>
+            </div>
+            <div class="calendar-grid">
+              @for (day of calendarDays; track day.date) {
+                <div class="day" 
+                     [class.checked]="day.checked" 
+                     [class.partial]="day.partial" 
+                     [class.missed]="day.missed" 
+                     [class.no-data]="day.empty"
+                     (click)="openDayDetail(day)">
+                  @if (day.day > 0) {
+                    <span>{{ day.day }}</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+          
+          <!-- Day Detail Back -->
+          <div class="calendar-back">
+            <div class="day-detail-header">
+              <h2>{{ selectedDay ? getFormattedDate(selectedDay.date) : '' }}</h2>
+              <button class="btn-close" (click)="closeDayDetail()">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            
+            <div class="day-detail-content">
+              @if (groupedMedications.length === 0) {
+                <p class="no-medications">Keine Medikamente für diesen Tag geplant</p>
+              } @else {
+                <!-- Desktop: Accordion View -->
+                <div class="desktop-time-groups">
+                  @for (timeGroup of groupedMedications; track timeGroup.timeLabel) {
+                    <div class="time-group" 
+                         [class.all-taken]="timeGroup.allTaken" 
+                         [class.has-missed]="!timeGroup.allTaken"
+                         [class.expanded]="isTimeGroupExpanded(timeGroup.timeLabel)">
+                      <div class="time-group-header" (click)="toggleTimeGroup(timeGroup.timeLabel)">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>{{ timeGroup.timeLabel }}</span>
+                        <i class="fa-solid toggle-icon" 
+                           [class.fa-chevron-down]="!isTimeGroupExpanded(timeGroup.timeLabel)"
+                           [class.fa-chevron-up]="isTimeGroupExpanded(timeGroup.timeLabel)"></i>
+                      </div>
+                      @if (isTimeGroupExpanded(timeGroup.timeLabel)) {
+                        <div class="medication-list">
+                          @for (med of timeGroup.medications; track $index) {
+                            <div class="medication-name" [class.taken]="med.status === 'taken'" [class.missed]="med.status === 'missed'">
+                              {{ med.name }}
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+                
+                <!-- Mobile: Carousel View -->
+                <div class="mobile-time-carousel"
+                     (touchstart)="onTouchStart($event)"
+                     (touchend)="onTouchEnd($event)">
+                  @if (groupedMedications[currentTimeIndex]; as currentGroup) {
+                    <div class="time-slide">
+                      <div class="time-group-mobile" 
+                           [class.all-taken]="currentGroup.allTaken" 
+                           [class.has-missed]="!currentGroup.allTaken">
+                        <div class="time-group-header-mobile">
+                          <i class="fa-solid fa-clock"></i>
+                          <span>{{ currentGroup.timeLabel }}</span>
+                        </div>
+                        <div class="medication-list-mobile">
+                          @for (med of currentGroup.medications; track $index) {
+                            <div class="medication-name" [class.taken]="med.status === 'taken'" [class.missed]="med.status === 'missed'">
+                              {{ med.name }}
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+                
+                <!-- Carousel Dots Navigation (at bottom of calendar) -->
+                @if (groupedMedications.length > 1) {
+                  <div class="carousel-dots">
+                    @for (group of groupedMedications; track $index) {
+                      <button class="dot" 
+                              [class.active]="$index === currentTimeIndex"
+                              [class.has-missed]="!group.allTaken"
+                              (click)="goToTimeGroup($index)"
+                              [attr.aria-label]="'Zu ' + group.timeLabel + ' wechseln'">
+                      </button>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="income-quote">
+        <h3>Einnahme quote {{ currentMonth }}</h3>
+
+        @if (checkedPercentage === 0 && missedPercentage === 0 && emptyPercentage === 0) {
+          <div class="no-data-message">
+            <p>Keine Daten vorhanden</p>
+          </div>
+        } @else {
+          <div class="progress-bar">
+            <div class="progress-segment checked" [style.width.%]="checkedPercentage"></div>
+            <div class="progress-segment partial" [style.width.%]="partialPercentage"></div>
+            <div class="progress-segment missed" [style.width.%]="missedPercentage"></div>
+            <div class="progress-segment empty" [style.width.%]="emptyPercentage"></div>
+          </div>
+          <p></p>
+          <div class="status-labels">
+            <span class="status-label">
+              <span class="status-dot checked"></span> Eingenommen: {{ checkedPercentage }}%
+            </span>
+            <!--<span class="status-label">
+              <span class="status-dot partial"></span> Teilweise: {{ partialPercentage }}%
+            </span> -->
+            <span class="status-label">
+              <span class="status-dot missed"></span> Verpasst: {{ missedPercentage }}%
+            </span>
+            <span class="status-label">
+              <span class="status-dot empty"></span> Keine Daten: {{ emptyPercentage }}%
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Medikamentenplan - Desktop Version (alle Tage) -->
+    <section class="medication-card desktop-medication" [class.flipped]="showPlanSelection">
+      <div class="medication-inner">
+        <!-- Front: Medikamentenplan -->
+        <div class="medication-front">
+          <h2>{{ selectedPlanName }}</h2>
+          <div class="table-scroll-container">
+            <table class="medication-table">
+              <thead>
+                <tr>
+                  <th class="time-label"></th>
+                  <th>Morgen</th>
+                  <th>Mittag</th>
+                  <th>Nachmittag</th>
+                  <th>Abend</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of medicationRows; track $index) {
+                  <tr>
+                    <td class="time-label">{{ row.dayLabel }}</td>
+                    @for (cell of row.times; track $index) {
+                      <td>{{ cell }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <div class="action-buttons">
+            <button class="btn-primary" (click)="openPlanSelection()">ändern</button>
+            <button class="btn-secondary" (click)="exportMedicationPlan()">exportieren</button>
+          </div>
+        </div>
+        
+        <!-- Back: Plan-Auswahl -->
+        <div class="medication-back">
+          <div class="plan-selection-header">
+            <h2>Medikamentenplan wählen</h2>
+            <button class="btn-close" (click)="closePlanSelection()">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          
+          <div class="plan-selection-content">
+            @for (plan of availablePlans; track plan.id) {
+              <div class="plan-option" 
+                   [class.selected]="plan.id === selectedPlanId"
+                   (click)="selectPlan(plan.id)">
+                <div class="plan-icon">
+                  <i class="fa-solid fa-pills"></i>
+                </div>
+                <div class="plan-info">
+                  <h3>{{ plan.name }}</h3>
+                  <p>{{ plan.patientName }}</p>
+                </div>
+                @if (plan.id === selectedPlanId) {
+                  <i class="fa-solid fa-check plan-check"></i>
+                }
+              </div>
+            }
+            
+            <!-- Neuen Plan erstellen -->
+            <div class="plan-option plan-create" (click)="openCreateWizard()">
+              <div class="plan-icon plan-icon-create">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              <div class="plan-info">
+                <h3>Neuen Medikamentenplan erstellen</h3>
+                <p>Schritt-für-Schritt Assistent</p>
+              </div>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Medikamentenplan - Mobile Version (nur aktueller Tag) -->
+    <section class="medication-card mobile-medication" [class.flipped]="showPlanSelection">
+      <div class="medication-inner">
+        <!-- Front: Medikamentenplan -->
+        <div class="medication-front">
+          <h2>{{ selectedPlanName }} - {{ currentDayName }}</h2>
+          <table class="medication-table">
+            <thead>
+              <tr>
+                <th class="time-label">Uhrzeit</th>
+                <th>Medikament</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (time of ['Morgen', 'Mittag', 'Nachmittag', 'Abend']; track $index) {
+                <tr>
+                  <td class="time-label">{{ time }}</td>
+                  <td>{{ (medicationRows[currentDayIndex].times || [])[$index] || '-' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          <div class="action-buttons">
+            <button class="btn-primary" (click)="navigateToEditor()">✏️ Plan bearbeiten</button>
+            <button class="btn-secondary" (click)="exportMedicationPlan()">📄 exportieren</button>
+          </div>
+        </div>
+        
+        <!-- Back: Plan-Auswahl -->
+        <div class="medication-back">
+          <div class="plan-selection-header">
+            <h2>Plan wählen</h2>
+            <button class="btn-close" (click)="closePlanSelection()">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          
+          <div class="plan-selection-content">
+            @for (plan of availablePlans; track plan.id) {
+              <div class="plan-option" 
+                   [class.selected]="plan.id === selectedPlanId"
+                   (click)="selectPlan(plan.id)">
+                <div class="plan-icon">
+                  <i class="fa-solid fa-pills"></i>
+                </div>
+                <div class="plan-info">
+                  <h3>{{ plan.name }}</h3>
+                  <p>{{ plan.patientName }}</p>
+                </div>
+                @if (plan.id === selectedPlanId) {
+                  <i class="fa-solid fa-check plan-check"></i>
+                }
+              </div>
+            }
+            
+            <!-- Neuen Plan erstellen -->
+            <div class="plan-option plan-create" (click)="openCreateWizard()">
+              <div class="plan-icon plan-icon-create">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              <div class="plan-info">
+                <h3>Neuen Medikamentenplan erstellen</h3>
+                <p>Schritt-für-Schritt Assistent</p>
+              </div>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- Create Plan Wizard Modal -->
+@if (showCreateWizard) {
+  <div class="wizard-overlay" (click)="closeCreateWizard()">
+    <div class="wizard-container" (click)="$event.stopPropagation()">
+      <div class="wizard-header">
+        <h2>Neuer Medikamentenplan</h2>
+        <button class="btn-close" (click)="closeCreateWizard()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      
+      <!-- Progress Stepper -->
+      <div class="wizard-stepper">
+        @for (step of wizardSteps; track $index) {
+          <div class="step" 
+               [class.active]="currentWizardStep === $index"
+               [class.completed]="currentWizardStep > $index">
+            <div class="step-number">
+              @if (currentWizardStep > $index) {
+                <i class="fa-solid fa-check"></i>
+              } @else {
+                {{ $index + 1 }}
+              }
+            </div>
+            <span class="step-label">{{ step }}</span>
+          </div>
+        }
+      </div>
+      
+      <!-- Wizard Content -->
+      <div class="wizard-content">
+        @switch (currentWizardStep) {
+          @case (0) {
+            <!-- Montag -->
+            <div class="wizard-step">
+              @let dayIndex = 0;
+              <h3>Montag</h3>
+              <p class="step-description">Fügen Sie Medikamente für die verschiedenen Tageszeiten hinzu</p>
+              
+              @for (timeOfDay of timesOfDay; track timeOfDay) {
+                <div class="time-slot-section">
+                  <h4>
+                    @switch (timeOfDay) {
+                      @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
+                      @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
+                      @case ('AFTERNOON') { <i class="fa-solid fa-cloud"></i> Nachmittag }
+                      @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                    }
+                  </h4>
+                  
+                  <!-- Liste der Medikamente für diese Tageszeit -->
+                  @let medications = getMedicationsForTimeSlot(dayIndex, timeOfDay);
+                  @if (medications.length > 0) {
+                    <div class="medication-time-list">
+                      @for (med of medications; track $index) {
+                        <div class="medication-item">
+                          <div class="med-info">
+                            <strong>{{ med.name }}</strong>
+                            <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                          </div>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <!-- Formular zum Hinzufügen -->
+                  <div class="add-medication-inline">
+                    <select [(ngModel)]="currentMedications[timeOfDay].medicationId" 
+                            (change)="onMedicationSelect(timeOfDay)"
+                            class="form-control-inline">
+                      <option [ngValue]="null">-- Medikament wählen --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                    
+                    <input type="text" [(ngModel)]="currentMedications[timeOfDay].name" 
+                           class="form-control-inline" placeholder="Oder neu eingeben"
+                           [disabled]="currentMedications[timeOfDay].medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <input type="number" [(ngModel)]="currentMedications[timeOfDay].dosage" 
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <select [(ngModel)]="currentMedications[timeOfDay].dosageUnit" class="form-control-inline unit-select">
+                      <option value="Tablette(n)">Tablette(n)</option>
+                      <option value="Kapsel(n)">Kapsel(n)</option>
+                      <option value="ml">ml</option>
+                      <option value="Tropfen">Tropfen</option>
+                    </select>
+                    
+                    <button class="btn-add-inline" (click)="addMedicationToTimeSlot(dayIndex, timeOfDay)"
+                            [disabled]="(!currentMedications[timeOfDay].medicationId && !currentMedications[timeOfDay].name.trim()) || currentMedications[timeOfDay].dosage <= 0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (1) {
+            <!-- Dienstag -->
+            <div class="wizard-step">
+              @let dayIndex = 1;
+              <h3>Dienstag</h3>
+              <p class="step-description">Fügen Sie Medikamente für die verschiedenen Tageszeiten hinzu</p>
+              
+              @for (timeOfDay of timesOfDay; track timeOfDay) {
+                <div class="time-slot-section">
+                  <h4>
+                    @switch (timeOfDay) {
+                      @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
+                      @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
+                      @case ('AFTERNOON') { <i class="fa-solid fa-cloud"></i> Nachmittag }
+                      @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                    }
+                  </h4>
+                  
+                  @let medications = getMedicationsForTimeSlot(dayIndex, timeOfDay);
+                  @if (medications.length > 0) {
+                    <div class="medication-time-list">
+                      @for (med of medications; track $index) {
+                        <div class="medication-item">
+                          <div class="med-info">
+                            <strong>{{ med.name }}</strong>
+                            <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                          </div>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <div class="add-medication-inline">
+                    <select [(ngModel)]="currentMedications[timeOfDay].medicationId" 
+                            (change)="onMedicationSelect(timeOfDay)"
+                            class="form-control-inline">
+                      <option [ngValue]="null">-- Medikament wählen --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                    
+                    <input type="text" [(ngModel)]="currentMedications[timeOfDay].name" 
+                           class="form-control-inline" placeholder="Oder neu eingeben"
+                           [disabled]="currentMedications[timeOfDay].medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <input type="number" [(ngModel)]="currentMedications[timeOfDay].dosage" 
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <select [(ngModel)]="currentMedications[timeOfDay].dosageUnit" class="form-control-inline unit-select">
+                      <option value="Tablette(n)">Tablette(n)</option>
+                      <option value="Kapsel(n)">Kapsel(n)</option>
+                      <option value="ml">ml</option>
+                      <option value="Tropfen">Tropfen</option>
+                    </select>
+                    
+                    <button class="btn-add-inline" (click)="addMedicationToTimeSlot(dayIndex, timeOfDay)"
+                            [disabled]="(!currentMedications[timeOfDay].medicationId && !currentMedications[timeOfDay].name.trim()) || currentMedications[timeOfDay].dosage <= 0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (2) {
+            <!-- Mittwoch -->
+            <div class="wizard-step">
+              @let dayIndex = 2;
+              <h3>Mittwoch</h3>
+              <p class="step-description">Fügen Sie Medikamente für die verschiedenen Tageszeiten hinzu</p>
+              
+              @for (timeOfDay of timesOfDay; track timeOfDay) {
+                <div class="time-slot-section">
+                  <h4>
+                    @switch (timeOfDay) {
+                      @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
+                      @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
+                      @case ('AFTERNOON') { <i class="fa-solid fa-cloud"></i> Nachmittag }
+                      @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                    }
+                  </h4>
+                  
+                  @let medications = getMedicationsForTimeSlot(dayIndex, timeOfDay);
+                  @if (medications.length > 0) {
+                    <div class="medication-time-list">
+                      @for (med of medications; track $index) {
+                        <div class="medication-item">
+                          <div class="med-info">
+                            <strong>{{ med.name }}</strong>
+                            <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                          </div>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <div class="add-medication-inline">
+                    <select [(ngModel)]="currentMedications[timeOfDay].medicationId" 
+                            (change)="onMedicationSelect(timeOfDay)"
+                            class="form-control-inline">
+                      <option [ngValue]="null">-- Medikament wählen --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                    
+                    <input type="text" [(ngModel)]="currentMedications[timeOfDay].name" 
+                           class="form-control-inline" placeholder="Oder neu eingeben"
+                           [disabled]="currentMedications[timeOfDay].medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <input type="number" [(ngModel)]="currentMedications[timeOfDay].dosage" 
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <select [(ngModel)]="currentMedications[timeOfDay].dosageUnit" class="form-control-inline unit-select">
+                      <option value="Tablette(n)">Tablette(n)</option>
+                      <option value="Kapsel(n)">Kapsel(n)</option>
+                      <option value="ml">ml</option>
+                      <option value="Tropfen">Tropfen</option>
+                    </select>
+                    
+                    <button class="btn-add-inline" (click)="addMedicationToTimeSlot(dayIndex, timeOfDay)"
+                            [disabled]="(!currentMedications[timeOfDay].medicationId && !currentMedications[timeOfDay].name.trim()) || currentMedications[timeOfDay].dosage <= 0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (3) {
+            <!-- Donnerstag -->
+            <div class="wizard-step">
+              @let dayIndex = 3;
+              <h3>Donnerstag</h3>
+              <p class="step-description">Fügen Sie Medikamente für die verschiedenen Tageszeiten hinzu</p>
+              
+              @for (timeOfDay of timesOfDay; track timeOfDay) {
+                <div class="time-slot-section">
+                  <h4>
+                    @switch (timeOfDay) {
+                      @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
+                      @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
+                      @case ('AFTERNOON') { <i class="fa-solid fa-cloud"></i> Nachmittag }
+                      @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                    }
+                  </h4>
+                  
+                  @let medications = getMedicationsForTimeSlot(dayIndex, timeOfDay);
+                  @if (medications.length > 0) {
+                    <div class="medication-time-list">
+                      @for (med of medications; track $index) {
+                        <div class="medication-item">
+                          <div class="med-info">
+                            <strong>{{ med.name }}</strong>
+                            <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                          </div>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <div class="add-medication-inline">
+                    <select [(ngModel)]="currentMedications[timeOfDay].medicationId" 
+                            (change)="onMedicationSelect(timeOfDay)"
+                            class="form-control-inline">
+                      <option [ngValue]="null">-- Medikament wählen --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                    
+                    <input type="text" [(ngModel)]="currentMedications[timeOfDay].name" 
+                           class="form-control-inline" placeholder="Oder neu eingeben"
+                           [disabled]="currentMedications[timeOfDay].medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <input type="number" [(ngModel)]="currentMedications[timeOfDay].dosage" 
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <select [(ngModel)]="currentMedications[timeOfDay].dosageUnit" class="form-control-inline unit-select">
+                      <option value="Tablette(n)">Tablette(n)</option>
+                      <option value="Kapsel(n)">Kapsel(n)</option>
+                      <option value="ml">ml</option>
+                      <option value="Tropfen">Tropfen</option>
+                    </select>
+                    
+                    <button class="btn-add-inline" (click)="addMedicationToTimeSlot(dayIndex, timeOfDay)"
+                            [disabled]="(!currentMedications[timeOfDay].medicationId && !currentMedications[timeOfDay].name.trim()) || currentMedications[timeOfDay].dosage <= 0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (4) {
+            <!-- Freitag -->
+            <div class="wizard-step">
+              @let dayIndex = 4;
+              <h3>Freitag</h3>
+              <p class="step-description">Fügen Sie Medikamente für die verschiedenen Tageszeiten hinzu</p>
+              
+              @for (timeOfDay of timesOfDay; track timeOfDay) {
+                <div class="time-slot-section">
+                  <h4>
+                    @switch (timeOfDay) {
+                      @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
+                      @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
+                      @case ('AFTERNOON') { <i class="fa-solid fa-cloud"></i> Nachmittag }
+                      @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                    }
+                  </h4>
+                  
+                  @let medications = getMedicationsForTimeSlot(dayIndex, timeOfDay);
+                  @if (medications.length > 0) {
+                    <div class="medication-time-list">
+                      @for (med of medications; track $index) {
+                        <div class="medication-item">
+                          <div class="med-info">
+                            <strong>{{ med.name }}</strong>
+                            <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                          </div>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <div class="add-medication-inline">
+                    <select [(ngModel)]="currentMedications[timeOfDay].medicationId" 
+                            (change)="onMedicationSelect(timeOfDay)"
+                            class="form-control-inline">
+                      <option [ngValue]="null">-- Medikament wählen --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                    
+                    <input type="text" [(ngModel)]="currentMedications[timeOfDay].name" 
+                           class="form-control-inline" placeholder="Oder neu eingeben"
+                           [disabled]="currentMedications[timeOfDay].medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <input type="number" [(ngModel)]="currentMedications[timeOfDay].dosage" 
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <select [(ngModel)]="currentMedications[timeOfDay].dosageUnit" class="form-control-inline unit-select">
+                      <option value="Tablette(n)">Tablette(n)</option>
+                      <option value="Kapsel(n)">Kapsel(n)</option>
+                      <option value="ml">ml</option>
+                      <option value="Tropfen">Tropfen</option>
+                    </select>
+                    
+                    <button class="btn-add-inline" (click)="addMedicationToTimeSlot(dayIndex, timeOfDay)"
+                            [disabled]="(!currentMedications[timeOfDay].medicationId && !currentMedications[timeOfDay].name.trim()) || currentMedications[timeOfDay].dosage <= 0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (5) {
+            <!-- Samstag -->
+            <div class="wizard-step">
+              @let dayIndex = 5;
+              <h3>Samstag</h3>
+              <p class="step-description">Fügen Sie Medikamente für die verschiedenen Tageszeiten hinzu</p>
+              
+              @for (timeOfDay of timesOfDay; track timeOfDay) {
+                <div class="time-slot-section">
+                  <h4>
+                    @switch (timeOfDay) {
+                      @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
+                      @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
+                      @case ('AFTERNOON') { <i class="fa-solid fa-cloud"></i> Nachmittag }
+                      @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                    }
+                  </h4>
+                  
+                  @let medications = getMedicationsForTimeSlot(dayIndex, timeOfDay);
+                  @if (medications.length > 0) {
+                    <div class="medication-time-list">
+                      @for (med of medications; track $index) {
+                        <div class="medication-item">
+                          <div class="med-info">
+                            <strong>{{ med.name }}</strong>
+                            <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                          </div>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <div class="add-medication-inline">
+                    <select [(ngModel)]="currentMedications[timeOfDay].medicationId" 
+                            (change)="onMedicationSelect(timeOfDay)"
+                            class="form-control-inline">
+                      <option [ngValue]="null">-- Medikament wählen --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                    
+                    <input type="text" [(ngModel)]="currentMedications[timeOfDay].name" 
+                           class="form-control-inline" placeholder="Oder neu eingeben"
+                           [disabled]="currentMedications[timeOfDay].medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <input type="number" [(ngModel)]="currentMedications[timeOfDay].dosage" 
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <select [(ngModel)]="currentMedications[timeOfDay].dosageUnit" class="form-control-inline unit-select">
+                      <option value="Tablette(n)">Tablette(n)</option>
+                      <option value="Kapsel(n)">Kapsel(n)</option>
+                      <option value="ml">ml</option>
+                      <option value="Tropfen">Tropfen</option>
+                    </select>
+                    
+                    <button class="btn-add-inline" (click)="addMedicationToTimeSlot(dayIndex, timeOfDay)"
+                            [disabled]="(!currentMedications[timeOfDay].medicationId && !currentMedications[timeOfDay].name.trim()) || currentMedications[timeOfDay].dosage <= 0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (6) {
+            <!-- Sonntag -->
+            <div class="wizard-step">
+              @let dayIndex = 6;
+              <h3>Sonntag</h3>
+              <p class="step-description">Fügen Sie Medikamente für die verschiedenen Tageszeiten hinzu</p>
+              
+              @for (timeOfDay of timesOfDay; track timeOfDay) {
+                <div class="time-slot-section">
+                  <h4>
+                    @switch (timeOfDay) {
+                      @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
+                      @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
+                      @case ('AFTERNOON') { <i class="fa-solid fa-cloud"></i> Nachmittag }
+                      @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                    }
+                  </h4>
+                  
+                  @let medications = getMedicationsForTimeSlot(dayIndex, timeOfDay);
+                  @if (medications.length > 0) {
+                    <div class="medication-time-list">
+                      @for (med of medications; track $index) {
+                        <div class="medication-item">
+                          <div class="med-info">
+                            <strong>{{ med.name }}</strong>
+                            <span>{{ med.dosage }} {{ med.dosageUnit }}</span>
+                          </div>
+                          <div class="med-actions">
+                            <button class="btn-repeat" 
+                                    (click)="repeatMedicationForOtherDays(dayIndex, timeOfDay, $index)"
+                                    title="Für andere Tage übernehmen">
+                              <i class="fa-solid fa-copy"></i>
+                            </button>
+                            <button class="btn-remove" (click)="removeMedicationFromTimeSlot(dayIndex, timeOfDay, $index)">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <div class="add-medication-inline">
+                    <select [(ngModel)]="currentMedications[timeOfDay].medicationId" 
+                            (change)="onMedicationSelect(timeOfDay)"
+                            class="form-control-inline">
+                      <option [ngValue]="null">-- Medikament wählen --</option>
+                      @for (med of availableMedications; track med.id) {
+                        <option [ngValue]="med.id">{{ med.name }}</option>
+                      }
+                    </select>
+                    
+                    <input type="text" [(ngModel)]="currentMedications[timeOfDay].name" 
+                           class="form-control-inline" placeholder="Oder neu eingeben"
+                           [disabled]="currentMedications[timeOfDay].medicationId !== null"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <input type="number" [(ngModel)]="currentMedications[timeOfDay].dosage" 
+                           class="form-control-inline dosage-input" placeholder="1" min="1"
+                           (keyup.enter)="addMedicationToTimeSlot(dayIndex, timeOfDay)">
+                    
+                    <select [(ngModel)]="currentMedications[timeOfDay].dosageUnit" class="form-control-inline unit-select">
+                      <option value="Tablette(n)">Tablette(n)</option>
+                      <option value="Kapsel(n)">Kapsel(n)</option>
+                      <option value="ml">ml</option>
+                      <option value="Tropfen">Tropfen</option>
+                    </select>
+                    
+                    <button class="btn-add-inline" (click)="addMedicationToTimeSlot(dayIndex, timeOfDay)"
+                            [disabled]="(!currentMedications[timeOfDay].medicationId && !currentMedications[timeOfDay].name.trim()) || currentMedications[timeOfDay].dosage <= 0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @case (7) {
+            <!-- Schritt 8: Zusammenfassung -->
+            <div class="wizard-step">
+              <h3>Zusammenfassung</h3>
+              <p class="step-description">Überprüfen Sie Ihren Wochenplan</p>
+              
+              <div class="summary-card">
+                <div class="summary-row">
+                  <strong>Patient:</strong>
+                  <span>{{ userName }}</span>
+                </div>
+                <div class="summary-schedule">
+                  <pre style="white-space: pre-wrap; font-family: inherit;">{{ getScheduleSummary() }}</pre>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+      
+      <!-- Wizard Footer -->
+      <div class="wizard-footer">
+        <button class="btn-secondary" 
+                (click)="previousWizardStep()"
+                [disabled]="currentWizardStep === 0">
+          <i class="fa-solid fa-arrow-left"></i> Zurück
+        </button>
+        
+        @if (currentWizardStep < wizardSteps.length - 1) {
+          <button class="btn-primary" 
+                  (click)="nextWizardStep()"
+                  [disabled]="!isCurrentStepValid()">
+            Weiter <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        } @else {
+          <button class="btn-primary" 
+                  (click)="createMedicationPlan()"
+                  [disabled]="!isCurrentStepValid()">
+            <i class="fa-solid fa-check"></i> Plan erstellen
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
 import { MedicationPlanEditorComponent } from './components/medication-plan-editor/medication-plan-editor.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
-    path: 'medication-plan-editor',
-    component: MedicationPlanEditorComponent
+    path: '',
+    component: DashboardComponent
   },
   {
-    path: '',
-    redirectTo: '/medication-plan-editor',
-    pathMatch: 'full'
+    path: 'medication-plan-editor',
+    component: MedicationPlanEditorComponent
   }
 ];
