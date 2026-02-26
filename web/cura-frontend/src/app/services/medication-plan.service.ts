@@ -369,6 +369,9 @@ export class MedicationPlanService {
   // Create multiple medication plans at once
   createMedicationPlans(plans: Partial<MedicationPlan>[]): Observable<MedicationPlan[]> {
     const requests = plans.map(plan => {
+      const validFromDate = new Date(plan.validFrom!);
+      const validToDate = plan.validTo ? new Date(plan.validTo) : new Date(2099, 11, 31);
+      
       const payload = {
         PatientId: plan.patientId,
         MedicationId: plan.medicationId,
@@ -376,11 +379,13 @@ export class MedicationPlanService {
         WeekdayFlags: plan.weekdayFlags,
         DayTimeFlags: plan.dayTimeFlags,
         Quantity: plan.quantity,
-        ValidFrom: plan.validFrom,
-        ValidTo: plan.validTo || new Date(2099, 11, 31).toISOString(),
+        ValidFrom: validFromDate.toISOString(),
+        ValidTo: validToDate.toISOString(),
         Notes: plan.notes || '',
-        IsActive: plan.isActive !== false
+        IsActive: true
       };
+      
+      console.log('📤 POST Payload:', payload);
       return this.http.post<MedicationPlan>(`${this.API_URL}/MedicationPlans`, payload);
     });
 
