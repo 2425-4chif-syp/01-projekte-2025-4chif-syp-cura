@@ -26,13 +26,9 @@ wifi:
     password: "cura12345"
 
 # Enable Home Assistant API (optional)
-api:
-  encryption:
-    key: !secret api_encryption_key
 
-# OTA updates
-ota:
-  password: !secret ota_password
+
+
 
 # Web Server (optional - für Debugging)
 web_server:
@@ -158,10 +154,7 @@ binary_sensor:
     internal: true
 
 # Optional: Buzzer für Benachrichtigungen
-output:
-  - platform: ledc
-    pin: GPIO26
-    id: buzzer_output
+
 
 # Optional: LED für visuelle Benachrichtigung
 light:
@@ -198,22 +191,3 @@ script:
       # - output.turn_off: buzzer_output
 
 # Button zum Bestätigen/Stummschalten der Benachrichtigung
-binary_sensor:
-  - platform: gpio
-    pin:
-      number: GPIO4
-      mode:
-        input: true
-        pullup: true
-    name: "Acknowledge Button"
-    id: ack_button
-    on_press:
-      then:
-        - logger.log: "Benachrichtigung bestätigt"
-        - mqtt.publish:
-            topic: display/acknowledged
-            payload: "true"
-        - text_sensor.template.publish:
-            id: display_message
-            state: ""
-        - light.turn_off: notification_led

@@ -5,9 +5,9 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/atem
-ExecStart=/home/pi/atem/venv/bin/python3 /home/pi/atem/atem_medication_daemon.py
+User=raspi
+WorkingDirectory=/home/raspi/atem
+ExecStart=/home/raspi/atem/venv/bin/python3 /home/raspi/atem/atem_medication_daemon.py
 Restart=always
 RestartSec=10
 StandardOutput=journal

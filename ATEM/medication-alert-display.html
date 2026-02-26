@@ -259,7 +259,6 @@
 
             if (!data.shouldAlert) {
                 app.innerHTML = `
-                    <div class="alert-icon">✅</div>
                     <h1>Alles in Ordnung</h1>
                     <div class="no-alert">Keine Medikamente fällig</div>
                     <div class="time-slot">${getTimeSlotLabel(data.timeSlot)}</div>
@@ -272,7 +271,6 @@
             const plural = medications.length > 1;
             
             let html = `
-                <div class="alert-icon urgent">💊</div>
                 <h1>Bitte nehmen Sie ${plural ? 'folgende Medikamente' : 'folgendes Medikament'} ein</h1>
                 <div class="medications-list">
             `;

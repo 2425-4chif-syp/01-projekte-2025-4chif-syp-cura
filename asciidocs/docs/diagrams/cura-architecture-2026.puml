@@ -1,0 +1,85 @@
+@startuml CURA Medication System Architecture
+!theme plain
+
+skinparam componentStyle rectangle
+skinparam component {
+  BackgroundColor<<web>> #3498DB
+  BackgroundColor<<backend>> #2ECC71
+  BackgroundColor<<auth>> #E67E22
+  BackgroundColor<<database>> #9B59B6
+  BackgroundColor<<control>> #E74C3C
+  BackgroundColor<<sensor>> #1ABC9C
+  BackgroundColor<<video>> #F39C12
+  BackgroundColor<<output>> #34495E
+  BorderColor #2C3E50
+  FontColor #FFFFFF
+}
+
+skinparam package {
+  BackgroundColor<<server>> #ECF0F1
+  BackgroundColor<<device>> #D5DBDB
+  BorderColor #2C3E50
+}
+
+title CURA Medication System
+
+' ===== SERVER =====
+package "Server VM12" <<server>> {
+  [Nginx] as nginx <<web>>
+  [Angular Frontend] as frontend <<web>>
+  [C# Backend] as backend <<backend>>
+  [Keycloak] as keycloak <<auth>>
+  database PostgreSQL as db <<database>>
+  [pgAdmin] as pgadmin <<database>>
+}
+
+' ===== RASPBERRY PI =====
+package "Raspberry Pi" <<device>> {
+  [Alert Display] as display_raspi <<control>>
+  [ATEM Control] as atem_control <<control>>
+}
+
+' ===== ESP32 =====
+package "ESP32" <<device>> {
+  [RFID Scanner] as rfid <<sensor>>
+  [e-Paper Display] as epaper <<output>>
+  [Buzzer] as buzzer <<output>>
+}
+
+' ===== HARDWARE =====
+[ATEM Mini] as atem <<video>>
+[TV/Monitor] as tv <<output>>
+[TV Signal] as tv_signal <<video>>
+[Alert Screen] as alert_screen <<output>>
+[Medikamentenschachtel] as medbox <<sensor>>
+[RFID Tag] as tag <<sensor>>
+
+' ===== SERVER INTERNAL =====
+nginx --> frontend
+nginx --> keycloak
+frontend --> backend
+frontend --> keycloak
+backend --> db
+backend --> keycloak
+pgadmin --> db
+
+' ===== SERVER TO DEVICES =====
+backend --> display_raspi
+backend --> atem_control
+backend --> epaper
+rfid --> backend
+
+' ===== RASPBERRY PI =====
+display_raspi --> alert_screen
+atem_control --> atem
+
+' ===== VIDEO SWITCHING =====
+tv_signal --> atem
+alert_screen --> atem
+atem --> tv
+
+' ===== RFID HARDWARE =====
+tag --> medbox
+medbox --> rfid
+
+@enduml
