@@ -122,9 +122,26 @@ export class MedicationPlanEditorComponent implements OnInit {
   }
 
   populatePlanFromBackend(plans: MedicationPlan[]) {
+    // Zuerst alle Slots leeren
+    this.weekdayPlans.forEach(dayPlan => {
+      dayPlan.timeSlots.forEach(slot => {
+        slot.medications = [];
+      });
+    });
+
+    // Gruppiere Pläne nach Medikament + Tageszeit + Menge
+    const processedKeys = new Set<string>();
+
     plans.forEach(plan => {
       const medication = this.availableMedications.find(m => m.id === plan.medicationId);
       if (!medication) return;
+
+      // Eindeutiger Key für dieses Medikament + Tageszeit + Menge
+      const key = `${plan.medicationId}_${plan.dayTimeFlags}_${plan.quantity}`;
+      
+      // Überspringe wenn schon verarbeitet (verhindert Duplikate)
+      if (processedKeys.has(key)) return;
+      processedKeys.add(key);
 
       const medItem: MedicationItem = {
         id: medication.id,
@@ -151,6 +168,8 @@ export class MedicationPlanEditorComponent implements OnInit {
         });
       });
     });
+    
+    console.log('📥 Pläne geladen. Verarbeitete Keys:', processedKeys.size);
   }
 
   drop(event: CdkDragDrop<any>) {
