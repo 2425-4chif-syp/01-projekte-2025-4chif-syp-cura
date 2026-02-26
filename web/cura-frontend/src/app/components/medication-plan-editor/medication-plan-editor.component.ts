@@ -187,47 +187,97 @@ export class MedicationPlanEditorComponent implements OnInit {
   }
 
   savePlan() {
-    const plans: Partial<MedicationPlan>[] = [];
+    console.log('💾 Speichere Medikamentenplan...');
+
+    // Schritt 1: Sammle alle Medikamente und gruppiere nach Medikament + Tageszeit
+    const medicationMap = new Map<string, {
+      medicationId: number;
+      medicationName: string;
+      dayTimeFlags: number;
+      weekdayFlags: number;
+      quantity: number;
+      isNew: boolean;
+    }>();
 
     this.weekdayPlans.forEach(dayPlan => {
       dayPlan.timeSlots.forEach(slot => {
         slot.medications.forEach(med => {
-          // Suche ob Plan bereits existiert
-          let existingPlan = plans.find(p => 
-            p.medicationId === med.id && 
-            (p.dayTimeFlags! & slot.flag) !== 0
-          );
-
-          if (existingPlan) {
+          const key = `${med.id}_${slot.flag}`;
+          
+          if (medicationMap.has(key)) {
             // Füge Wochentag hinzu
-            existingPlan.weekdayFlags! |= dayPlan.flag;
+            const entry = medicationMap.get(key)!;
+            entry.weekdayFlags |= dayPlan.flag;
           } else {
-            // Erstelle neuen Plan
-            plans.push({
-              patientId: this.patientId,
-              medicationId: med.id > 0 ? med.id : undefined,
-              caregiverId: 0,
-              weekdayFlags: dayPlan.flag,
+            // Neuer Eintrag
+            medicationMap.set(key, {
+              medicationId: med.id,
+              medicationName: med.name,
               dayTimeFlags: slot.flag,
+              weekdayFlags: dayPlan.flag,
               quantity: med.quantity,
-              validFrom: new Date().toISOString(),
-              validTo: '',
-              notes: med.isNew ? `Neu: ${med.name}` : '',
-              isActive: true
+              isNew: med.id < 0
             });
           }
         });
       });
     });
 
-    console.log('Speichere Pläne:', plans);
-
-    // TODO: API Call zum Speichern
-    // 1. Neue Medikamente erstellen (mit negativer ID)
-    // 2. Alte Pläne löschen
-    // 3. Neue Pläne erstellen
+    const plans = Array.from(medicationMap.values());
     
-    alert(`${plans.length} Medikamentenpläne wurden erstellt!`);
+    if (plans.length === 0) {
+      alert('⚠️ Bitte fügen Sie mindestens ein Medikament hinzu!');
+      return;
+    }
+
+    console.log('📋 Zu speichernde Pläne:', plans);
+
+    // Schritt 2: Erstelle neue Medikamente falls vorhanden
+    const newMeds = plans.filter(p => p.isNew);
+    if (newMeds.length > 0) {
+      console.log('🆕 Erstelle neue Medikamente:', newMeds.map(m => m.medicationName));
+      // TODO: API Call für neue Medikamente
+    }
+
+    // Schritt 3: Lösche alte Pläne für diesen Patienten
+    console.log('🗑️ Lösche alte Medikamentenpläne für Patient', this.patientId);
+    this.medicationPlanService.deleteAllPlansForPatient(this.patientId).subscribe({
+      next: () => {
+        console.log('✅ Alte Pläne gelöscht');
+        
+        // Schritt 4: Erstelle neue Pläne
+        const plansToCreate: Partial<MedicationPlan>[] = plans.map(p => ({
+          patientId: this.patientId,
+          medicationId: p.medicationId > 0 ? p.medicationId : undefined,
+          caregiverId: 1, // Default Caregiver
+          weekdayFlags: p.weekdayFlags,
+          dayTimeFlags: p.dayTimeFlags,
+          quantity: p.quantity,
+          validFrom: new Date().toISOString(),
+          validTo: new Date(2099, 11, 31).toISOString(),
+          notes: p.isNew ? `Neues Medikament: ${p.medicationName}` : '',
+          isActive: true
+        }));
+
+        console.log('💾 Erstelle neue Pläne:', plansToCreate);
+        
+        this.medicationPlanService.createMedicationPlans(plansToCreate).subscribe({
+          next: (created) => {
+            console.log('✅ Pläne erfolgreich gespeichert:', created);
+            alert(`✅ Medikamentenplan gespeichert!\n${plans.length} Einträge wurden erstellt.`);
+            this.goBack();
+          },
+          error: (err) => {
+            console.error('❌ Fehler beim Erstellen der Pläne:', err);
+            alert('❌ Fehler beim Speichern des Plans!\nBitte versuchen Sie es erneut.');
+          }
+        });
+      },
+      error: (err) => {
+        console.error('❌ Fehler beim Löschen alter Pläne:', err);
+        alert('❌ Fehler beim Löschen alter Pläne!\nBitte versuchen Sie es erneut.');
+      }
+    });
   }
 
   copyDayPlan(fromDay: WeekdayPlan) {

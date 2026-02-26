@@ -310,5 +310,31 @@ export class MedicationPlanService {
       switchMap(planRequests => planRequests.length > 0 ? forkJoin(planRequests) : of([]))
     );
   }
+
+  // Delete all medication plans for a patient
+  deleteAllPlansForPatient(patientId: number): Observable<any> {
+    return this.http.delete(`${this.API_URL}/MedicationPlans/patient/${patientId}`);
+  }
+
+  // Create multiple medication plans at once
+  createMedicationPlans(plans: Partial<MedicationPlan>[]): Observable<MedicationPlan[]> {
+    const requests = plans.map(plan => {
+      const payload = {
+        PatientId: plan.patientId,
+        MedicationId: plan.medicationId,
+        CaregiverId: plan.caregiverId || 1,
+        WeekdayFlags: plan.weekdayFlags,
+        DayTimeFlags: plan.dayTimeFlags,
+        Quantity: plan.quantity,
+        ValidFrom: plan.validFrom,
+        ValidTo: plan.validTo || new Date(2099, 11, 31).toISOString(),
+        Notes: plan.notes || '',
+        IsActive: plan.isActive !== false
+      };
+      return this.http.post<MedicationPlan>(`${this.API_URL}/MedicationPlans`, payload);
+    });
+
+    return requests.length > 0 ? forkJoin(requests) : of([]);
+  }
 }
 
