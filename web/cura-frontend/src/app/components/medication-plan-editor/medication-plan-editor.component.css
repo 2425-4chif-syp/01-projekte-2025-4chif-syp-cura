@@ -3,7 +3,7 @@
   max-width: 1800px;
   margin: 0 auto;
   padding: 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f5f7f9;
   min-height: 100vh;
 }
 
@@ -27,10 +27,7 @@
 
 .editor-header h1 {
   margin: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2c5282;
   font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -69,15 +66,15 @@
 
 .date-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #4A90E2;
   background: white;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
   transform: translateY(-1px);
 }
 
 .btn-back {
   padding: 12px 24px;
-  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  background: #718096;
   color: white;
   border: none;
   border-radius: 12px;
@@ -85,20 +82,21 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  box-shadow: 0 4px 12px rgba(113, 128, 150, 0.2);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .btn-back:hover {
+  background: #5a6c7d;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+  box-shadow: 0 6px 20px rgba(113, 128, 150, 0.3);
 }
 
 .btn-save {
   padding: 14px 32px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: #48bb78;
   color: white;
   border: none;
   border-radius: 12px;
@@ -106,16 +104,16 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 16px rgba(72, 187, 120, 0.25);
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
 .btn-save:hover {
+  background: #38a169;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 8px 24px rgba(72, 187, 120, 0.35);
 }
 
 .editor-content {
@@ -149,15 +147,12 @@
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2c5282;
 }
 
 .btn-add {
   padding: 8px 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #4A90E2;
   color: white;
   border: none;
   border-radius: 8px;
@@ -165,12 +160,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
 }
 
 .btn-add:hover {
+  background: #357ABD;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
 .add-medication-form {
@@ -228,8 +224,8 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 2px solid #e1e8ed;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
   border-radius: 12px;
   cursor: grab;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -240,9 +236,9 @@
 }
 
 .medication-item:hover {
-  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  background: #f7fafc;
+  border-color: #4A90E2;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.12);
   transform: translateX(4px);
 }
 
@@ -354,15 +350,15 @@
   gap: 10px;
   padding: 14px;
   background: white;
-  border: 2px solid #e1e8ed;
+  border: 2px solid #e2e8f0;
   border-radius: 10px;
   cursor: grab;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .medication-assignment:hover {
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
-  border-color: #667eea;
+  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.12);
+  border-color: #4A90E2;
   transform: translateY(-2px);
 }
 
@@ -393,19 +389,19 @@
   width: 28px;
   height: 28px;
   padding: 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 2px solid #e1e8ed;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #2d3748;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .quantity-controls button:hover {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
+  background: #4A90E2;
+  border-color: #4A90E2;
   color: white;
   transform: scale(1.1);
 }
@@ -424,20 +420,20 @@
   width: 32px;
   height: 32px;
   padding: 0;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: #e53e3e;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 2px 8px rgba(229, 62, 62, 0.2);
 }
 
 .btn-remove:hover {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  background: #c53030;
   transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
 }
 
 /* CDK Drag Preview */
@@ -513,13 +509,13 @@
 }
 
 .day-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
   color: white;
   padding: 18px;
   border-radius: 12px;
   font-weight: 700;
   font-size: 16px;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -546,14 +542,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: #faf9f7;
   border-radius: 12px;
   padding: 24px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #2d3748;
   font-size: 17px;
-  border: 2px solid #e1e8ed;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .time-label-cell h4 {
@@ -563,7 +559,7 @@
 }
 
 .time-slot-cell {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  background: #ffffff;
   border: 2px dashed #cbd5e0;
   border-radius: 12px;
   padding: 16px;
@@ -572,15 +568,15 @@
 }
 
 .time-slot-cell.cdk-drop-list-dragging {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  border-color: #667eea;
+  background: #ebf4ff;
+  border-color: #4A90E2;
   border-style: solid;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
 }
 
 .time-slot-cell:hover {
-  border-color: #667eea;
-  background: white;
+  border-color: #4A90E2;
+  background: #fafbfc;
 }
 
 .time-slot-cell .drop-zone:empty {
