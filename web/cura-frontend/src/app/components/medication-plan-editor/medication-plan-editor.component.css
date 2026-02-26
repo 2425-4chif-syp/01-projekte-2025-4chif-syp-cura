@@ -30,6 +30,41 @@
   font-size: 28px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.validity-period {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.validity-period label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.date-input {
+  padding: 8px 12px;
+  border: 2px solid #dfe6e9;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
 .btn-back {
   padding: 10px 20px;
   background: #95a5a6;

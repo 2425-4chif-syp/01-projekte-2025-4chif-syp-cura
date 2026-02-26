@@ -41,6 +41,10 @@ export class MedicationPlanEditorComponent implements OnInit {
   showAddMedicationForm: boolean = false;
   patientId: number = 1; // TODO: Get from auth service
   
+  // Plan Gültigkeit
+  validFrom: string = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  validTo: string = ''; // Leer = unbegrenzt
+  
   weekdays = [
     { label: 'Montag', flag: 2 },
     { label: 'Dienstag', flag: 4 },
@@ -96,9 +100,22 @@ export class MedicationPlanEditorComponent implements OnInit {
   }
 
   loadExistingPlan() {
+    const today = new Date().toISOString();
     this.medicationPlanService.getMedicationPlans(this.patientId).subscribe({
       next: (plans) => {
-        this.populatePlanFromBackend(plans);
+        // Nur aktive Pläne, die aktuell gültig sind
+        const activePlans = plans.filter(p => {
+          const validFrom = new Date(p.validFrom);
+          const validTo = p.validTo ? new Date(p.validTo) : null;
+          const now = new Date();
+          
+          return p.isActive && 
+                 validFrom <= now && 
+                 (!validTo || validTo >= now);
+        });
+        
+        console.log('📅 Lade aktive Pläne:', activePlans.length, 'von', plans.length);
+        this.populatePlanFromBackend(activePlans);
       },
       error: (err) => console.error('Fehler beim Laden des Plans:', err)
     });
@@ -187,7 +204,19 @@ export class MedicationPlanEditorComponent implements OnInit {
   }
 
   savePlan() {
-    console.log('💾 Speichere Medikamentenplan...');
+    console.log('💾 Speichere neuen Medikamentenplan...');
+
+    // Validierung: ValidFrom muss gesetzt sein
+    if (!this.validFrom) {
+      alert('⚠️ Bitte geben Sie ein Start-Datum an!');
+      return;
+    }
+
+    // Validierung: ValidTo muss nach ValidFrom liegen
+    if (this.validTo && new Date(this.validTo) < new Date(this.validFrom)) {
+      alert('⚠️ End-Datum muss nach dem Start-Datum liegen!');
+      return;
+    }
 
     // Schritt 1: Sammle alle Medikamente und gruppiere nach Medikament + Tageszeit
     const medicationMap = new Map<string, {
@@ -231,30 +260,29 @@ export class MedicationPlanEditorComponent implements OnInit {
     }
 
     console.log('📋 Zu speichernde Pläne:', plans);
+    console.log('📅 Gültig von:', this.validFrom, 'bis:', this.validTo || 'unbegrenzt');
 
-    // Schritt 2: Erstelle neue Medikamente falls vorhanden
-    const newMeds = plans.filter(p => p.isNew);
-    if (newMeds.length > 0) {
-      console.log('🆕 Erstelle neue Medikamente:', newMeds.map(m => m.medicationName));
-      // TODO: API Call für neue Medikamente
-    }
+    // Schritt 2: Deaktiviere alle aktuell aktiven Pläne (statt löschen)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString();
 
-    // Schritt 3: Lösche alte Pläne für diesen Patienten
-    console.log('🗑️ Lösche alte Medikamentenpläne für Patient', this.patientId);
-    this.medicationPlanService.deleteAllPlansForPatient(this.patientId).subscribe({
+    console.log('🗓️ Deaktiviere alte Pläne (setze ValidTo auf gestern)...');
+    this.medicationPlanService.deactivateActivePlans(this.patientId, yesterdayStr).subscribe({
       next: () => {
-        console.log('✅ Alte Pläne gelöscht');
+        console.log('✅ Alte Pläne deaktiviert');
         
-        // Schritt 4: Erstelle neue Pläne
+        // Schritt 3: Erstelle neue Pläne mit Gültigkeitszeitraum
+        const validToDate = this.validTo || new Date(2099, 11, 31).toISOString().split('T')[0];
         const plansToCreate: Partial<MedicationPlan>[] = plans.map(p => ({
           patientId: this.patientId,
           medicationId: p.medicationId > 0 ? p.medicationId : undefined,
-          caregiverId: 1, // Default Caregiver
+          caregiverId: 1,
           weekdayFlags: p.weekdayFlags,
           dayTimeFlags: p.dayTimeFlags,
           quantity: p.quantity,
-          validFrom: new Date().toISOString(),
-          validTo: new Date(2099, 11, 31).toISOString(),
+          validFrom: this.validFrom + 'T00:00:00',
+          validTo: validToDate + 'T23:59:59',
           notes: p.isNew ? `Neues Medikament: ${p.medicationName}` : '',
           isActive: true
         }));
@@ -264,7 +292,10 @@ export class MedicationPlanEditorComponent implements OnInit {
         this.medicationPlanService.createMedicationPlans(plansToCreate).subscribe({
           next: (created) => {
             console.log('✅ Pläne erfolgreich gespeichert:', created);
-            alert(`✅ Medikamentenplan gespeichert!\n${plans.length} Einträge wurden erstellt.`);
+            const dateRange = this.validTo 
+              ? `${this.formatDate(this.validFrom)} bis ${this.formatDate(this.validTo)}`
+              : `ab ${this.formatDate(this.validFrom)}`;
+            alert(`✅ Neuer Medikamentenplan gespeichert!\n\nGültig: ${dateRange}\n${plans.length} Einträge erstellt.`);
             this.goBack();
           },
           error: (err) => {
@@ -274,10 +305,15 @@ export class MedicationPlanEditorComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('❌ Fehler beim Löschen alter Pläne:', err);
-        alert('❌ Fehler beim Löschen alter Pläne!\nBitte versuchen Sie es erneut.');
+        console.error('❌ Fehler beim Deaktivieren alter Pläne:', err);
+        alert('❌ Fehler beim Deaktivieren alter Pläne!\nBitte versuchen Sie es erneut.');
       }
     });
+  }
+
+  formatDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 
   copyDayPlan(fromDay: WeekdayPlan) {

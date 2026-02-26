@@ -4,7 +4,19 @@
       <button class="btn-back" (click)="goBack()">← Zurück</button>
       <h1>Medikamentenplan bearbeiten</h1>
     </div>
-    <button class="btn-save" (click)="savePlan()">💾 Plan speichern</button>
+    <div class="header-right">
+      <div class="validity-period">
+        <label>
+          📅 Gültig von:
+          <input type="date" [(ngModel)]="validFrom" class="date-input" />
+        </label>
+        <label>
+          📅 Gültig bis:
+          <input type="date" [(ngModel)]="validTo" class="date-input" placeholder="unbegrenzt" />
+        </label>
+      </div>
+      <button class="btn-save" (click)="savePlan()">💾 Plan speichern</button>
+    </div>
   </header>
 
   <div class="editor-content">

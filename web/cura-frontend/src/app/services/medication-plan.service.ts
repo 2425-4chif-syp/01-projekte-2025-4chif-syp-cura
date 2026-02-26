@@ -311,6 +311,35 @@ export class MedicationPlanService {
     );
   }
 
+  // Deactivate all currently active plans for a patient by setting ValidTo date
+  deactivateActivePlans(patientId: number, validToDate: string): Observable<any> {
+    return this.getMedicationPlans(patientId).pipe(
+      switchMap(plans => {
+        // Filter nur aktive Pläne
+        const activePlans = plans.filter(p => p.isActive);
+        
+        if (activePlans.length === 0) {
+          console.log('ℹ️ Keine aktiven Pläne zum Deaktivieren');
+          return of(null);
+        }
+        
+        console.log(`🔄 Deaktiviere ${activePlans.length} Pläne...`);
+        
+        // Setze ValidTo auf das angegebene Datum (gestern)
+        const updateRequests = activePlans.map(plan => {
+          const updatedPlan = {
+            ...plan,
+            validTo: validToDate,
+            isActive: false
+          };
+          return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, updatedPlan);
+        });
+        
+        return forkJoin(updateRequests);
+      })
+    );
+  }
+
   // Delete all medication plans for a patient
   deleteAllPlansForPatient(patientId: number): Observable<any> {
     // Zuerst alle Pläne des Patienten laden
