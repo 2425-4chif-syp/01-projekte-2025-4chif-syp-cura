@@ -136,18 +136,29 @@ export class MedicationPlanEditorComponent implements OnInit {
     });
   }
 
-  drop(event: CdkDragDrop<MedicationItem[]>) {
+  drop(event: CdkDragDrop<any>) {
     if (event.previousContainer === event.container) {
+      // Innerhalb des gleichen Slots umsortieren
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Kopiere statt verschieben (aus Medikamentenliste)
-      const item = event.previousContainer.data[event.previousIndex];
-      const newItem: MedicationItem = { ...item, quantity: 1 };
+      // Von Medikamentenliste in Slot ziehen
+      const sourceItem = event.previousContainer.data[event.previousIndex];
+      
+      // Konvertiere Medication zu MedicationItem
+      const newItem: MedicationItem = {
+        id: sourceItem.id,
+        name: sourceItem.name,
+        quantity: 1,
+        isNew: sourceItem.id < 0
+      };
       
       // Prüfe ob Medikament bereits im Slot ist
-      const exists = event.container.data.find(m => m.id === item.id);
+      const exists = event.container.data.find((m: MedicationItem) => m.id === newItem.id);
       if (!exists) {
-        event.container.data.splice(event.currentIndex, 0, newItem);
+        event.container.data.push(newItem);
+        console.log('Medikament hinzugefügt:', newItem.name, 'zu Slot');
+      } else {
+        console.log('Medikament bereits vorhanden:', newItem.name);
       }
     }
   }
