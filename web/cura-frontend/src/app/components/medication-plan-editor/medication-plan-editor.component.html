@@ -1,0 +1,105 @@
+<div class="medication-plan-editor">
+  <header class="editor-header">
+    <h1>Medikamentenplan bearbeiten</h1>
+    <button class="btn-save" (click)="savePlan()">💾 Plan speichern</button>
+  </header>
+
+  <div class="editor-content">
+    <!-- Linke Seite: Verfügbare Medikamente -->
+    <aside class="medication-list">
+      <div class="section-header">
+        <h2>Verfügbare Medikamente</h2>
+        <button class="btn-add" (click)="showAddMedicationForm = !showAddMedicationForm">
+          ➕ Neues Medikament
+        </button>
+      </div>
+
+      <!-- Neues Medikament hinzufügen -->
+      @if (showAddMedicationForm) {
+        <div class="add-medication-form">
+          <input 
+            type="text" 
+            [(ngModel)]="newMedicationName"
+            placeholder="Medikamentenname"
+            class="input-text"
+            (keyup.enter)="addNewMedication()"
+          />
+          <button class="btn-primary" (click)="addNewMedication()">Hinzufügen</button>
+          <button class="btn-cancel" (click)="showAddMedicationForm = false">Abbrechen</button>
+        </div>
+      }
+
+      <!-- Drag-Quelle: Medikamentenliste -->
+      <div 
+        cdkDropList
+        #medicationList="cdkDropList"
+        [cdkDropListData]="availableMedications"
+        [cdkDropListConnectedTo]="[]"
+        class="medication-items"
+        cdkDropListSortingDisabled>
+        @for (med of availableMedications; track med.id) {
+          <div class="medication-item" cdkDrag>
+            <span class="drag-handle">⋮⋮</span>
+            <span class="medication-name">{{ med.name }}</span>
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- Rechte Seite: Wochenplan -->
+    <main class="week-plan">
+      @for (dayPlan of weekdayPlans; track dayPlan.label) {
+        <section class="day-section">
+          <div class="day-header">
+            <h3>{{ dayPlan.label }}</h3>
+            <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
+              📋
+            </button>
+          </div>
+
+          <div class="time-slots">
+            @for (slot of dayPlan.timeSlots; track slot.id) {
+              <div class="time-slot">
+                <h4 class="time-label">{{ slot.label }}</h4>
+                
+                <div 
+                  cdkDropList
+                  [cdkDropListData]="slot.medications"
+                  [cdkDropListConnectedTo]="[medicationList]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="drop-zone">
+                  
+                  @if (slot.medications.length === 0) {
+                    <div class="empty-placeholder">
+                      Medikament hierher ziehen
+                    </div>
+                  }
+
+                  @for (med of slot.medications; track med.id; let idx = $index) {
+                    <div class="medication-assignment" cdkDrag>
+                      <span class="drag-handle">⋮⋮</span>
+                      <div class="med-info">
+                        <span class="med-name">{{ med.name }}</span>
+                        <div class="quantity-controls">
+                          <button (click)="updateQuantity(med, med.quantity - 1)">−</button>
+                          <input 
+                            type="number" 
+                            [(ngModel)]="med.quantity"
+                            min="1"
+                            class="quantity-input"
+                          />
+                          <button (click)="updateQuantity(med, med.quantity + 1)">+</button>
+                        </div>
+                      </div>
+                      <button class="btn-remove" (click)="removeMedication(slot, idx)">✕</button>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    </main>
+  </div>
+</div>

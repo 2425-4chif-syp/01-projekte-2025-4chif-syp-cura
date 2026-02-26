@@ -260,7 +260,7 @@
               @for (time of ['Morgen', 'Mittag', 'Nachmittag', 'Abend']; track $index) {
                 <tr>
                   <td class="time-label">{{ time }}</td>
-                  <td>{{ medicationRows[currentDayIndex]?.times?.[$index] ?? '-' }}</td>
+                  <td>{{ (medicationRows[currentDayIndex].times || [])[$index] || '-' }}</td>
                 </tr>
               }
             </tbody>
