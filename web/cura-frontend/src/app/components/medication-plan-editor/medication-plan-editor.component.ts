@@ -262,51 +262,57 @@ export class MedicationPlanEditorComponent implements OnInit {
     console.log('📋 Zu speichernde Pläne:', plans);
     console.log('📅 Gültig von:', this.validFrom, 'bis:', this.validTo || 'unbegrenzt');
 
-    // Schritt 2: Deaktiviere alle aktuell aktiven Pläne (statt löschen)
+    // Schritt 2: Versuche alte Pläne zu deaktivieren (aber ignoriere Fehler)
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString();
 
-    console.log('🗓️ Deaktiviere alte Pläne (setze ValidTo auf gestern)...');
+    const createNewPlans = () => {
+      // Erstelle neue Pläne mit Gültigkeitszeitraum
+      const validToDate = this.validTo || new Date(2099, 11, 31).toISOString().split('T')[0];
+      const plansToCreate: Partial<MedicationPlan>[] = plans.map(p => ({
+        patientId: this.patientId,
+        medicationId: p.medicationId > 0 ? p.medicationId : undefined,
+        caregiverId: 1,
+        weekdayFlags: p.weekdayFlags,
+        dayTimeFlags: p.dayTimeFlags,
+        quantity: p.quantity,
+        validFrom: this.validFrom + 'T00:00:00',
+        validTo: validToDate + 'T23:59:59',
+        notes: p.isNew ? `Neues Medikament: ${p.medicationName}` : '',
+        isActive: true
+      }));
+
+      console.log('💾 Erstelle neue Pläne:', plansToCreate);
+      
+      this.medicationPlanService.createMedicationPlans(plansToCreate).subscribe({
+        next: (created) => {
+          console.log('✅ Pläne erfolgreich gespeichert:', created);
+          const dateRange = this.validTo 
+            ? `${this.formatDate(this.validFrom)} bis ${this.formatDate(this.validTo)}`
+            : `ab ${this.formatDate(this.validFrom)}`;
+          alert(`✅ Neuer Medikamentenplan gespeichert!\n\nGültig: ${dateRange}\n${plans.length} Einträge erstellt.`);
+          this.goBack();
+        },
+        error: (err) => {
+          console.error('❌ Fehler beim Erstellen der Pläne:', err);
+          alert('❌ Fehler beim Speichern des Plans!\nBitte versuchen Sie es erneut.');
+        }
+      });
+    };
+
+    // Versuche alte Pläne zu deaktivieren, aber fahre fort auch wenn es fehlschlägt
+    console.log('🗓️ Versuche alte Pläne zu deaktivieren...');
     this.medicationPlanService.deactivateActivePlans(this.patientId, yesterdayStr).subscribe({
       next: () => {
         console.log('✅ Alte Pläne deaktiviert');
-        
-        // Schritt 3: Erstelle neue Pläne mit Gültigkeitszeitraum
-        const validToDate = this.validTo || new Date(2099, 11, 31).toISOString().split('T')[0];
-        const plansToCreate: Partial<MedicationPlan>[] = plans.map(p => ({
-          patientId: this.patientId,
-          medicationId: p.medicationId > 0 ? p.medicationId : undefined,
-          caregiverId: 1,
-          weekdayFlags: p.weekdayFlags,
-          dayTimeFlags: p.dayTimeFlags,
-          quantity: p.quantity,
-          validFrom: this.validFrom + 'T00:00:00',
-          validTo: validToDate + 'T23:59:59',
-          notes: p.isNew ? `Neues Medikament: ${p.medicationName}` : '',
-          isActive: true
-        }));
-
-        console.log('💾 Erstelle neue Pläne:', plansToCreate);
-        
-        this.medicationPlanService.createMedicationPlans(plansToCreate).subscribe({
-          next: (created) => {
-            console.log('✅ Pläne erfolgreich gespeichert:', created);
-            const dateRange = this.validTo 
-              ? `${this.formatDate(this.validFrom)} bis ${this.formatDate(this.validTo)}`
-              : `ab ${this.formatDate(this.validFrom)}`;
-            alert(`✅ Neuer Medikamentenplan gespeichert!\n\nGültig: ${dateRange}\n${plans.length} Einträge erstellt.`);
-            this.goBack();
-          },
-          error: (err) => {
-            console.error('❌ Fehler beim Erstellen der Pläne:', err);
-            alert('❌ Fehler beim Speichern des Plans!\nBitte versuchen Sie es erneut.');
-          }
-        });
+        createNewPlans();
       },
       error: (err) => {
-        console.error('❌ Fehler beim Deaktivieren alter Pläne:', err);
-        alert('❌ Fehler beim Deaktivieren alter Pläne!\nBitte versuchen Sie es erneut.');
+        console.warn('⚠️ Warnung: Alte Pläne konnten nicht deaktiviert werden:', err);
+        console.warn('⚠️ Fahre trotzdem mit Erstellung fort...');
+        // Erstelle trotzdem neue Pläne
+        createNewPlans();
       }
     });
   }
