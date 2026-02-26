@@ -216,9 +216,14 @@
 }
 
 .drag-handle {
-  color: #7f8c8d;
+  color: #718096;
   font-size: 16px;
   cursor: grab;
+  margin-right: 8px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
 }
 
 .medication-name {
@@ -229,16 +234,8 @@
 
 /* Rechte Seite: Wochenplan */
 .week-plan {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.day-section {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  padding: 10px;
 }
 
 .day-header {
@@ -462,3 +459,69 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Horizontal Grid Layout */
+.weekdays-header {
+  display: grid;
+  grid-template-columns: 150px repeat(7, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.weekday-column {
+  text-align: center;
+}
+
+.day-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.time-row {
+  display: grid;
+  grid-template-columns: 150px repeat(7, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.time-label-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.time-slot-cell {
+  background: white;
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 15px;
+  min-height: 150px;
+  transition: all 0.3s;
+}
+
+.time-slot-cell.cdk-drop-list-dragging {
+  background: #f7fafc;
+}
+
+.time-slot-cell:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0aec0;
+  font-size: 14px;
+}
+
+.time-slot-cell:empty::after {
+  content: '📋 Hier ablegen';
+}
+

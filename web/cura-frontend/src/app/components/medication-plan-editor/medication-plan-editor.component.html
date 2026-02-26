@@ -1,21 +1,25 @@
 <div class="medication-plan-editor">
   <header class="editor-header">
     <div class="header-left">
-      <button class="btn-back" (click)="goBack()">← Zurück</button>
+      <button class="btn-back" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Zurück
+      </button>
       <h1>Medikamentenplan bearbeiten</h1>
     </div>
     <div class="header-right">
       <div class="validity-period">
         <label>
-          📅 Gültig von:
+          <i class="fas fa-calendar-alt"></i> Gültig von:
           <input type="date" [(ngModel)]="validFrom" class="date-input" />
         </label>
         <label>
-          📅 Gültig bis:
+          <i class="fas fa-calendar-alt"></i> Gültig bis:
           <input type="date" [(ngModel)]="validTo" class="date-input" placeholder="unbegrenzt" />
         </label>
       </div>
-      <button class="btn-save" (click)="savePlan()">💾 Plan speichern</button>
+      <button class="btn-save" (click)="savePlan()">
+        <i class="fas fa-save"></i> Plan speichern
+      </button>
     </div>
   </header>
 
@@ -25,7 +29,7 @@
       <div class="section-header">
         <h2>Verfügbare Medikamente</h2>
         <button class="btn-add" (click)="showAddMedicationForm = !showAddMedicationForm">
-          ➕ Neues Medikament
+          <i class="fas fa-plus"></i> Neues Medikament
         </button>
       </div>
 
@@ -54,7 +58,7 @@
         cdkDropListSortingDisabled>
         @for (med of availableMedications; track med.id) {
           <div class="medication-item" cdkDrag>
-            <span class="drag-handle">⋮⋮</span>
+            <i class="fas fa-grip-vertical drag-handle"></i>
             <span class="medication-name">{{ med.name }}</span>
           </div>
         }
@@ -63,58 +67,68 @@
 
     <!-- Rechte Seite: Wochenplan -->
     <main class="week-plan">
-      @for (dayPlan of weekdayPlans; track dayPlan.label) {
-        <section class="day-section">
-          <div class="day-header">
-            <h3>{{ dayPlan.label }}</h3>
-            <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
-              📋
-            </button>
+      <!-- Kopfzeile: Wochentage -->
+      <div class="weekdays-header">
+        @for (dayPlan of weekdayPlans; track dayPlan.label) {
+          <div class="weekday-column">
+            <div class="day-header">
+              <h3>{{ dayPlan.label }}</h3>
+              <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
           </div>
+        }
+      </div>
 
-          <div class="time-slots">
-            @for (slot of dayPlan.timeSlots; track slot.id) {
-              <div class="time-slot">
-                <h4 class="time-label">{{ slot.label }}</h4>
+      <!-- Tageszeiten (Zeilen) -->
+      @for (slotTemplate of timeSlotTemplates; track slotTemplate.id; let slotIdx = $index) {
+        <div class="time-row">
+          <div class="time-label-cell">
+            <h4>{{ slotTemplate.label }}</h4>
+          </div>
+          
+          @for (dayPlan of weekdayPlans; track dayPlan.label; let dayIdx = $index) {
+            <div class="time-slot-cell">
+              <div 
+                cdkDropList
+                [id]="dayPlan.timeSlots[slotIdx].id"
+                [cdkDropListData]="dayPlan.timeSlots[slotIdx].medications"
+                [cdkDropListConnectedTo]="['medicationList']"
+                (cdkDropListDropped)="drop($event)"
+                class="drop-zone">
                 
-                <div 
-                  cdkDropList
-                  [id]="slot.id"
-                  [cdkDropListData]="slot.medications"
-                  [cdkDropListConnectedTo]="['medicationList']"
-                  (cdkDropListDropped)="drop($event)"
-                  class="drop-zone">
-                  
-                  @if (slot.medications.length === 0) {
-                    <div class="empty-placeholder">
-                      Medikament hierher ziehen
-                    </div>
-                  }
+                @if (dayPlan.timeSlots[slotIdx].medications.length === 0) {
+                  <div class="empty-placeholder">
+                    <i class="fas fa-hand-pointer"></i>
+                  </div>
+                }
 
-                  @for (med of slot.medications; track med.id; let idx = $index) {
-                    <div class="medication-assignment" cdkDrag>
-                      <span class="drag-handle">⋮⋮</span>
-                      <div class="med-info">
-                        <span class="med-name">{{ med.name }}</span>
-                        <div class="quantity-controls">
-                          <button (click)="updateQuantity(med, med.quantity - 1)">−</button>
-                          <input 
-                            type="number" 
-                            [(ngModel)]="med.quantity"
-                            min="1"
-                            class="quantity-input"
-                          />
-                          <button (click)="updateQuantity(med, med.quantity + 1)">+</button>
-                        </div>
+                @for (med of dayPlan.timeSlots[slotIdx].medications; track med.id; let idx = $index) {
+                  <div class="medication-assignment" cdkDrag>
+                    <i class="fas fa-grip-vertical drag-handle"></i>
+                    <div class="med-info">
+                      <span class="med-name">{{ med.name }}</span>
+                      <div class="quantity-controls">
+                        <button (click)="updateQuantity(med, med.quantity - 1)"><i class="fas fa-minus"></i></button>
+                        <input 
+                          type="number" 
+                          [(ngModel)]="med.quantity"
+                          min="1"
+                          class="quantity-input"
+                        />
+                        <button (click)="updateQuantity(med, med.quantity + 1)"><i class="fas fa-plus"></i></button>
                       </div>
-                      <button class="btn-remove" (click)="removeMedication(slot, idx)">✕</button>
                     </div>
-                  }
-                </div>
+                    <button class="btn-remove" (click)="removeMedication(dayPlan.timeSlots[slotIdx], idx)">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                }
               </div>
-            }
-          </div>
-        </section>
+            </div>
+          }
+        </div>
       }
     </main>
   </div>
