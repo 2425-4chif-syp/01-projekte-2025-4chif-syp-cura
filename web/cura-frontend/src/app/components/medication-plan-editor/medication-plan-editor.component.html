@@ -35,9 +35,9 @@
       <!-- Drag-Quelle: Medikamentenliste -->
       <div 
         cdkDropList
-        #medicationList="cdkDropList"
+        id="medicationList"
         [cdkDropListData]="availableMedications"
-        [cdkDropListConnectedTo]="[]"
+        [cdkDropListConnectedTo]="getDropListIds()"
         class="medication-items"
         cdkDropListSortingDisabled>
         @for (med of availableMedications; track med.id) {
@@ -67,8 +67,9 @@
                 
                 <div 
                   cdkDropList
+                  [id]="slot.id"
                   [cdkDropListData]="slot.medications"
-                  [cdkDropListConnectedTo]="[medicationList]"
+                  [cdkDropListConnectedTo]="['medicationList']"
                   (cdkDropListDropped)="drop($event)"
                   class="drop-zone">
                   

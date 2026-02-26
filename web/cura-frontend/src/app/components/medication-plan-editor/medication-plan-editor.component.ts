@@ -234,4 +234,14 @@ export class MedicationPlanEditorComponent implements OnInit {
       }
     });
   }
+
+  getDropListIds(): string[] {
+    const ids: string[] = [];
+    this.weekdayPlans.forEach(day => {
+      day.timeSlots.forEach(slot => {
+        ids.push(slot.id);
+      });
+    });
+    return ids;
+  }
 }
