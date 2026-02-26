@@ -499,7 +499,7 @@
 /* Horizontal Grid Layout */
 .weekdays-header {
   display: grid;
-  grid-template-columns: 180px repeat(7, 1fr);
+  grid-template-columns: 180px repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 15px;
 }
@@ -533,7 +533,7 @@
 
 .time-row {
   display: grid;
-  grid-template-columns: 180px repeat(7, 1fr);
+  grid-template-columns: 180px repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 15px;
 }
@@ -541,10 +541,10 @@
 .time-label-cell {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background: #faf9f7;
   border-radius: 12px;
-  padding: 24px;
+  padding: 20px 24px;
   font-weight: 700;
   color: #2d3748;
   font-size: 17px;

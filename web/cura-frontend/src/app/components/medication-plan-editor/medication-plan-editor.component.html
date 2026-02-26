@@ -67,29 +67,29 @@
 
     <!-- Rechte Seite: Wochenplan -->
     <main class="week-plan">
-      <!-- Kopfzeile: Wochentage -->
+      <!-- Kopfzeile: Tageszeiten -->
       <div class="weekdays-header">
         <div class="weekday-column"></div> <!-- Leere Ecke links oben -->
-        @for (dayPlan of weekdayPlans; track dayPlan.label) {
+        @for (slotTemplate of timeSlotTemplates; track slotTemplate.id) {
           <div class="weekday-column">
             <div class="day-header">
-              <h3>{{ dayPlan.label }}</h3>
-              <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
-                <i class="fas fa-copy"></i>
-              </button>
+              <h3>{{ slotTemplate.label }}</h3>
             </div>
           </div>
         }
       </div>
 
-      <!-- Tageszeiten (Zeilen) -->
-      @for (slotTemplate of timeSlotTemplates; track slotTemplate.id; let slotIdx = $index) {
+      <!-- Wochentage (Zeilen) -->
+      @for (dayPlan of weekdayPlans; track dayPlan.label; let dayIdx = $index) {
         <div class="time-row">
           <div class="time-label-cell">
-            <h4>{{ slotTemplate.label }}</h4>
+            <h4>{{ dayPlan.label }}</h4>
+            <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
+              <i class="fas fa-copy"></i>
+            </button>
           </div>
           
-          @for (dayPlan of weekdayPlans; track dayPlan.label; let dayIdx = $index) {
+          @for (slotTemplate of timeSlotTemplates; track slotTemplate.id; let slotIdx = $index) {
             <div class="time-slot-cell">
               <div 
                 cdkDropList
