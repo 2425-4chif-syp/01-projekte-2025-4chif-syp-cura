@@ -69,6 +69,7 @@
     <main class="week-plan">
       <!-- Kopfzeile: Wochentage -->
       <div class="weekdays-header">
+        <div class="weekday-column"></div> <!-- Leere Ecke links oben -->
         @for (dayPlan of weekdayPlans; track dayPlan.label) {
           <div class="weekday-column">
             <div class="day-header">

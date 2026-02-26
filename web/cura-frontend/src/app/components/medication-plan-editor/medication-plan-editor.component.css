@@ -1,9 +1,9 @@
 .medication-plan-editor {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1800px;
   margin: 0 auto;
-  padding: 20px;
-  background: #f5f7fa;
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
 }
 
@@ -12,10 +12,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  padding: 20px;
+  padding: 25px 30px;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.8);
 }
 
 .header-left {
@@ -26,8 +27,13 @@
 
 .editor-header h1 {
   margin: 0;
-  color: #2c3e50;
-  font-size: 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .header-right {
@@ -52,49 +58,64 @@
 }
 
 .date-input {
-  padding: 8px 12px;
-  border: 2px solid #dfe6e9;
-  border-radius: 6px;
+  padding: 10px 14px;
+  border: 2px solid #e8ecef;
+  border-radius: 10px;
   font-size: 14px;
   font-family: inherit;
-  transition: border-color 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f8f9fa;
 }
 
 .date-input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
 }
 
 .btn-back {
-  padding: 10px 20px;
-  background: #95a5a6;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-back:hover {
-  background: #7f8c8d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
 }
 
 .btn-save {
-  padding: 12px 24px;
-  background: #27ae60;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .btn-save:hover {
-  background: #229954;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
 }
 
 .editor-content {
@@ -107,13 +128,14 @@
 /* Linke Seite: Medikamentenliste */
 .medication-list {
   background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
   position: sticky;
-  top: 20px;
-  max-height: calc(100vh - 40px);
+  top: 30px;
+  max-height: calc(100vh - 60px);
   overflow-y: auto;
+  border: 1px solid rgba(255,255,255,0.8);
 }
 
 .section-header {
@@ -125,23 +147,30 @@
 
 .section-header h2 {
   margin: 0;
-  font-size: 18px;
-  color: #2c3e50;
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .btn-add {
-  padding: 8px 12px;
-  background: #3498db;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .btn-add:hover {
-  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .add-medication-form {
@@ -197,13 +226,13 @@
 .medication-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px;
-  background: #ecf0f1;
-  border: 2px dashed #bdc3c7;
-  border-radius: 6px;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
   cursor: grab;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .medication-item:active {
@@ -211,8 +240,10 @@
 }
 
 .medication-item:hover {
-  background: #d5dbdb;
-  border-color: #95a5a6;
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateX(4px);
 }
 
 .drag-handle {
@@ -235,7 +266,10 @@
 /* Rechte Seite: Wochenplan */
 .week-plan {
   overflow-x: auto;
-  padding: 10px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
 }
 
 .day-header {
@@ -254,18 +288,20 @@
 }
 
 .btn-copy {
-  padding: 6px 12px;
-  background: #95a5a6;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.2);
   color: white;
-  border: none;
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
 .btn-copy:hover {
-  background: #7f8c8d;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
 .time-slots {
@@ -288,20 +324,20 @@
 }
 
 .drop-zone {
-  min-height: 80px;
-  padding: 10px;
-  background: #f8f9fa;
-  border: 2px dashed #cbd5e0;
-  border-radius: 6px;
+  min-height: 120px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  transition: all 0.3s;
+  gap: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .drop-zone.cdk-drop-list-dragging {
-  background: #e8f4f8;
-  border-color: #3498db;
+  background: transparent;
+  border: none;
 }
 
 .empty-placeholder {
@@ -315,18 +351,19 @@
 .medication-assignment {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px;
+  gap: 10px;
+  padding: 14px;
   background: white;
-  border: 1px solid #e1e8ed;
-  border-radius: 6px;
+  border: 2px solid #e1e8ed;
+  border-radius: 10px;
   cursor: grab;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .medication-assignment:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-color: #3498db;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
+  transform: translateY(-2px);
 }
 
 .medication-assignment:active {
@@ -353,23 +390,24 @@
 }
 
 .quantity-controls button {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  background: #ecf0f1;
-  border: 1px solid #bdc3c7;
-  border-radius: 4px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #e1e8ed;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 700;
   color: #2c3e50;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .quantity-controls button:hover {
-  background: #3498db;
-  border-color: #3498db;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
   color: white;
+  transform: scale(1.1);
 }
 
 .quantity-input {
@@ -383,21 +421,23 @@
 }
 
 .btn-remove {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  background: #e74c3c;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background 0.3s;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .btn-remove:hover {
-  background: #c0392b;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
 /* CDK Drag Preview */
@@ -463,9 +503,9 @@
 /* Horizontal Grid Layout */
 .weekdays-header {
   display: grid;
-  grid-template-columns: 150px repeat(7, 1fr);
-  gap: 10px;
-  margin-bottom: 10px;
+  grid-template-columns: 180px repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
 .weekday-column {
@@ -475,53 +515,84 @@
 .day-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 15px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 18px;
+  border-radius: 12px;
+  font-weight: 700;
   font-size: 16px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  margin-bottom: 0;
+  padding-bottom: 18px;
+}
+
+.day-header h3 {
+  margin: 0;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .time-row {
   display: grid;
-  grid-template-columns: 150px repeat(7, 1fr);
-  gap: 10px;
-  margin-bottom: 10px;
+  grid-template-columns: 180px repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
 .time-label-cell {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 20px;
-  font-weight: 600;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  padding: 24px;
+  font-weight: 700;
   color: #2c3e50;
-  font-size: 16px;
+  font-size: 17px;
+  border: 2px solid #e1e8ed;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.time-label-cell h4 {
+  margin: 0;
+  color: #2c3e50;
+  font-weight: 700;
 }
 
 .time-slot-cell {
-  background: white;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border: 2px dashed #cbd5e0;
-  border-radius: 8px;
-  padding: 15px;
-  min-height: 150px;
-  transition: all 0.3s;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 160px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .time-slot-cell.cdk-drop-list-dragging {
-  background: #f7fafc;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-color: #667eea;
+  border-style: solid;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
-.time-slot-cell:empty {
+.time-slot-cell:hover {
+  border-color: #667eea;
+  background: white;
+}
+
+.time-slot-cell .drop-zone:empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #a0aec0;
-  font-size: 14px;
+  min-height: 120px;
 }
 
-.time-slot-cell:empty::after {
-  content: '📋 Hier ablegen';
+.time-slot-cell .empty-placeholder {
+  color: #cbd5e0;
+  font-size: 16px;
+  text-align: center;
 }
 
