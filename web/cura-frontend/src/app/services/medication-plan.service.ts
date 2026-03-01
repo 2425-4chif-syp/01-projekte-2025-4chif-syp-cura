@@ -466,7 +466,11 @@ export class MedicationPlanService {
             ValidFrom: plan.validFrom,
             ValidTo: validToDate,
             Notes: plan.notes,
-            IsActive: false
+            IsActive: false,
+            // Navigation Properties auf null setzen
+            Patient: null,
+            Medication: null,
+            Caregiver: null
           };
           console.log('📝 Update Plan:', plan.id, 'auf inactive');
           return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, payload);
