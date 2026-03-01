@@ -45,8 +45,8 @@ export class DashboardComponent implements OnInit {
   
   // Medication Plan Flip
   showPlanSelection = false;
-  selectedPlanId = 1;
-  availablePlans: { id: number; name: string; patientName: string }[] = [];
+  selectedPlanId: string = '';
+  availablePlans: { id: string; name: string; patientName: string }[] = [];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
   expandedTimeGroups = new Set<string>();
   
@@ -202,7 +202,7 @@ export class DashboardComponent implements OnInit {
     this.medicationPlanService.getPatientPlanGroups(this.currentPatientId).subscribe({
       next: (planGroups) => {
         this.availablePlans = planGroups.map(g => ({
-          id: g.validFrom.replace(/-/g, ''), // YYYYMMDD als numerische ID
+          id: g.validFrom, // YYYY-MM-DD als string ID
           name: g.name,
           patientName: this.userName
         }));
@@ -210,15 +210,15 @@ export class DashboardComponent implements OnInit {
         // Wähle aktuell gültigen Plan automatisch
         const currentPlan = planGroups.find(p => p.isCurrentlyActive) || planGroups[0];
         if (currentPlan) {
-          this.selectedPlanId = parseInt(currentPlan.validFrom.replace(/-/g, ''), 10);
+          this.selectedPlanId = currentPlan.validFrom;
         } else {
-          this.selectedPlanId = this.currentPatientId;
+          this.selectedPlanId = String(this.currentPatientId);
         }
       },
       error: (error) => {
         console.error('Fehler beim Laden der Plan-Gruppen:', error);
-        this.availablePlans = [{ id: this.currentPatientId, name: 'Mein Medikamentenplan', patientName: this.userName }];
-        this.selectedPlanId = this.currentPatientId;
+        this.availablePlans = [{ id: String(this.currentPatientId), name: 'Mein Medikamentenplan', patientName: this.userName }];
+        this.selectedPlanId = String(this.currentPatientId);
       }
     });
   }
@@ -243,7 +243,7 @@ export class DashboardComponent implements OnInit {
     this.showPlanSelection = false;
   }
 
-  selectPlan(planId: number) {
+  selectPlan(planId: string) {
     this.selectedPlanId = planId;
     this.closePlanSelection();
     // Lade Medikamentenpläne für den ausgewählten Patienten neu
@@ -260,7 +260,7 @@ export class DashboardComponent implements OnInit {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
-    const patientId = this.selectedPlanId || 1;
+    const patientId = this.currentPatientId;
 
     this.calendarService.getDailyStatus(patientId, year, month).subscribe({
       next: (statusData) => {
@@ -361,7 +361,7 @@ export class DashboardComponent implements OnInit {
     // Parse date (format: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)
     const dateOnly = date.split('T')[0]; // Remove time part if present
     const [year, month, day] = dateOnly.split('-').map(Number);
-    const patientId = this.selectedPlanId || 1;
+    const patientId = this.currentPatientId;
     
     // Load all scheduled and taken medications for this day
     this.medicationPlanService.getDayDetails(patientId, year, month, day).subscribe({
