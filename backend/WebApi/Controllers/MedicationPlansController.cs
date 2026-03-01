@@ -162,10 +162,9 @@ namespace WebApi.Controllers
             if (existingPlan == null)
                 return NotFound();
 
-            // Update nur die Felder aus dem DTO
-            existingPlan.PatientId = dto.PatientId;
-            existingPlan.MedicationId = dto.MedicationId;
-            existingPlan.CaregiverId = dto.CaregiverId;
+            // Update nur die Felder die sich ändern können (keine Foreign Keys ändern!)
+            // Structural fields (PatientId, MedicationId, CaregiverId) werden NICHT geändert
+            // um EF Tracking-Probleme zu vermeiden
             existingPlan.WeekdayFlags = dto.WeekdayFlags;
             existingPlan.DayTimeFlags = dto.DayTimeFlags;
             existingPlan.Quantity = dto.Quantity;
@@ -174,7 +173,7 @@ namespace WebApi.Controllers
             existingPlan.Notes = dto.Notes;
             existingPlan.IsActive = dto.IsActive;
 
-            _unitOfWork.MedicationPlanRepository.Update(existingPlan);
+            // Kein expliziter Update() Call nötig - EF trackt die Änderungen
             await _unitOfWork.SaveChangesAsync();
 
             return NoContent();
