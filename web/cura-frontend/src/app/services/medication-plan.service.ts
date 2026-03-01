@@ -329,8 +329,7 @@ export class MedicationPlanService {
       'MORNING': 1,
       'NOON': 2,
       'AFTERNOON': 4,
-      'EVENING': 8,
-      'NIGHT': 16
+      'EVENING': 8
     };
 
     const weekdayFlagsArray = [2, 4, 8, 16, 32, 64, 1]; // Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64, So=1
@@ -457,8 +456,16 @@ export class MedicationPlanService {
         // Setze ValidTo und IsActive
         const updateRequests = activePlans.map(plan => {
           const payload = {
-            ...plan, // Behalte alle Felder inkl. Navigation Properties
+            Id: plan.id,
+            PatientId: plan.patientId,
+            MedicationId: plan.medicationId,
+            CaregiverId: plan.caregiverId,
+            WeekdayFlags: plan.weekdayFlags,
+            DayTimeFlags: plan.dayTimeFlags,
+            Quantity: plan.quantity,
+            ValidFrom: plan.validFrom,
             ValidTo: validToDate,
+            Notes: plan.notes,
             IsActive: false
           };
           console.log('📝 Update Plan:', plan.id, 'auf inactive');
