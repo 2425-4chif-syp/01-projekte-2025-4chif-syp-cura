@@ -275,8 +275,9 @@ export class DashboardComponent implements OnInit {
         console.log('Suche nach planId:', planId);
         
         // Filtere Pläne nach ValidFrom (das ist unsere Plan-ID)
+        // Verwende split statt new Date() um Zeitzone-Probleme zu vermeiden
         const plansForThisGroup = allPlans.filter(p => {
-          const validFromDate = new Date(p.validFrom).toISOString().split('T')[0];
+          const validFromDate = p.validFrom.split('T')[0]; // YYYY-MM-DD
           console.log('Vergleiche:', validFromDate, 'mit', planId, '=', validFromDate === planId);
           return validFromDate === planId;
         });
