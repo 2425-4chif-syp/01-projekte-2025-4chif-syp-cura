@@ -186,7 +186,7 @@
                 @for (row of medicationRows; track $index) {
                   <tr>
                     <td class="time-label">{{ row.dayLabel }}</td>
-                    @for (cell of row.times; track $index) {
+                    @for (cell of (row.times || []); track $index) {
                       <td>{{ cell }}</td>
                     }
                   </tr>
