@@ -643,9 +643,26 @@ export class DashboardComponent implements OnInit {
       if (!this.planValidFrom) return false;
       if (this.isShortTermMedication === null) return false;
       if (this.isShortTermMedication && !this.planValidTo) return false;
+      
+      // Dauermedikation muss heute oder früher starten
+      if (!this.isShortTermMedication) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const selectedDate = new Date(this.planValidFrom);
+        if (selectedDate > today) return false;
+      }
+      
       return true;
     }
     return false;
+  }
+
+  isStartDateInFuture(): boolean {
+    if (!this.planValidFrom) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(this.planValidFrom);
+    return selectedDate > today;
   }
 
   getPatientName(patientId: number | null): string {

@@ -976,6 +976,14 @@
                       <strong>Hinweis:</strong> Alle aktuell aktiven Medikamentenpläne werden beendet und durch diesen neuen Plan ersetzt.
                     </div>
                   </div>
+                  @if (planValidFrom && isStartDateInFuture()) {
+                    <div class="info-box error">
+                      <i class="fa-solid fa-xmark-circle"></i>
+                      <div>
+                        <strong>Fehler:</strong> Dauermedikation muss heute oder früher starten. Ein zukünftiges Startdatum würde eine Versorgungslücke verursachen.
+                      </div>
+                    </div>
+                  }
                 }
               </div>
             </div>
