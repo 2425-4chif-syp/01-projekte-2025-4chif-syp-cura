@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
-import { switchMap } from 'rxjs';
+import { switchMap, forkJoin } from 'rxjs';
 import { CalendarDay } from '../../models/calendar-day.model';
 import { MedicationPlan } from '../../models/medication-plan.model';
 import { DayDetail } from '../../models/day-detail.model';
@@ -49,6 +49,16 @@ export class DashboardComponent implements OnInit {
   availablePlans: { id: string; name: string; patientName: string; isCurrentlyActive: boolean }[] = [];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
   expandedTimeGroups = new Set<string>();
+  
+  // Plan Detail View
+  showPlanDetail = false;
+  selectedPlanForDetail: any = null;
+  planDetailMedications: Array<{
+    medicationName: string;
+    dosage: number;
+    weekdays: string[];
+    timeSlots: string[];
+  }> = [];
   
   // Mobile Carousel
   currentTimeIndex = 0;
@@ -242,6 +252,97 @@ export class DashboardComponent implements OnInit {
 
   closePlanSelection() {
     this.showPlanSelection = false;
+    this.showPlanDetail = false;
+  }
+
+  viewPlanDetails(planId: string) {
+    // Finde den ausgewählten Plan
+    const plan = this.availablePlans.find(p => p.id === planId);
+    if (!plan) return;
+    
+    this.selectedPlanForDetail = plan;
+    
+    // Lade alle MedicationPlans für diesen Zeitraum
+    this.medicationPlanService.getMedicationPlans(this.currentPatientId).subscribe({
+      next: (allPlans) => {
+        // Filtere Pläne nach ValidFrom (das ist unsere Plan-ID)
+        const plansForThisGroup = allPlans.filter(p => {
+          const validFromDate = new Date(p.validFrom).toISOString().split('T')[0];
+          return validFromDate === planId;
+        });
+        
+        // Gruppiere nach Medikament (medicationId + quantity)
+        const medicationMap = new Map<string, {
+          medicationId: number;
+          dosage: number;
+          weekdayFlags: number;
+          dayTimeFlags: number;
+        }>();
+        
+        plansForThisGroup.forEach(plan => {
+          const key = `${plan.medicationId}_${plan.quantity}`;
+          if (medicationMap.has(key)) {
+            const existing = medicationMap.get(key)!;
+            existing.weekdayFlags |= plan.weekdayFlags;
+            existing.dayTimeFlags |= plan.dayTimeFlags;
+          } else {
+            medicationMap.set(key, {
+              medicationId: plan.medicationId,
+              dosage: plan.quantity,
+              weekdayFlags: plan.weekdayFlags,
+              dayTimeFlags: plan.dayTimeFlags
+            });
+          }
+        });
+        
+        // Lade Medication-Namen für alle IDs
+        const medicationRequests = Array.from(medicationMap.values()).map(med =>
+          this.medicationPlanService.getMedicationName(med.medicationId)
+        );
+        
+        forkJoin(medicationRequests).subscribe({
+          next: (medicationNames) => {
+            // Konvertiere zu Array mit lesbaren Wochentagen/Zeiten
+            this.planDetailMedications = Array.from(medicationMap.values()).map((med, index) => {
+              const weekdays: string[] = [];
+              const weekdayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+              const weekdayFlags = [1, 2, 4, 8, 16, 32, 64];
+              
+              weekdayFlags.forEach((flag, idx) => {
+                if (med.weekdayFlags & flag) {
+                  weekdays.push(weekdayNames[idx]);
+                }
+              });
+              
+              const timeSlots: string[] = [];
+              if (med.dayTimeFlags & 1) timeSlots.push('Morgen');
+              if (med.dayTimeFlags & 2) timeSlots.push('Mittag');
+              if (med.dayTimeFlags & 4) timeSlots.push('Nachmittag');
+              if (med.dayTimeFlags & 8) timeSlots.push('Abend');
+              
+              return {
+                medicationName: medicationNames[index],
+                dosage: med.dosage,
+                weekdays: weekdays,
+                timeSlots: timeSlots
+              };
+            });
+            
+            this.showPlanDetail = true;
+          },
+          error: (error) => {
+            console.error('Fehler beim Laden der Medikamenten-Namen:', error);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der Plan-Details:', error);
+      }
+    });
+  }
+
+  closePlanDetail() {
+    this.showPlanDetail = false;
   }
 
   selectPlan(planId: string) {

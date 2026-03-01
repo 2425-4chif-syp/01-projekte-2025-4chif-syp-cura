@@ -210,35 +210,89 @@
           </div>
           
           <div class="plan-selection-content">
-            @for (plan of availablePlans; track plan.id) {
-              <div class="plan-option" 
-                   [class.active]="plan.isCurrentlyActive"
-                   [class.archived]="!plan.isCurrentlyActive">
-                <div class="plan-icon">
-                  <i class="fa-solid fa-pills"></i>
+            @if (!showPlanDetail) {
+              @for (plan of availablePlans; track plan.id) {
+                <div class="plan-option" 
+                     [class.active]="plan.isCurrentlyActive"
+                     [class.archived]="!plan.isCurrentlyActive"
+                     (click)="viewPlanDetails(plan.id)">
+                  <div class="plan-icon">
+                    <i class="fa-solid fa-pills"></i>
+                  </div>
+                  <div class="plan-info">
+                    <h3>{{ plan.name }}</h3>
+                    @if (plan.isCurrentlyActive) {
+                      <span class="plan-status status-active">✓ Aktuell aktiv</span>
+                    } @else {
+                      <span class="plan-status status-archived">Archiviert</span>
+                    }
+                  </div>
+                  <i class="fa-solid fa-chevron-right"></i>
+                </div>
+              }
+              
+              <!-- Neuen Plan erstellen -->
+              <div class="plan-option plan-create" (click)="openCreateWizard()">
+                <div class="plan-icon plan-icon-create">
+                  <i class="fa-solid fa-plus"></i>
                 </div>
                 <div class="plan-info">
-                  <h3>{{ plan.name }}</h3>
-                  @if (plan.isCurrentlyActive) {
+                  <h3>Neuen Medikamentenplan erstellen</h3>
+                  <p>Schritt-für-Schritt Assistent</p>
+                </div>
+                <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            }
+            
+            @if (showPlanDetail && selectedPlanForDetail) {
+              <div class="plan-detail-view">
+                <button class="btn-back" (click)="closePlanDetail()">
+                  <i class="fa-solid fa-arrow-left"></i> Zurück
+                </button>
+                
+                <div class="plan-detail-header">
+                  <h3>{{ selectedPlanForDetail.name }}</h3>
+                  @if (selectedPlanForDetail.isCurrentlyActive) {
                     <span class="plan-status status-active">✓ Aktuell aktiv</span>
                   } @else {
                     <span class="plan-status status-archived">Archiviert</span>
                   }
                 </div>
+                
+                <div class="plan-detail-medications">
+                  @for (med of planDetailMedications; track $index) {
+                    <div class="medication-detail-card">
+                      <div class="med-detail-header">
+                        <i class="fa-solid fa-pills"></i>
+                        <h4>{{ med.medicationName }}</h4>
+                      </div>
+                      <div class="med-detail-info">
+                        <div class="detail-row">
+                          <span class="detail-label">Dosierung:</span>
+                          <span class="detail-value">{{ med.dosage }}x täglich</span>
+                        </div>
+                        <div class="detail-row">
+                          <span class="detail-label">Tage:</span>
+                          <span class="detail-value">
+                            @for (day of med.weekdays; track day) {
+                              <span class="day-badge">{{ day }}</span>
+                            }
+                          </span>
+                        </div>
+                        <div class="detail-row">
+                          <span class="detail-label">Zeiten:</span>
+                          <span class="detail-value">
+                            @for (time of med.timeSlots; track time) {
+                              <span class="time-badge">{{ time }}</span>
+                            }
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
               </div>
             }
-            
-            <!-- Neuen Plan erstellen -->
-            <div class="plan-option plan-create" (click)="openCreateWizard()">
-              <div class="plan-icon plan-icon-create">
-                <i class="fa-solid fa-plus"></i>
-              </div>
-              <div class="plan-info">
-                <h3>Neuen Medikamentenplan erstellen</h3>
-                <p>Schritt-für-Schritt Assistent</p>
-              </div>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
           </div>
         </div>
       </div>
@@ -282,35 +336,89 @@
           </div>
           
           <div class="plan-selection-content">
-            @for (plan of availablePlans; track plan.id) {
-              <div class="plan-option" 
-                   [class.active]="plan.isCurrentlyActive"
-                   [class.archived]="!plan.isCurrentlyActive">
-                <div class="plan-icon">
-                  <i class="fa-solid fa-pills"></i>
+            @if (!showPlanDetail) {
+              @for (plan of availablePlans; track plan.id) {
+                <div class="plan-option" 
+                     [class.active]="plan.isCurrentlyActive"
+                     [class.archived]="!plan.isCurrentlyActive"
+                     (click)="viewPlanDetails(plan.id)">
+                  <div class="plan-icon">
+                    <i class="fa-solid fa-pills"></i>
+                  </div>
+                  <div class="plan-info">
+                    <h3>{{ plan.name }}</h3>
+                    @if (plan.isCurrentlyActive) {
+                      <span class="plan-status status-active">✓ Aktuell aktiv</span>
+                    } @else {
+                      <span class="plan-status status-archived">Archiviert</span>
+                    }
+                  </div>
+                  <i class="fa-solid fa-chevron-right"></i>
+                </div>
+              }
+              
+              <!-- Neuen Plan erstellen -->
+              <div class="plan-option plan-create" (click)="openCreateWizard()">
+                <div class="plan-icon plan-icon-create">
+                  <i class="fa-solid fa-plus"></i>
                 </div>
                 <div class="plan-info">
-                  <h3>{{ plan.name }}</h3>
-                  @if (plan.isCurrentlyActive) {
+                  <h3>Neuen Medikamentenplan erstellen</h3>
+                  <p>Schritt-für-Schritt Assistent</p>
+                </div>
+                <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            }
+            
+            @if (showPlanDetail && selectedPlanForDetail) {
+              <div class="plan-detail-view">
+                <button class="btn-back" (click)="closePlanDetail()">
+                  <i class="fa-solid fa-arrow-left"></i> Zurück
+                </button>
+                
+                <div class="plan-detail-header">
+                  <h3>{{ selectedPlanForDetail.name }}</h3>
+                  @if (selectedPlanForDetail.isCurrentlyActive) {
                     <span class="plan-status status-active">✓ Aktuell aktiv</span>
                   } @else {
                     <span class="plan-status status-archived">Archiviert</span>
                   }
                 </div>
+                
+                <div class="plan-detail-medications">
+                  @for (med of planDetailMedications; track $index) {
+                    <div class="medication-detail-card">
+                      <div class="med-detail-header">
+                        <i class="fa-solid fa-pills"></i>
+                        <h4>{{ med.medicationName }}</h4>
+                      </div>
+                      <div class="med-detail-info">
+                        <div class="detail-row">
+                          <span class="detail-label">Dosierung:</span>
+                          <span class="detail-value">{{ med.dosage }}x täglich</span>
+                        </div>
+                        <div class="detail-row">
+                          <span class="detail-label">Tage:</span>
+                          <span class="detail-value">
+                            @for (day of med.weekdays; track day) {
+                              <span class="day-badge">{{ day }}</span>
+                            }
+                          </span>
+                        </div>
+                        <div class="detail-row">
+                          <span class="detail-label">Zeiten:</span>
+                          <span class="detail-value">
+                            @for (time of med.timeSlots; track time) {
+                              <span class="time-badge">{{ time }}</span>
+                            }
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
               </div>
             }
-            
-            <!-- Neuen Plan erstellen -->
-            <div class="plan-option plan-create" (click)="openCreateWizard()">
-              <div class="plan-icon plan-icon-create">
-                <i class="fa-solid fa-plus"></i>
-              </div>
-              <div class="plan-info">
-                <h3>Neuen Medikamentenplan erstellen</h3>
-                <p>Schritt-für-Schritt Assistent</p>
-              </div>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
           </div>
         </div>
       </div>

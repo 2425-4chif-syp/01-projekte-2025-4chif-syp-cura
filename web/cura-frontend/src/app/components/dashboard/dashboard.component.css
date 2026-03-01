@@ -912,6 +912,154 @@ main {
   flex-shrink: 0;
 }
 
+/* Plan Detail View */
+.plan-detail-view {
+  animation: slideInRight 0.3s ease;
+}
+
+.btn-back {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  background: var(--bg-hover);
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+}
+
+.plan-detail-header {
+  padding: var(--space-md);
+  background: linear-gradient(135deg, var(--bg-surface) 0%, rgba(176,196,177,0.1) 100%);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+}
+
+.plan-detail-header h3 {
+  margin: 0 0 var(--space-sm) 0;
+  color: var(--text-primary);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+.plan-detail-medications {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.medication-detail-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  transition: all 0.2s ease;
+}
+
+.medication-detail-card:hover {
+  border-color: var(--primary-green);
+  box-shadow: 0 2px 8px rgba(176,196,177,0.2);
+}
+
+.med-detail-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.med-detail-header i {
+  color: var(--primary-green);
+  font-size: var(--text-xl);
+}
+
+.med-detail-header h4 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.med-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.detail-label {
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  color: var(--text-primary);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.day-badge, .time-badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.day-badge {
+  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+  color: white;
+}
+
+.time-badge {
+  background: linear-gradient(135deg, rgba(176,196,177,0.2) 0%, rgba(176,196,177,0.3) 100%);
+  color: var(--primary-green);
+  border: 1px solid var(--primary-green);
+}
+
+.plan-option .fa-chevron-right {
+  margin-left: auto;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.plan-option:hover .fa-chevron-right {
+  transform: translateX(4px);
+  color: var(--primary-green);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Mobile Optimierungen für Plan-Auswahl */
 @media (max-width: 768px) {
   .plan-option {
