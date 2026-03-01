@@ -150,8 +150,8 @@ public class MedicationReminderController : ControllerBase
         {
             { 1, new TimeSpan(8, 0, 0) },   // Morning
             { 2, new TimeSpan(12, 0, 0) },  // Noon
-            { 8, new TimeSpan(15, 0, 0) },  // Evening
-            { 16, new TimeSpan(19, 0, 0) }  // Night
+            { 4, new TimeSpan(16, 0, 0) },  // Afternoon
+            { 8, new TimeSpan(20, 0, 0) }   // Evening
         };
 
         var weekdays = new Dictionary<DayOfWeek, int>

@@ -194,13 +194,13 @@ namespace WebApi.Controllers
             }
             else if (hour >= 14 && hour < 18)
             {
-                dayTimeFlag = 8; // Evening
-                dayTimeName = "EVENING";
+                dayTimeFlag = 4; // Afternoon
+                dayTimeName = "AFTERNOON";
             }
             else if (hour >= 18 && hour < 22)
             {
-                dayTimeFlag = 16; // Night
-                dayTimeName = "NIGHT";
+                dayTimeFlag = 8; // Evening
+                dayTimeName = "EVENING";
             }
             else
             {

@@ -49,7 +49,7 @@ namespace WebApi.DTOs
         public DateOnly IntakeDate => DateOnly.FromDateTime(IntakeTime);
         
         /// <summary>
-        /// Time of day flag (1=Morning, 2=Noon, 8=Evening, 16=Night)
+        /// Time of day flag (1=Morning, 2=Noon, 4=Afternoon, 8=Evening)
         /// Calculated from IntakeTime hour
         /// </summary>
         public int DayTimeFlag => GetDayTimeFlag(IntakeTime.Hour);
@@ -63,8 +63,8 @@ namespace WebApi.DTOs
         {
             >= 6 and < 11 => 1,   // Morning
             >= 11 and < 14 => 2,  // Noon
-            >= 14 and < 18 => 8,  // Evening
-            >= 18 and < 22 => 16, // Night
+            >= 14 and < 18 => 4,  // Afternoon
+            >= 18 and < 22 => 8,  // Evening
             _ => 1                // Default to Morning
         };
         
@@ -72,8 +72,8 @@ namespace WebApi.DTOs
         {
             >= 6 and < 11 => "Morning",
             >= 11 and < 14 => "Noon",
-            >= 14 and < 18 => "Evening",
-            >= 18 and < 22 => "Night",
+            >= 14 and < 18 => "Afternoon",
+            >= 18 and < 22 => "Evening",
             _ => "Unknown"
         };
     }

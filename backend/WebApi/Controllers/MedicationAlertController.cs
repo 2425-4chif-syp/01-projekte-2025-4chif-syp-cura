@@ -27,7 +27,7 @@ namespace WebApi.Controllers
             var today = now.Date;
             var hour = now.Hour;
 
-            // Tageszeit ermitteln (Morning=1, Noon=2, Evening=8, Night=16)
+            // Tageszeit ermitteln (Morning=1, Noon=2, Afternoon=4, Evening=8)
             int currentTimeSlot;
             string timeSlotName;
             
@@ -43,13 +43,13 @@ namespace WebApi.Controllers
             }
             else if (hour >= 14 && hour < 18)
             {
-                currentTimeSlot = 8; // Evening
-                timeSlotName = "Evening";
+                currentTimeSlot = 4; // Afternoon
+                timeSlotName = "Afternoon";
             }
             else if (hour >= 18 && hour < 22)
             {
-                currentTimeSlot = 16; // Night
-                timeSlotName = "Night";
+                currentTimeSlot = 8; // Evening
+                timeSlotName = "Evening";
             }
             else
             {
