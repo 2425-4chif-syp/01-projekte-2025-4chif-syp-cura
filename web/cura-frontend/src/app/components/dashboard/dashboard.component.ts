@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
   availableMedications: Array<{ id: number; name: string }> = [];
   
   // Neue Struktur: weekSchedule[dayIndex][timeOfDay] = [medications]
-  // dayIndex: 0-6 (Mo-So), timeOfDay: MORNING, NOON, AFTERNOON, EVENING
+  // dayIndex: 0-6 (Mo-So), timeOfDay: MORNING, NOON, EVENING, NIGHT
   weekSchedule: Map<number, Map<string, Array<{
     medicationId: number | null;
     name: string;
@@ -74,16 +74,16 @@ export class DashboardComponent implements OnInit {
   currentMedications: { [key: string]: { medicationId: number | null, name: string, dosage: number, dosageUnit: string } } = {
     'MORNING': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' },
     'NOON': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' },
-    'AFTERNOON': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' },
-    'EVENING': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' }
+    'EVENING': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' },
+    'NIGHT': { medicationId: null, name: '', dosage: 1, dosageUnit: 'Tablette(n)' }
   };
   
-  timesOfDay = ['MORNING', 'NOON', 'AFTERNOON', 'EVENING'];
+  timesOfDay = ['MORNING', 'NOON', 'EVENING', 'NIGHT'];
   timeLabels: { [key: string]: string } = {
     'MORNING': 'Morgen',
     'NOON': 'Mittag',
-    'AFTERNOON': 'Nachmittag',
-    'EVENING': 'Abend'
+    'EVENING': 'Abend',
+    'NIGHT': 'Nachts'
   };
   
   weekdays = [
@@ -377,7 +377,7 @@ export class DashboardComponent implements OnInit {
   }
 
   groupMedicationsByTime() {
-    const timeOrder = ['Morning', 'Noon', 'Afternoon', 'Evening'];
+    const timeOrder = ['Morning', 'Noon', 'Evening', 'Night'];
     const medicationsByTime = new Map<string, { name: string; status: 'taken' | 'missed' }[]>();
     
     // Reset expanded groups
