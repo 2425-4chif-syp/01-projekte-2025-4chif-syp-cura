@@ -65,8 +65,8 @@ namespace WebApi.Controllers
                         // For each time slot this plan covers, add an entry
                         if ((plan.DayTimeFlags & 1) != 0) scheduledMedications.Add((plan.Id, 1)); // Morning
                         if ((plan.DayTimeFlags & 2) != 0) scheduledMedications.Add((plan.Id, 2)); // Noon
-                        if ((plan.DayTimeFlags & 4) != 0) scheduledMedications.Add((plan.Id, 4)); // Afternoon
                         if ((plan.DayTimeFlags & 8) != 0) scheduledMedications.Add((plan.Id, 8)); // Evening
+                        if ((plan.DayTimeFlags & 16) != 0) scheduledMedications.Add((plan.Id, 16)); // Night
                     }
                 }
 
@@ -88,8 +88,8 @@ namespace WebApi.Controllers
                         var intakeTimeSlot = 0;
                         if (hour >= 6 && hour < 11) intakeTimeSlot = 1;
                         else if (hour >= 11 && hour < 14) intakeTimeSlot = 2;
-                        else if (hour >= 14 && hour < 18) intakeTimeSlot = 4;
-                        else if (hour >= 18 && hour < 24) intakeTimeSlot = 8;
+                        else if (hour >= 18 && hour < 22) intakeTimeSlot = 8;
+                        else if (hour >= 22 || hour < 6) intakeTimeSlot = 16;
                         
                         return intakeTimeSlot == timeSlot;
                     });
@@ -160,8 +160,8 @@ namespace WebApi.Controllers
                         {
                             1 => "Morning",
                             2 => "Noon",
-                            4 => "Afternoon",
                             8 => "Evening",
+                            16 => "Night",
                             _ => "Unknown"
                         };
 
@@ -197,8 +197,8 @@ namespace WebApi.Controllers
         {
             if (hour >= 6 && hour < 11) return 1;      // Morning
             else if (hour >= 11 && hour < 14) return 2; // Noon
-            else if (hour >= 14 && hour < 18) return 4; // Afternoon
-            else if (hour >= 18 && hour < 24) return 8; // Evening
+            else if (hour >= 18 && hour < 22) return 8; // Evening
+            else if (hour >= 22 || hour < 6) return 16; // Night
             return 0;
         }
     }

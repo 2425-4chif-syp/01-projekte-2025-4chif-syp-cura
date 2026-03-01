@@ -253,8 +253,8 @@ public class MedicationCalendarController : ControllerBase
             var dayTimes = new List<string>();
             if ((plan.DayTimeFlags & 1) != 0) dayTimes.Add("Morning");
             if ((plan.DayTimeFlags & 2) != 0) dayTimes.Add("Noon");
-            if ((plan.DayTimeFlags & 4) != 0) dayTimes.Add("Afternoon");
             if ((plan.DayTimeFlags & 8) != 0) dayTimes.Add("Evening");
+            if ((plan.DayTimeFlags & 16) != 0) dayTimes.Add("Night");
 
             expected.Add(new ExpectedMedication
             {

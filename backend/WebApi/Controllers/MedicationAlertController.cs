@@ -27,7 +27,7 @@ namespace WebApi.Controllers
             var today = now.Date;
             var hour = now.Hour;
 
-            // Tageszeit ermitteln (Morning=1, Noon=2, Afternoon=4, Evening=8)
+            // Tageszeit ermitteln (Morning=1, Noon=2, Evening=8, Night=16)
             int currentTimeSlot;
             string timeSlotName;
             
@@ -41,19 +41,19 @@ namespace WebApi.Controllers
                 currentTimeSlot = 2; // Noon
                 timeSlotName = "Noon";
             }
-            else if (hour >= 14 && hour < 18)
-            {
-                currentTimeSlot = 4; // Afternoon
-                timeSlotName = "Afternoon";
-            }
-            else if (hour >= 18 && hour < 23)
+            else if (hour >= 18 && hour < 22)
             {
                 currentTimeSlot = 8; // Evening
                 timeSlotName = "Evening";
             }
+            else if (hour >= 22 || hour < 6)
+            {
+                currentTimeSlot = 16; // Night
+                timeSlotName = "Night";
+            }
             else
             {
-                // Außerhalb der Medikamentenzeiten
+                // Außerhalb der Medikamentenzeiten (14:00-18:00)
                 return Ok(new
                 {
                     ShouldAlert = false,
@@ -92,8 +92,8 @@ namespace WebApi.Controllers
                 // Zeitslot der Einnahme bestimmen
                 if (intakeHour >= 6 && intakeHour < 11 && currentTimeSlot == 1) return true;
                 if (intakeHour >= 11 && intakeHour < 14 && currentTimeSlot == 2) return true;
-                if (intakeHour >= 14 && intakeHour < 18 && currentTimeSlot == 4) return true;
-                if (intakeHour >= 18 && intakeHour < 24 && currentTimeSlot == 8) return true;
+                if (intakeHour >= 18 && intakeHour < 22 && currentTimeSlot == 8) return true;
+                if ((intakeHour >= 22 || intakeHour < 6) && currentTimeSlot == 16) return true;
                 
                 return false;
             }).ToList();
