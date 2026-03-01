@@ -217,8 +217,8 @@ export class MedicationPlanService {
     const timeLabels = [
       { flag: 1, label: 'Morgen' },
       { flag: 2, label: 'Mittag' },
-      { flag: 8, label: 'Abend' },
-      { flag: 16, label: 'Nachts' }
+      { flag: 4, label: 'Nachmittag' },
+      { flag: 8, label: 'Abend' }
     ];
 
     // WICHTIG: Reihenfolge muss Mo, Di, Mi, Do, Fr, Sa, So sein!
@@ -264,8 +264,8 @@ export class MedicationPlanService {
     const timeLabels = [
       { flag: 1, label: 'Morgen' },
       { flag: 2, label: 'Mittag' },
-      { flag: 8, label: 'Abend' },
-      { flag: 16, label: 'Nachts' }
+      { flag: 4, label: 'Nachmittag' },
+      { flag: 8, label: 'Abend' }
     ];
 
     // WICHTIG: Reihenfolge muss Mo, Di, Mi, Do, Fr, Sa, So sein!
@@ -329,8 +329,7 @@ export class MedicationPlanService {
       'MORNING': 1,
       'NOON': 2,
       'AFTERNOON': 4,
-      'EVENING': 8,
-      'NIGHT': 16
+      'EVENING': 8
     };
 
     const weekdayFlagsArray = [2, 4, 8, 16, 32, 64, 1]; // Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64, So=1

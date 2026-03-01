@@ -62,8 +62,8 @@ export class MedicationPlanEditorComponent implements OnInit {
   timeSlotTemplates = [
     { id: 'morning', label: 'Morgens', flag: 1 },
     { id: 'noon', label: 'Mittags', flag: 2 },
-    { id: 'evening', label: 'Abends', flag: 8 },
-    { id: 'night', label: 'Nachts', flag: 16 }
+    { id: 'afternoon', label: 'Nachmittag', flag: 4 },
+    { id: 'evening', label: 'Abends', flag: 8 }
   ];
 
   constructor(

@@ -29,9 +29,9 @@ export interface MedicationIntake {
   /** Date portion of intakeTime (e.g., "2026-01-15") - for backward compatibility */
   intakeDate?: string;
   
-  /** Time of day flag: 1=Morning, 2=Noon, 8=Evening, 16=Night - calculated from hour */
+  /** Time of day flag: 1=Morning, 2=Noon, 4=Afternoon, 8=Evening - calculated from hour */
   dayTimeFlag?: number;
   
-  /** Human-readable time of day (Morning/Noon/Evening/Night) */
+  /** Human-readable time of day (Morning/Noon/Afternoon/Evening) */
   timeLabel?: string;
 }
