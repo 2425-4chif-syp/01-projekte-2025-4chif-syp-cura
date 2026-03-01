@@ -122,28 +122,44 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMedicationPlan([FromBody] CreateMedicationPlanDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            // Map DTO to Entity
-            var medicationPlan = new MedicationPlan
+            try
             {
-                PatientId = dto.PatientId,
-                MedicationId = dto.MedicationId,
-                CaregiverId = dto.CaregiverId,
-                WeekdayFlags = dto.WeekdayFlags,
-                DayTimeFlags = dto.DayTimeFlags,
-                Quantity = dto.Quantity,
-                ValidFrom = dto.ValidFrom,
-                ValidTo = dto.ValidTo,
-                Notes = dto.Notes,
-                IsActive = dto.IsActive
-            };
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            await _unitOfWork.MedicationPlanRepository.AddAsync(medicationPlan);
-            await _unitOfWork.SaveChangesAsync();
+                // Map DTO to Entity
+                var medicationPlan = new MedicationPlan
+                {
+                    PatientId = dto.PatientId,
+                    MedicationId = dto.MedicationId,
+                    CaregiverId = dto.CaregiverId,
+                    WeekdayFlags = dto.WeekdayFlags,
+                    DayTimeFlags = dto.DayTimeFlags,
+                    Quantity = dto.Quantity,
+                    ValidFrom = dto.ValidFrom,
+                    ValidTo = dto.ValidTo,
+                    Notes = dto.Notes,
+                    IsActive = dto.IsActive
+                };
 
-            return CreatedAtAction(nameof(GetMedicationPlan), new { id = medicationPlan.Id }, medicationPlan);
+                await _unitOfWork.MedicationPlanRepository.AddAsync(medicationPlan);
+                await _unitOfWork.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetMedicationPlan), new { id = medicationPlan.Id }, medicationPlan);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ ERROR in CreateMedicationPlan: {ex.Message}");
+                Console.WriteLine($"   InnerException: {ex.InnerException?.Message}");
+                Console.WriteLine($"   StackTrace: {ex.StackTrace}");
+                Console.WriteLine($"   DTO Data: PatientId={dto.PatientId}, MedicationId={dto.MedicationId}, " +
+                                $"DayTimeFlags={dto.DayTimeFlags}, WeekdayFlags={dto.WeekdayFlags}");
+                return StatusCode(500, new { 
+                    error = ex.Message, 
+                    innerError = ex.InnerException?.Message,
+                    dayTimeFlags = dto.DayTimeFlags 
+                });
+            }
         }
 
         /// <summary>

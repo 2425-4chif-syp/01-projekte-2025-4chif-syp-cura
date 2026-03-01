@@ -354,6 +354,11 @@ export class MedicationPlanService {
       dayMap.forEach((medications, timeOfDay) => {
         const dayTimeFlag = timeOfDayMap[timeOfDay];
         
+        if (dayTimeFlag === undefined) {
+          console.error(`❌ FEHLER: Unbekannte Tageszeit '${timeOfDay}'. Verfügbare Zeiten:`, Object.keys(timeOfDayMap));
+          return; // Skip this time slot
+        }
+        
         medications.forEach(med => {
           if (!med.medicationId && !med.name.trim()) return;
           
@@ -384,6 +389,14 @@ export class MedicationPlanService {
         });
       });
     });
+
+    console.log('📋 Gruppierte Medikamente:', Array.from(medicationGroups.entries()).map(([key, group]) => ({
+      key,
+      medication: group.medicationName,
+      weekdayFlags: group.weekdayFlags,
+      dayTimeFlags: group.dayTimeFlags,
+      dosage: group.dosage
+    })));
 
     // Erstelle zuerst neue Medikamente
     const createMedicationRequests = Array.from(newMedicationsToCreate).map(name =>
@@ -429,7 +442,13 @@ export class MedicationPlanService {
             IsActive: true
           };
           
-          console.log('Erstelle Plan:', plan);
+          console.log('🚀 Erstelle Plan:', {
+            medication: group.medicationName,
+            medId,
+            weekdayFlags: group.weekdayFlags,
+            dayTimeFlags: group.dayTimeFlags,
+            plan
+          });
           planRequests.push(this.http.post(`${this.API_URL}/MedicationPlans`, plan));
         });
 
