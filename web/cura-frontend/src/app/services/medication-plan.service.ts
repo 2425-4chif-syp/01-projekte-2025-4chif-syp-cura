@@ -460,20 +460,21 @@ export class MedicationPlanService {
         activePlans.forEach(plan => {
           chain$ = chain$.pipe(
             switchMap(() => {
+              // Verwende exakt das gleiche Format wie beim CREATE - PascalCase für das Backend
               const payload = {
                 Id: plan.id,
                 PatientId: plan.patientId,
                 MedicationId: plan.medicationId,
-                CaregiverId: plan.caregiverId || null,
+                CaregiverId: plan.caregiverId,
                 WeekdayFlags: plan.weekdayFlags,
                 DayTimeFlags: plan.dayTimeFlags,
                 Quantity: plan.quantity,
-                ValidFrom: plan.validFrom,
-                ValidTo: validToDate,
-                Notes: plan.notes || null,
-                IsActive: false
+                ValidFrom: plan.validFrom,  // ISO String behalten
+                ValidTo: validToDate,        // Neuer Wert
+                Notes: plan.notes,
+                IsActive: false              // Deaktivieren
               };
-              console.log('📝 Update Plan:', plan.id, 'auf inactive');
+              console.log('📝 Update Plan:', plan.id, 'ValidTo:', validToDate);
               return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, payload);
             })
           );
