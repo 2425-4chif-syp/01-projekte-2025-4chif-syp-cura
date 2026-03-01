@@ -815,19 +815,33 @@ main {
   background: white;
   border: 2px solid var(--bg-hover);
   border-radius: var(--radius-md);
-  cursor: pointer;
   transition: all 0.3s ease;
+  opacity: 0.7;
 }
 
-.plan-option:hover {
+/* Aktive Pläne sind deutlich sichtbar */
+.plan-option.active {
+  border-color: var(--primary-green);
+  background: linear-gradient(135deg, rgba(176,196,177,0.15) 0%, rgba(255,255,255,1) 100%);
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(176,196,177,0.3);
+}
+
+/* Archivierte Pläne sind gedimmt */
+.plan-option.archived {
+  opacity: 0.6;
+  border-color: #e0e0e0;
+}
+
+/* Plan Create ist immer klickbar */
+.plan-option.plan-create {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.plan-option.plan-create:hover {
   border-color: var(--primary-teal);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74,87,89,0.12);
-}
-
-.plan-option.selected {
-  border-color: var(--primary-green);
-  background: linear-gradient(135deg, rgba(176,196,177,0.2) 0%, rgba(255,255,255,1) 100%);
   box-shadow: 0 4px 12px rgba(74,87,89,0.12);
 }
 
@@ -844,8 +858,12 @@ main {
   flex-shrink: 0;
 }
 
-.plan-option.selected .plan-icon {
+.plan-option.active .plan-icon {
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-teal) 100%);
+}
+
+.plan-option.archived .plan-icon {
+  background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%);
 }
 
 .plan-info {
@@ -867,6 +885,25 @@ main {
   font-size: var(--text-sm);
   color: var(--text-secondary);
   margin: 0;
+}
+
+.plan-status {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  width: fit-content;
+}
+
+.status-active {
+  color: var(--primary-green);
+  background: rgba(176,196,177,0.2);
+}
+
+.status-archived {
+  color: var(--text-secondary);
+  background: var(--bg-hover);
 }
 
 .plan-check {

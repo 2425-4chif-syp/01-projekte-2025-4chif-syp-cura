@@ -283,18 +283,19 @@
           <div class="plan-selection-content">
             @for (plan of availablePlans; track plan.id) {
               <div class="plan-option" 
-                   [class.selected]="plan.id === selectedPlanId"
-                   (click)="selectPlan(plan.id)">
+                   [class.active]="plan.isCurrentlyActive"
+                   [class.archived]="!plan.isCurrentlyActive">
                 <div class="plan-icon">
                   <i class="fa-solid fa-pills"></i>
                 </div>
                 <div class="plan-info">
                   <h3>{{ plan.name }}</h3>
-                  <p>{{ plan.patientName }}</p>
+                  @if (plan.isCurrentlyActive) {
+                    <span class="plan-status status-active">✓ Aktuell aktiv</span>
+                  } @else {
+                    <span class="plan-status status-archived">Archiviert</span>
+                  }
                 </div>
-                @if (plan.isCurrentlyActive) {
-                  <i class="fa-solid fa-check plan-check"></i>
-                }
               </div>
             }
             
