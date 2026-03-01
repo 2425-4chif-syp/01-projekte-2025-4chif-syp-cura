@@ -46,18 +46,18 @@ namespace WebApi.Controllers
                 currentTimeSlot = 4; // Afternoon
                 timeSlotName = "Afternoon";
             }
-            else if (hour >= 18 && hour < 22)
+            else if (hour >= 18)
             {
-                currentTimeSlot = 8; // Evening
+                currentTimeSlot = 8; // Evening (18:00-23:59)
                 timeSlotName = "Evening";
             }
             else
             {
-                // Außerhalb der Medikamentenzeiten (22:00-06:00)
+                // Außerhalb der Medikamentenzeiten (00:00-06:00)
                 return Ok(new
                 {
                     ShouldAlert = false,
-                    Reason = "Outside medication time windows",
+                    Reason = "Outside medication time windows (night rest)",
                     CurrentTime = now.ToString("HH:mm")
                 });
             }
@@ -92,8 +92,8 @@ namespace WebApi.Controllers
                 // Zeitslot der Einnahme bestimmen
                 if (intakeHour >= 6 && intakeHour < 11 && currentTimeSlot == 1) return true;
                 if (intakeHour >= 11 && intakeHour < 14 && currentTimeSlot == 2) return true;
-                if (intakeHour >= 14 && intakeHour < 18 && currentTimeSlot == 8) return true;
-                if (intakeHour >= 18 && intakeHour < 22 && currentTimeSlot == 16) return true;
+                if (intakeHour >= 14 && intakeHour < 18 && currentTimeSlot == 4) return true;
+                if (intakeHour >= 18 && currentTimeSlot == 8) return true;
                 
                 return false;
             }).ToList();

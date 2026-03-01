@@ -88,8 +88,8 @@ namespace WebApi.Controllers
                         var intakeTimeSlot = 0;
                         if (hour >= 6 && hour < 11) intakeTimeSlot = 1;
                         else if (hour >= 11 && hour < 14) intakeTimeSlot = 2;
-                        else if (hour >= 14 && hour < 18) intakeTimeSlot = 8;
-                        else if (hour >= 18 && hour < 22) intakeTimeSlot = 16;
+                        else if (hour >= 14 && hour < 18) intakeTimeSlot = 4;
+                        else if (hour >= 18) intakeTimeSlot = 8;
                         
                         return intakeTimeSlot == timeSlot;
                     });
@@ -198,7 +198,7 @@ namespace WebApi.Controllers
             if (hour >= 6 && hour < 11) return 1;      // Morning
             else if (hour >= 11 && hour < 14) return 2; // Noon
             else if (hour >= 14 && hour < 18) return 4; // Afternoon
-            else if (hour >= 18 && hour < 22) return 8; // Evening
+            else if (hour >= 18) return 8; // Evening (18:00-23:59)
             return 0;
         }
     }
