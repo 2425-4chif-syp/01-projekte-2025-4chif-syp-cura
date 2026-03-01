@@ -212,7 +212,7 @@ export class DashboardComponent implements OnInit {
     this.medicationPlanService.getPatientPlanGroups(this.currentPatientId).subscribe({
       next: (planGroups) => {
         this.availablePlans = planGroups.map(g => ({
-          id: g.validFrom, // YYYY-MM-DD als string ID
+          id: g.id, // groupKey: validFrom_validTo or validFrom_unbegrenzt
           name: g.name,
           patientName: this.userName,
           isCurrentlyActive: g.isCurrentlyActive
@@ -221,7 +221,7 @@ export class DashboardComponent implements OnInit {
         // Wähle aktuell gültigen Plan automatisch
         const currentPlan = planGroups.find(p => p.isCurrentlyActive) || planGroups[0];
         if (currentPlan) {
-          this.selectedPlanId = currentPlan.validFrom;
+          this.selectedPlanId = currentPlan.id;
         } else {
           this.selectedPlanId = String(this.currentPatientId);
         }
@@ -274,12 +274,14 @@ export class DashboardComponent implements OnInit {
         console.log('Alle Pläne geladen:', allPlans.length);
         console.log('Suche nach planId:', planId);
         
-        // Filtere Pläne nach ValidFrom (das ist unsere Plan-ID)
-        // Verwende split statt new Date() um Zeitzone-Probleme zu vermeiden
+        // Filtere Pläne nach ValidFrom + ValidTo (groupKey)
+        // planId Format: "YYYY-MM-DD_YYYY-MM-DD" oder "YYYY-MM-DD_unbegrenzt"
         const plansForThisGroup = allPlans.filter(p => {
-          const validFromDate = p.validFrom.split('T')[0]; // YYYY-MM-DD
-          console.log('Vergleiche:', validFromDate, 'mit', planId, '=', validFromDate === planId);
-          return validFromDate === planId;
+          const validFromDate = p.validFrom.split('T')[0];
+          const validToDate = p.validTo ? p.validTo.split('T')[0] : 'unbegrenzt';
+          const groupKey = `${validFromDate}_${validToDate}`;
+          console.log('Vergleiche:', groupKey, 'mit', planId, '=', groupKey === planId);
+          return groupKey === planId;
         });
         
         console.log('Gefilterte Pläne für diese Gruppe:', plansForThisGroup.length);
