@@ -253,8 +253,19 @@ export class DashboardComponent implements OnInit {
   }
 
   get selectedPlanName(): string {
-    const plan = this.availablePlans.find(p => p.id === this.selectedPlanId);
-    return plan?.name || 'Medikamentenplan';
+    const selectedPlan = this.availablePlans.find(p => p.id === this.selectedPlanId);
+    
+    // Wenn der ausgewählte Plan aktiv ist, zeige Info über alle aktiven Pläne
+    if (selectedPlan?.isCurrentlyActive) {
+      const activeCount = this.availablePlans.filter(p => p.isCurrentlyActive).length;
+      if (activeCount > 1) {
+        return `Aktueller Medikamentenplan (${activeCount} aktive Pläne)`;
+      }
+      return 'Aktueller Medikamentenplan';
+    }
+    
+    // Historischer Plan wird ausgewählt
+    return selectedPlan?.name || 'Medikamentenplan';
   }
 
   loadCalendar() {

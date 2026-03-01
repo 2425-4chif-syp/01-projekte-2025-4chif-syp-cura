@@ -452,28 +452,34 @@ export class MedicationPlanService {
           return of(null);
         }
         
-        console.log(`🔄 Deaktiviere ${activePlans.length} Pläne...`);
+        console.log(`🔄 Deaktiviere ${activePlans.length} Pläne sequenziell...`);
         
-        // Setze ValidTo und IsActive
-        const updateRequests = activePlans.map(plan => {
-          const payload = {
-            Id: plan.id,
-            PatientId: plan.patientId,
-            MedicationId: plan.medicationId,
-            CaregiverId: plan.caregiverId,
-            WeekdayFlags: plan.weekdayFlags,
-            DayTimeFlags: plan.dayTimeFlags,
-            Quantity: plan.quantity,
-            ValidFrom: plan.validFrom,
-            ValidTo: validToDate,
-            Notes: plan.notes || '',
-            IsActive: false
-          };
-          console.log('📝 Update Plan:', plan.id, 'auf inactive');
-          return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, payload);
+        // Deaktiviere Pläne sequenziell (einer nach dem anderen) um Concurrency-Probleme zu vermeiden
+        let chain$: Observable<any> = of(null);
+        
+        activePlans.forEach(plan => {
+          chain$ = chain$.pipe(
+            switchMap(() => {
+              const payload = {
+                Id: plan.id,
+                PatientId: plan.patientId,
+                MedicationId: plan.medicationId,
+                CaregiverId: plan.caregiverId || null,
+                WeekdayFlags: plan.weekdayFlags,
+                DayTimeFlags: plan.dayTimeFlags,
+                Quantity: plan.quantity,
+                ValidFrom: plan.validFrom,
+                ValidTo: validToDate,
+                Notes: plan.notes || null,
+                IsActive: false
+              };
+              console.log('📝 Update Plan:', plan.id, 'auf inactive');
+              return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, payload);
+            })
+          );
         });
         
-        return forkJoin(updateRequests);
+        return chain$;
       })
     );
   }
