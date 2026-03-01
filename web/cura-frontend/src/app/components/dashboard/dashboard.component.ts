@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
+import { switchMap } from 'rxjs';
 import { CalendarDay } from '../../models/calendar-day.model';
 import { MedicationPlan } from '../../models/medication-plan.model';
 import { DayDetail } from '../../models/day-detail.model';
@@ -57,7 +58,13 @@ export class DashboardComponent implements OnInit {
   // Create Plan Wizard
   showCreateWizard = false;
   currentWizardStep = 0;
-  wizardSteps = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag', 'Zusammenfassung'];
+  wizardSteps = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag', 'Zusammenfassung', 'Plan-Details'];
+  
+  // Wizard: Plan-Eigenschaften
+  planValidFrom: string = ''; // YYYY-MM-DD
+  planValidTo: string = ''; // YYYY-MM-DD oder leer
+  isShortTermMedication: boolean | null = null; // null = noch nicht gewählt
+  replaceExistingPlans: boolean = true; // true = ersetzen, false = zusätzlich
   
   availableMedications: Array<{ id: number; name: string }> = [];
   
@@ -191,11 +198,29 @@ export class DashboardComponent implements OnInit {
 
   // Medication Plan Selection
   loadAvailablePlans() {
-    // Lade nur Pläne für den aktuellen Patienten
-    this.availablePlans = [
-      { id: this.currentPatientId, name: 'Mein Medikamentenplan', patientName: this.userName }
-    ];
-    this.selectedPlanId = this.currentPatientId;
+    // Lade Plan-Gruppen für den aktuellen Patienten
+    this.medicationPlanService.getPatientPlanGroups(this.currentPatientId).subscribe({
+      next: (planGroups) => {
+        this.availablePlans = planGroups.map(g => ({
+          id: g.validFrom.replace(/-/g, ''), // YYYYMMDD als numerische ID
+          name: g.name,
+          patientName: this.userName
+        }));
+        
+        // Wähle aktuell gültigen Plan automatisch
+        const currentPlan = planGroups.find(p => p.isCurrentlyActive) || planGroups[0];
+        if (currentPlan) {
+          this.selectedPlanId = parseInt(currentPlan.validFrom.replace(/-/g, ''), 10);
+        } else {
+          this.selectedPlanId = this.currentPatientId;
+        }
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der Plan-Gruppen:', error);
+        this.availablePlans = [{ id: this.currentPatientId, name: 'Mein Medikamentenplan', patientName: this.userName }];
+        this.selectedPlanId = this.currentPatientId;
+      }
+    });
   }
 
   loadAvailableMedications() {
@@ -255,11 +280,12 @@ export class DashboardComponent implements OnInit {
   }
 
   loadMedicationPlans() {
-    // Verwende selectedPlanId (= patientId) statt hardcoded 1
-    const patientId = this.selectedPlanId || 1;
+    // Lade alle aktuell gültigen Pläne (nicht nur einen bestimmten)
+    const patientId = this.currentPatientId;
     
-    this.medicationPlanService.getMedicationPlans(patientId).subscribe({
+    this.medicationPlanService.getActivePlansForDate(patientId).subscribe({
       next: (plans) => {
+        console.log('✅ Aktuell gültige Pläne:', plans.length);
         this.medicationPlans = plans;
         this.loadMedicationNames(plans);
       },
@@ -559,6 +585,13 @@ export class DashboardComponent implements OnInit {
     }
     // Alle Tageszeit-Formulare zurücksetzen
     this.resetCurrentMedication();
+    
+    // Plan-Details zurücksetzen
+    const today = new Date();
+    this.planValidFrom = today.toISOString().split('T')[0]; // YYYY-MM-DD
+    this.planValidTo = '';
+    this.isShortTermMedication = null;
+    this.replaceExistingPlans = true;
   }
 
   nextWizardStep() {
@@ -603,6 +636,13 @@ export class DashboardComponent implements OnInit {
         });
       });
       return totalMeds > 0;
+    }
+    if (this.currentWizardStep === 8) {
+      // Plan-Details: Startdatum und Kurzzeitmedikation-Frage müssen ausgefüllt sein
+      if (!this.planValidFrom) return false;
+      if (this.isShortTermMedication === null) return false;
+      if (this.isShortTermMedication && !this.planValidTo) return false;
+      return true;
     }
     return false;
   }
@@ -756,31 +796,121 @@ export class DashboardComponent implements OnInit {
       alert('Bitte fügen Sie mindestens ein Medikament hinzu!');
       return;
     }
+    
+    // Validierung der Daten
+    if (!this.planValidFrom) {
+      alert('Bitte wählen Sie ein Startdatum!');
+      return;
+    }
+    
+    if (this.isShortTermMedication && !this.planValidTo) {
+      alert('Bitte wählen Sie ein Enddatum für die Kurzzeitmedikation!');
+      return;
+    }
+    
+    // Datum-Objekte erstellen
+    const validFrom = new Date(this.planValidFrom);
+    validFrom.setHours(0, 0, 0, 0);
+    
+    const validTo = this.planValidTo ? new Date(this.planValidTo) : null;
+    if (validTo) {
+      validTo.setHours(23, 59, 59, 999);
+    }
+    
+    // Validierung: ValidTo muss nach ValidFrom liegen
+    if (validTo && validTo <= validFrom) {
+      alert('Das Enddatum muss nach dem Startdatum liegen!');
+      return;
+    }
 
     console.log('Erstelle Medikamentenplan mit', totalMeds, 'Einnahmen...');
-
-    this.medicationPlanService.createWeeklyMedicationPlans(this.weekSchedule, this.currentPatientId).subscribe({
-      next: (createdPlans) => {
-        console.log('Erfolgreich erstellt:', createdPlans);
-        alert(`✓ Medikamentenplan erfolgreich erstellt!\n${createdPlans.length} Einträge gespeichert.`);
-        this.closeCreateWizard();
-        this.loadMedicationPlans();
-      },
-      error: (error) => {
-        console.error('Fehler beim Erstellen des Plans:', error);
-        console.error('Error Details:', error.error);
-        if (error.error?.errors) {
-          console.error('Validation Errors:', error.error.errors);
+    console.log('ValidFrom:', validFrom.toISOString());
+    console.log('ValidTo:', validTo ? validTo.toISOString() : 'unbegrenzt');
+    console.log('Kurzzeitmedikation:', this.isShortTermMedication);
+    console.log('Bestehende Pläne ersetzen:', !this.isShortTermMedication);
+    
+    // Entscheide: Ersetzen oder Hinzufügen?
+    // Kurzzeitmedikation = rhinzufügen (alte Pläne bleiben)
+    // Reguläre Medikation = ersetzen (alte Pläne deaktivieren)
+    const shouldDeactivateOldPlans = !this.isShortTermMedication;
+    
+    if (shouldDeactivateOldPlans) {
+      // Variante A: Bestehende Pläne ersetzen
+      const yesterday = new Date(validFrom);
+      yesterday.setDate(yesterday.getDate() - 1);
+      yesterday.setHours(23, 59, 59, 999);
+      
+      console.log('➡️ Deaktiviere alte Pläne (ValidTo:', yesterday.toISOString(), ')');
+      
+      this.medicationPlanService.deactivateActivePlans(
+        this.currentPatientId,
+        yesterday.toISOString()
+      ).pipe(
+        switchMap(() => {
+          console.log('✅ Alte Pläne deaktiviert, erstelle neue...');
+          return this.medicationPlanService.createWeeklyMedicationPlans(
+            this.weekSchedule,
+            this.currentPatientId,
+            validFrom,
+            validTo
+          );
+        })
+      ).subscribe({
+        next: (createdPlans) => {
+          console.log('✅ Erfolgreich erstellt:', createdPlans);
+          alert(`✓ Medikamentenplan erfolgreich erstellt!\n${createdPlans.length} Einträge gespeichert.\n\nAlte Pläne wurden ersetzt.`);
+          this.closeCreateWizard();
+          this.loadMedicationPlans();
+          this.loadAvailablePlans();
+        },
+        error: (error) => {
+          console.error('❌ Fehler beim Erstellen des Plans:', error);
+          this.handlePlanCreationError(error);
         }
-        
-        let errorMsg = '⚠ Fehler beim Speichern des Medikamentenplans!\n\n';
-        if (error.error?.errors) {
-          Object.keys(error.error.errors).forEach(key => {
-            errorMsg += `${key}: ${error.error.errors[key].join(', ')}\n`;
-          });
+      });
+    } else {
+      // Variante B: Zusätzlich hinzufügen (Kurzzeitmedikation)
+      console.log('➡️ Erstelle zusätzlichen Plan (alte Pläne bleiben aktiv)');
+      
+      this.medicationPlanService.createWeeklyMedicationPlans(
+        this.weekSchedule,
+        this.currentPatientId,
+        validFrom,
+        validTo
+      ).subscribe({
+        next: (createdPlans) => {
+          console.log('✅ Erfolgreich erstellt:', createdPlans);
+          let message = `✓ Kurzzeitmedikation erfolgreich hinzugefügt!\n${createdPlans.length}Einträge gespeichert.`;
+          if (validTo) {
+            message += `\n\nGültig bis: ${validTo.toLocaleDateString('de-DE')}`;
+          }
+          alert(message);
+          this.closeCreateWizard();
+          this.loadMedicationPlans();
+          this.loadAvailablePlans();
+        },
+        error: (error) => {
+          console.error('❌ Fehler beim Erstellen des Plans:', error);
+          this.handlePlanCreationError(error);
         }
-        alert(errorMsg);
-      }
-    });
+      });
+    }
+  }
+  
+  private handlePlanCreationError(error: any) {
+    console.error('Error Details:', error.error);
+    if (error.error?.errors) {
+      console.error('Validation Errors:', error.error.errors);
+    }
+    
+    let errorMsg = '⚠ Fehler beim Speichern des Medikamentenplans!\n\n';
+    if (error.error?.errors) {
+      Object.keys(error.error.errors).forEach(key => {
+        errorMsg += `${key}: ${error.error.errors[key].join(', ')}\n`;
+      });
+    } else if (error.message) {
+      errorMsg += error.message;
+    }
+    alert(errorMsg);
   }
 }

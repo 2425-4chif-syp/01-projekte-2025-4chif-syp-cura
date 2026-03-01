@@ -195,7 +195,7 @@
             </table>
           </div>
           <div class="action-buttons">
-            <button class="btn-primary" (click)="openPlanSelection()">✏️ bearbeiten</button>
+            <button class="btn-primary" (click)="openPlanSelection()">📋 Plan-Historie</button>
             <button class="btn-secondary" (click)="exportMedicationPlan()">📄 exportieren</button>
           </div>
         </div>
@@ -203,7 +203,7 @@
         <!-- Back: Plan-Auswahl -->
         <div class="medication-back">
           <div class="plan-selection-header">
-            <h2>Medikamentenplan wählen</h2>
+            <h2>Plan-Historie anzeigen</h2>
             <button class="btn-close" (click)="closePlanSelection()">
               <i class="fa-solid fa-xmark"></i>
             </button>
@@ -266,7 +266,7 @@
             </tbody>
           </table>
           <div class="action-buttons">
-            <button class="btn-primary" (click)="openPlanSelection()">✏️ bearbeiten</button>
+            <button class="btn-primary" (click)="openPlanSelection()">📋 Plan-Historie</button>
             <button class="btn-secondary" (click)="exportMedicationPlan()">📄 exportieren</button>
           </div>
         </div>
@@ -274,7 +274,7 @@
         <!-- Back: Plan-Auswahl -->
         <div class="medication-back">
           <div class="plan-selection-header">
-            <h2>Plan wählen</h2>
+            <h2>Plan-Historie</h2>
             <button class="btn-close" (click)="closePlanSelection()">
               <i class="fa-solid fa-xmark"></i>
             </button>
@@ -903,6 +903,80 @@
                 <div class="summary-schedule">
                   <pre style="white-space: pre-wrap; font-family: inherit;">{{ getScheduleSummary() }}</pre>
                 </div>
+              </div>
+            </div>
+          }
+          @case (8) {
+            <!-- Schritt 9: Plan-Details -->
+            <div class="wizard-step">
+              <h3>Plan-Details festlegen</h3>
+              <p class="step-description">Wann soll der Plan gültig sein?</p>
+              
+              <div class="plan-details-form">
+                <div class="form-group">
+                  <label for="validFrom">Startdatum *</label>
+                  <input 
+                    type="date" 
+                    id="validFrom" 
+                    [(ngModel)]="planValidFrom"
+                    class="form-control">
+                  <small>Ab wann soll der Medikamentenplan gültig sein?</small>
+                </div>
+                
+                <div class="form-group question-card">
+                  <h4>Ist dies eine Kurzzeitmedikation?</h4>
+                  <p class="question-description">
+                    z.B. Antibiotika-Kur, temporäre Schmerzmittel
+                  </p>
+                  
+                  <div class="radio-options">
+                    <label class="radio-option" [class.selected]="isShortTermMedication === true">
+                      <input 
+                        type="radio" 
+                        name="shortTerm" 
+                        [value]="true"
+                        [(ngModel)]="isShortTermMedication">
+                      <div class="option-content">
+                        <strong>Ja, Kurzzeitmedikation</strong>
+                        <p>Läuft zusätzlich zur bestehenden Dauermedikation.<br>Enddatum erforderlich.</p>
+                      </div>
+                    </label>
+                    
+                    <label class="radio-option" [class.selected]="isShortTermMedication === false">
+                      <input 
+                        type="radio" 
+                        name="shortTerm" 
+                        [value]="false"
+                        [(ngModel)]="isShortTermMedication">
+                      <div class="option-content">
+                        <strong>Nein, reguläre Medikation</strong>
+                        <p>Ersetzt bisherige Medikation.<br>Läuft unbegrenzt (bis zum nächsten Plan).</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                
+                @if (isShortTermMedication === true) {
+                  <div class="form-group">
+                    <label for="validTo">Enddatum *</label>
+                    <input 
+                      type="date" 
+                      id="validTo" 
+                      [(ngModel)]="planValidTo"
+                      [min]="planValidFrom"
+                      class="form-control">
+                    <small>Bis wann soll die Kurzzeitmedikation laufen?</small>
+                  </div>
+                }
+                
+                @if (isShortTermMedication === false) {
+                  <div class="info-box warning">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <div>
+                      <strong>Hinweis:</strong> Alle aktuell aktiven Medikamentenpläne werden beendet und durch diesen neuen Plan ersetzt.
+                    </div>
+                  </div>
+                }
               </div>
             </div>
           }
