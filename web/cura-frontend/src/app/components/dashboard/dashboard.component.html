@@ -361,8 +361,8 @@
                     @switch (timeOfDay) {
                       @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
                       @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
-                      @case ('AFTERNOON') { <i class="fa-solid fa-sun-bright"></i> Nachmittag }
                       @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                      @case ('NIGHT') { <i class="fa-solid fa-moon-stars"></i> Nachts }
                     }
                   </h4>
                   
@@ -440,8 +440,8 @@
                     @switch (timeOfDay) {
                       @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
                       @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
-                      @case ('AFTERNOON') { <i class="fa-solid fa-sun-bright"></i> Nachmittag }
                       @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                      @case ('NIGHT') { <i class="fa-solid fa-moon-stars"></i> Nachts }
                     }
                   </h4>
                   
@@ -517,8 +517,8 @@
                     @switch (timeOfDay) {
                       @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
                       @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
-                      @case ('AFTERNOON') { <i class="fa-solid fa-sun-bright"></i> Nachmittag }
                       @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                      @case ('NIGHT') { <i class="fa-solid fa-moon-stars"></i> Nachts }
                     }
                   </h4>
                   
@@ -594,8 +594,8 @@
                     @switch (timeOfDay) {
                       @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
                       @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
-                      @case ('AFTERNOON') { <i class="fa-solid fa-sun-bright"></i> Nachmittag }
                       @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                      @case ('NIGHT') { <i class="fa-solid fa-moon-stars"></i> Nachts }
                     }
                   </h4>
                   
@@ -671,8 +671,8 @@
                     @switch (timeOfDay) {
                       @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
                       @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
-                      @case ('AFTERNOON') { <i class="fa-solid fa-sun-bright"></i> Nachmittag }
                       @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                      @case ('NIGHT') { <i class="fa-solid fa-moon-stars"></i> Nachts }
                     }
                   </h4>
                   
@@ -748,8 +748,8 @@
                     @switch (timeOfDay) {
                       @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
                       @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
-                      @case ('AFTERNOON') { <i class="fa-solid fa-sun-bright"></i> Nachmittag }
                       @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                      @case ('NIGHT') { <i class="fa-solid fa-moon-stars"></i> Nachts }
                     }
                   </h4>
                   
@@ -825,8 +825,8 @@
                     @switch (timeOfDay) {
                       @case ('MORNING') { <i class="fa-solid fa-sun"></i> Morgen }
                       @case ('NOON') { <i class="fa-solid fa-cloud-sun"></i> Mittag }
-                      @case ('AFTERNOON') { <i class="fa-solid fa-sun-bright"></i> Nachmittag }
                       @case ('EVENING') { <i class="fa-solid fa-moon"></i> Abend }
+                      @case ('NIGHT') { <i class="fa-solid fa-moon-stars"></i> Nachts }
                     }
                   </h4>
                   
@@ -976,14 +976,6 @@
                       <strong>Hinweis:</strong> Alle aktuell aktiven Medikamentenpläne werden beendet und durch diesen neuen Plan ersetzt.
                     </div>
                   </div>
-                  @if (planValidFrom && isStartDateInFuture()) {
-                    <div class="info-box error">
-                      <i class="fa-solid fa-xmark-circle"></i>
-                      <div>
-                        <strong>Fehler:</strong> Dauermedikation muss heute oder früher starten. Ein zukünftiges Startdatum würde eine Versorgungslücke verursachen.
-                      </div>
-                    </div>
-                  }
                 }
               </div>
             </div>

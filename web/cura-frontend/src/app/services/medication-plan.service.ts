@@ -329,7 +329,8 @@ export class MedicationPlanService {
       'MORNING': 1,
       'NOON': 2,
       'AFTERNOON': 4,
-      'EVENING': 8
+      'EVENING': 8,
+      'NIGHT': 16
     };
 
     const weekdayFlagsArray = [2, 4, 8, 16, 32, 64, 1]; // Mo=2, Di=4, Mi=8, Do=16, Fr=32, Sa=64, So=1
@@ -465,9 +466,8 @@ export class MedicationPlanService {
             Quantity: plan.quantity,
             ValidFrom: plan.validFrom,
             ValidTo: validToDate,
-            Notes: plan.notes,
+            Notes: plan.notes || '',
             IsActive: false
-            // Navigation Properties KOMPLETT weglassen (nicht null, einfach nicht vorhanden)
           };
           console.log('📝 Update Plan:', plan.id, 'auf inactive');
           return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, payload);
