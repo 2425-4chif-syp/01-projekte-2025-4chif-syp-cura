@@ -256,20 +256,30 @@ export class DashboardComponent implements OnInit {
   }
 
   viewPlanDetails(planId: string) {
+    console.log('viewPlanDetails called with planId:', planId);
+    
     // Finde den ausgewählten Plan
     const plan = this.availablePlans.find(p => p.id === planId);
-    if (!plan) return;
+    if (!plan) {
+      console.log('Plan nicht gefunden!');
+      return;
+    }
     
+    console.log('Plan gefunden:', plan);
     this.selectedPlanForDetail = plan;
     
     // Lade alle MedicationPlans für diesen Zeitraum
     this.medicationPlanService.getMedicationPlans(this.currentPatientId).subscribe({
       next: (allPlans) => {
+        console.log('Alle Pläne geladen:', allPlans.length);
+        
         // Filtere Pläne nach ValidFrom (das ist unsere Plan-ID)
         const plansForThisGroup = allPlans.filter(p => {
           const validFromDate = new Date(p.validFrom).toISOString().split('T')[0];
           return validFromDate === planId;
         });
+        
+        console.log('Gefilterte Pläne für diese Gruppe:', plansForThisGroup.length);
         
         // Gruppiere nach Medikament (medicationId + quantity)
         const medicationMap = new Map<string, {
@@ -295,13 +305,25 @@ export class DashboardComponent implements OnInit {
           }
         });
         
+        console.log('Gruppierte Medikamente:', medicationMap.size);
+        
         // Lade Medication-Namen für alle IDs
         const medicationRequests = Array.from(medicationMap.values()).map(med =>
           this.medicationPlanService.getMedicationName(med.medicationId)
         );
         
+        // Wenn keine Medikamente vorhanden sind
+        if (medicationRequests.length === 0) {
+          console.log('Keine Medikamente in diesem Plan');
+          this.planDetailMedications = [];
+          this.showPlanDetail = true;
+          return;
+        }
+        
         forkJoin(medicationRequests).subscribe({
           next: (medicationNames) => {
+            console.log('Medication-Namen geladen:', medicationNames);
+            
             // Konvertiere zu Array mit lesbaren Wochentagen/Zeiten
             this.planDetailMedications = Array.from(medicationMap.values()).map((med, index) => {
               const weekdays: string[] = [];
@@ -328,6 +350,7 @@ export class DashboardComponent implements OnInit {
               };
             });
             
+            console.log('Plan-Details vorbereitet:', this.planDetailMedications);
             this.showPlanDetail = true;
           },
           error: (error) => {
