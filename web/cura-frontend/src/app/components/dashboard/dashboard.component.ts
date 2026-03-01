@@ -272,10 +272,12 @@ export class DashboardComponent implements OnInit {
     this.medicationPlanService.getMedicationPlans(this.currentPatientId).subscribe({
       next: (allPlans) => {
         console.log('Alle Pläne geladen:', allPlans.length);
+        console.log('Suche nach planId:', planId);
         
         // Filtere Pläne nach ValidFrom (das ist unsere Plan-ID)
         const plansForThisGroup = allPlans.filter(p => {
           const validFromDate = new Date(p.validFrom).toISOString().split('T')[0];
+          console.log('Vergleiche:', validFromDate, 'mit', planId, '=', validFromDate === planId);
           return validFromDate === planId;
         });
         
