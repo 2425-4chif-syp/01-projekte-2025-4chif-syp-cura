@@ -150,14 +150,11 @@ namespace WebApi.Controllers
         /// Updates an existing medication plan.
         /// </summary>
         /// <param name="id">Medication plan ID</param>
-        /// <param name="medicationPlan">New medication plan data</param>
+        /// <param name="dto">Updated medication plan data</param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMedicationPlan(int id, [FromBody] MedicationPlan medicationPlan)
+        public async Task<IActionResult> UpdateMedicationPlan(int id, [FromBody] UpdateMedicationPlanDto dto)
         {
-            if (id != medicationPlan.Id)
-                return BadRequest("ID mismatch");
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -165,7 +162,19 @@ namespace WebApi.Controllers
             if (existingPlan == null)
                 return NotFound();
 
-            _unitOfWork.MedicationPlanRepository.Update(medicationPlan);
+            // Update nur die Felder aus dem DTO
+            existingPlan.PatientId = dto.PatientId;
+            existingPlan.MedicationId = dto.MedicationId;
+            existingPlan.CaregiverId = dto.CaregiverId;
+            existingPlan.WeekdayFlags = dto.WeekdayFlags;
+            existingPlan.DayTimeFlags = dto.DayTimeFlags;
+            existingPlan.Quantity = dto.Quantity;
+            existingPlan.ValidFrom = dto.ValidFrom;
+            existingPlan.ValidTo = dto.ValidTo;
+            existingPlan.Notes = dto.Notes;
+            existingPlan.IsActive = dto.IsActive;
+
+            _unitOfWork.MedicationPlanRepository.Update(existingPlan);
             await _unitOfWork.SaveChangesAsync();
 
             return NoContent();

@@ -460,31 +460,22 @@ export class MedicationPlanService {
         activePlans.forEach(plan => {
           chain$ = chain$.pipe(
             switchMap(() => {
-              // WICHTIG: Erstelle komplett neues Objekt mit NUR den primitiven Feldern
-              // Keine Navigation Properties (patient, medication, caregiver)!
-              const payload = {
-                Id: plan.id,
-                PatientId: plan.patientId,
-                MedicationId: plan.medicationId,
-                CaregiverId: plan.caregiverId,
-                WeekdayFlags: plan.weekdayFlags,
-                DayTimeFlags: plan.dayTimeFlags,
-                Quantity: plan.quantity,
-                ValidFrom: plan.validFrom,
-                ValidTo: validToDate,
-                Notes: plan.notes,
-                IsActive: false
+              // DTO für Update - NUR die primitiven Felder (kein id, keine Navigation Properties)
+              const dto = {
+                patientId: plan.patientId,
+                medicationId: plan.medicationId,
+                caregiverId: plan.caregiverId,
+                weekdayFlags: plan.weekdayFlags,
+                dayTimeFlags: plan.dayTimeFlags,
+                quantity: plan.quantity,
+                validFrom: plan.validFrom,
+                validTo: validToDate,
+                notes: plan.notes,
+                isActive: false
               };
               
-              // Entferne alle undefined/null Werte die problematisch sein könnten
-              Object.keys(payload).forEach(key => {
-                if (payload[key as keyof typeof payload] === undefined) {
-                  delete payload[key as keyof typeof payload];
-                }
-              });
-              
-              console.log('📝 Update Plan:', plan.id, 'Payload:', JSON.stringify(payload, null, 2));
-              return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, payload);
+              console.log('📝 Update Plan:', plan.id, 'DTO:', JSON.stringify(dto, null, 2));
+              return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, dto);
             })
           );
         });
