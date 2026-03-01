@@ -221,7 +221,7 @@
                   <h3>{{ plan.name }}</h3>
                   <p>{{ plan.patientName }}</p>
                 </div>
-                @if (plan.id === selectedPlanId) {
+                @if (plan.isCurrentlyActive) {
                   <i class="fa-solid fa-check plan-check"></i>
                 }
               </div>
@@ -292,7 +292,7 @@
                   <h3>{{ plan.name }}</h3>
                   <p>{{ plan.patientName }}</p>
                 </div>
-                @if (plan.id === selectedPlanId) {
+                @if (plan.isCurrentlyActive) {
                   <i class="fa-solid fa-check plan-check"></i>
                 }
               </div>

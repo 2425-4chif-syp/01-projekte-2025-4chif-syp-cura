@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
   // Medication Plan Flip
   showPlanSelection = false;
   selectedPlanId: string = '';
-  availablePlans: { id: string; name: string; patientName: string }[] = [];
+  availablePlans: { id: string; name: string; patientName: string; isCurrentlyActive: boolean }[] = [];
   groupedMedications: { timeLabel: string; medications: { name: string; status: 'taken' | 'missed' }[]; allTaken: boolean }[] = [];
   expandedTimeGroups = new Set<string>();
   
@@ -204,7 +204,8 @@ export class DashboardComponent implements OnInit {
         this.availablePlans = planGroups.map(g => ({
           id: g.validFrom, // YYYY-MM-DD als string ID
           name: g.name,
-          patientName: this.userName
+          patientName: this.userName,
+          isCurrentlyActive: g.isCurrentlyActive
         }));
         
         // Wähle aktuell gültigen Plan automatisch
@@ -217,7 +218,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Fehler beim Laden der Plan-Gruppen:', error);
-        this.availablePlans = [{ id: String(this.currentPatientId), name: 'Mein Medikamentenplan', patientName: this.userName }];
+        this.availablePlans = [{ id: String(this.currentPatientId), name: 'Mein Medikamentenplan', patientName: this.userName, isCurrentlyActive: true }];
         this.selectedPlanId = String(this.currentPatientId);
       }
     });
