@@ -49,8 +49,8 @@ namespace Core.Entities
             {
                 >= 6 and < 11 => "Morning",
                 >= 11 and < 14 => "Noon",
-                >= 18 and < 22 => "Evening",
-                >= 22 or < 6 => "Night",
+                >= 14 and < 18 => "Evening",
+                >= 18 and < 22 => "Night",
                 _ => "Unknown"
             };
             

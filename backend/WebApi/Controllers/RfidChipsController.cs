@@ -192,12 +192,12 @@ namespace WebApi.Controllers
                 dayTimeFlag = 2; // Noon
                 dayTimeName = "NOON";
             }
-            else if (hour >= 18 && hour < 22)
+            else if (hour >= 14 && hour < 18)
             {
                 dayTimeFlag = 8; // Evening
                 dayTimeName = "EVENING";
             }
-            else if (hour >= 22 || hour < 6)
+            else if (hour >= 18 && hour < 22)
             {
                 dayTimeFlag = 16; // Night
                 dayTimeName = "NIGHT";
@@ -207,7 +207,7 @@ namespace WebApi.Controllers
                 return Ok(new { 
                     Success = false,
                     Error = "OUTSIDE_TIME_WINDOW",
-                    Message = $"Current time {now:HH:mm} is outside medication time windows (14:00-18:00 free time)",
+                    Message = $"Current time {now:HH:mm} is outside medication time windows (22:00-06:00 night rest)",
                     CurrentTime = now.ToString("HH:mm")
                 });
             }
