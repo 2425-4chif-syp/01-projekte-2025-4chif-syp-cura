@@ -460,7 +460,8 @@ export class MedicationPlanService {
         activePlans.forEach(plan => {
           chain$ = chain$.pipe(
             switchMap(() => {
-              // Verwende exakt das gleiche Format wie beim CREATE - PascalCase für das Backend
+              // WICHTIG: Erstelle komplett neues Objekt mit NUR den primitiven Feldern
+              // Keine Navigation Properties (patient, medication, caregiver)!
               const payload = {
                 Id: plan.id,
                 PatientId: plan.patientId,
@@ -469,12 +470,20 @@ export class MedicationPlanService {
                 WeekdayFlags: plan.weekdayFlags,
                 DayTimeFlags: plan.dayTimeFlags,
                 Quantity: plan.quantity,
-                ValidFrom: plan.validFrom,  // ISO String behalten
-                ValidTo: validToDate,        // Neuer Wert
+                ValidFrom: plan.validFrom,
+                ValidTo: validToDate,
                 Notes: plan.notes,
-                IsActive: false              // Deaktivieren
+                IsActive: false
               };
-              console.log('📝 Update Plan:', plan.id, 'ValidTo:', validToDate);
+              
+              // Entferne alle undefined/null Werte die problematisch sein könnten
+              Object.keys(payload).forEach(key => {
+                if (payload[key as keyof typeof payload] === undefined) {
+                  delete payload[key as keyof typeof payload];
+                }
+              });
+              
+              console.log('📝 Update Plan:', plan.id, 'Payload:', JSON.stringify(payload, null, 2));
               return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, payload);
             })
           );
