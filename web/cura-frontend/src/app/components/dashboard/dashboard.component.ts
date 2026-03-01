@@ -646,10 +646,8 @@ export class DashboardComponent implements OnInit {
       
       // Dauermedikation muss heute oder früher starten
       if (!this.isShortTermMedication) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const selectedDate = new Date(this.planValidFrom);
-        if (selectedDate > today) return false;
+        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        if (this.planValidFrom > today) return false;
       }
       
       return true;
@@ -659,10 +657,8 @@ export class DashboardComponent implements OnInit {
 
   isStartDateInFuture(): boolean {
     if (!this.planValidFrom) return false;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const selectedDate = new Date(this.planValidFrom);
-    return selectedDate > today;
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    return this.planValidFrom > today;
   }
 
   getPatientName(patientId: number | null): string {

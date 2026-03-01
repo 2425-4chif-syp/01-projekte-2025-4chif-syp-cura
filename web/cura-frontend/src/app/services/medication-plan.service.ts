@@ -457,16 +457,8 @@ export class MedicationPlanService {
         // Setze ValidTo und IsActive
         const updateRequests = activePlans.map(plan => {
           const payload = {
-            Id: plan.id,
-            PatientId: plan.patientId,
-            MedicationId: plan.medicationId,
-            CaregiverId: plan.caregiverId,
-            WeekdayFlags: plan.weekdayFlags,
-            DayTimeFlags: plan.dayTimeFlags,
-            Quantity: plan.quantity,
-            ValidFrom: plan.validFrom,
+            ...plan, // Behalte alle Felder inkl. Navigation Properties
             ValidTo: validToDate,
-            Notes: plan.notes || '',
             IsActive: false
           };
           console.log('📝 Update Plan:', plan.id, 'auf inactive');
