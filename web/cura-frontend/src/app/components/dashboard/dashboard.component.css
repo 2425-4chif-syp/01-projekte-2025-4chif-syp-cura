@@ -412,9 +412,10 @@ main {
   position: absolute;
   top: 0;
   left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   transform: rotateY(180deg);
-  overflow-y: auto;
-  max-height: calc(100vh - 130px);
 }
 
 .medication-card h2 {
@@ -830,11 +831,12 @@ main {
 }
 
 .plan-selection-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
   overflow-y: auto;
-  max-height: calc(100vh - 250px);
+  min-height: 0;
 }
 
 .plan-option {
@@ -1113,10 +1115,6 @@ main {
 
   .plan-check {
     font-size: var(--text-lg);
-  }
-
-  .plan-selection-content {
-    max-height: calc(100vh - 220px);
   }
 }
 
