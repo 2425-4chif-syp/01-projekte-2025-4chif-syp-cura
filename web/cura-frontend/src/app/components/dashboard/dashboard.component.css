@@ -718,7 +718,7 @@ main {
   
   .medication-table th.time-label,
   .medication-table td.time-label {
-    min-width: 35px;
+    min-width: 5px;
     max-width: 38px;
     padding-right: 2px;
   }
