@@ -179,7 +179,7 @@ main {
 }
 
 .day.checked {
-  background: #34d399;
+  background: #e2e8e1;
   color: white;
 }
 
@@ -317,7 +317,7 @@ main {
 }
 
 .status-dot.checked {
-  background: linear-gradient(90deg, #34d399 0%, #6ee7b7 100%);
+  background: linear-gradient(90deg, #e2e8e1 0%, #d0d9cf 100%);
 }
 
 .status-dot.partial {
@@ -345,7 +345,7 @@ main {
 }
 
 .progress-segment.checked {
-  background: linear-gradient(90deg, #34d399 0%, #6ee7b7 100%);
+  background: linear-gradient(90deg, #e2e8e1 0%, #d0d9cf 100%);
 }
 
 .progress-segment.partial {
