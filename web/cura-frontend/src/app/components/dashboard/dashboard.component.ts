@@ -949,14 +949,10 @@ export class DashboardComponent implements OnInit {
       return;
     }
     
-    // Datum-Objekte erstellen (in lokaler Zeitzone, nicht UTC)
-    const [yearFrom, monthFrom, dayFrom] = this.planValidFrom.split('-').map(Number);
-    const validFrom = new Date(yearFrom, monthFrom - 1, dayFrom, 0, 0, 0, 0);
+    // Datum-Objekte erstellen (in UTC, um Timezone-Probleme zu vermeiden)
+    const validFrom = new Date(this.planValidFrom + 'T00:00:00.000Z');
     
-    const validTo = this.planValidTo ? (() => {
-      const [yearTo, monthTo, dayTo] = this.planValidTo.split('-').map(Number);
-      return new Date(yearTo, monthTo - 1, dayTo, 23, 59, 59, 999);
-    })() : null;
+    const validTo = this.planValidTo ? new Date(this.planValidTo + 'T23:59:59.999Z') : null;
     
     // Validierung: ValidTo muss nach ValidFrom liegen
     if (validTo && validTo <= validFrom) {

@@ -417,8 +417,10 @@ export class MedicationPlanService {
       map(() => {
         // Jetzt haben wir IDs für alle neuen Medikamente
         const planRequests: Observable<any>[] = [];
-        const validFrom = new Date(validFromDate);
-        validFrom.setHours(0, 0, 0, 0);
+        
+        // Verwende die Date-Objekte direkt (sie sind bereits in UTC)
+        const validFromStr = validFromDate.toISOString();
+        const validToStr = validToDate ? validToDate.toISOString() : null;
 
         medicationGroups.forEach((group) => {
           // Hole die richtige medicationId
@@ -436,8 +438,8 @@ export class MedicationPlanService {
             WeekdayFlags: group.weekdayFlags,
             DayTimeFlags: group.dayTimeFlags,
             Quantity: group.dosage,
-            ValidFrom: validFrom.toISOString(),
-            ValidTo: validToDate ? validToDate.toISOString() : null,
+            ValidFrom: validFromStr,
+            ValidTo: validToStr,
             Notes: `${group.dosageUnit}`,
             IsActive: true
           };
