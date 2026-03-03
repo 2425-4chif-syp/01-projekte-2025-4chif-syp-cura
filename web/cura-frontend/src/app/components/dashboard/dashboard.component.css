@@ -707,14 +707,15 @@ main {
   }
 
   .table-scroll-container {
-    overflow-x: hidden;
+    overflow-x: hidden !important;
   }
 
   .mobile-medication .medication-table {
     font-size: var(--text-xs);
     flex: none;
-    min-width: 100%;
-    table-layout: auto;
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
   }
 
   .medication-table td,
