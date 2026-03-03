@@ -37,8 +37,14 @@ namespace Core.Entities
         public bool IsActive { get; set; } = true;
 
         // Navigation Properties
+        // JsonIgnore verhindert dass diese beim PUT request validiert werden
+        [System.Text.Json.Serialization.JsonIgnore]
         public Patient Patient { get; set; } = null!;
+        
+        [System.Text.Json.Serialization.JsonIgnore]
         public Medication Medication { get; set; } = null!;
+        
+        [System.Text.Json.Serialization.JsonIgnore]
         public Caregiver? Caregiver { get; set; }
 
         public override string ToString()

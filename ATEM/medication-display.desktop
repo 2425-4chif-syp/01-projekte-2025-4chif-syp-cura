@@ -2,7 +2,7 @@
 Type=Application
 Name=ATEM Medication Alert Display
 Comment=Zeigt Medikamenten-Erinnerungen im Fullscreen
-Exec=/home/pi/start-display.sh
+Exec=/home/raspi/start-display.sh
 Terminal=false
 Categories=Application;
 X-GNOME-Autostart-enabled=true

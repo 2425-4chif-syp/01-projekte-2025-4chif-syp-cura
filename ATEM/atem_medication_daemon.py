@@ -23,15 +23,15 @@ PATIENT_ID = 1
 POLL_INTERVAL = 30  # Alle 30 Sekunden checken
 
 # ATEM Inputs
-INPUT_NORMAL = 1   # HDMI 1 - Normal/Hauptsignal
-INPUT_ALERT = 2    # HDMI 2 - Alert/Erinnerung
+INPUT_NORMAL = 2   # HDMI 2 - Normal/Hauptsignal
+INPUT_ALERT = 1    # HDMI 1 - Alert/Raspi Display
 
 # ===== LOGGING =====
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('/var/log/atem-medication-alert.log'),
+        logging.FileHandler('/home/raspi/atem/medication-alert.log'),
         logging.StreamHandler()
     ]
 )

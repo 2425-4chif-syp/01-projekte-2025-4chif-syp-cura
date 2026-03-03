@@ -33,6 +33,130 @@ export class MedicationPlanService {
     return this.http.get<MedicationPlan[]>(`${this.API_URL}/MedicationPlans/patient/${patientId}`);
   }
 
+  /**
+   * Get plan groups for a patient (grouped by ValidFrom + ValidTo)
+   * @param patientId Patient ID
+   * @returns Array of plan groups with metadata
+   */
+  getPatientPlanGroups(patientId: number): Observable<{id: string; name: string; patientName: string; validFrom: string; validTo: string | null; medicationCount: number; isCurrentlyActive: boolean}[]> {
+    return this.getMedicationPlans(patientId).pipe(
+      map(plans => {
+        // Gruppiere nach ValidFrom + ValidTo Kombination
+        const groups = new Map<string, MedicationPlan[]>();
+        
+        plans.forEach(plan => {
+          const validFromDate = plan.validFrom.split('T')[0]; // YYYY-MM-DD
+          const validToDate = plan.validTo ? plan.validTo.split('T')[0] : 'unbegrenzt';
+          const groupKey = `${validFromDate}_${validToDate}`;
+          
+          if (!groups.has(groupKey)) {
+            groups.set(groupKey, []);
+          }
+          groups.get(groupKey)!.push(plan);
+        });
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // Konvertiere zu Array und sortiere (neueste zuerst)
+        return Array.from(groups.entries())
+          .map(([groupKey, planList]) => {
+            const validFrom = new Date(planList[0].validFrom);
+            const validTo = planList[0].validTo ? new Date(planList[0].validTo) : null;
+            
+            // Prüfe ob aktuell gültig
+            const isCurrentlyActive = planList.some(p => {
+              const vf = new Date(p.validFrom);
+              vf.setHours(0, 0, 0, 0);
+              const vt = p.validTo ? new Date(p.validTo) : new Date(2099, 11, 31);
+              vt.setHours(23, 59, 59, 999);
+              return p.isActive && vf <= today && today <= vt;
+            });
+            
+            // Gruppennamen erstellen
+            let name = '';
+            if (validTo) {
+              name = `Medikamentenplan ${this.formatDateRange(planList[0].validFrom, planList[0].validTo!)}`;
+            } else {
+              name = `Medikamentenplan ab ${this.formatDate(planList[0].validFrom)}`;
+            }
+            
+            return {
+              id: groupKey,
+              name: name,
+              patientName: 'Patient',
+              validFrom: planList[0].validFrom.split('T')[0],
+              validTo: planList[0].validTo ? planList[0].validTo.split('T')[0] : null,
+              medicationCount: planList.length,
+              isCurrentlyActive: isCurrentlyActive
+            };
+          })
+          .sort((a, b) => {
+            // Aktive zuerst, dann nach Datum absteigend
+            if (a.isCurrentlyActive && !b.isCurrentlyActive) return -1;
+            if (!a.isCurrentlyActive && b.isCurrentlyActive) return 1;
+            return b.validFrom.localeCompare(a.validFrom);
+          });
+      })
+    );
+  }
+
+  /**
+   * Get medication plans by ValidFrom date (for a specific plan group)
+   * @param patientId Patient ID
+   * @param validFromDate ValidFrom date in YYYY-MM-DD format
+   * @returns Medication plans starting on that date
+   */
+  getMedicationPlansByDate(patientId: number, validFromDate: string, validToDate: string | null = null): Observable<MedicationPlan[]> {
+    return this.getMedicationPlans(patientId).pipe(
+      map(plans => plans.filter(p => {
+        const planValidFrom = p.validFrom.split('T')[0];
+        const planValidTo = p.validTo ? p.validTo.split('T')[0] : null;
+        
+        // Filter nach ValidFrom und ValidTo
+        if (validToDate) {
+          return planValidFrom === validFromDate && planValidTo === validToDate;
+        } else {
+          return planValidFrom === validFromDate && !planValidTo;
+        }
+      }))
+    );
+  }
+
+  /**
+   * Get all medication plans that are valid for a specific date
+   * @param patientId Patient ID
+   * @param date Date to check (default: today)
+   * @returns All plans valid on that date
+   */
+  getActivePlansForDate(patientId: number, date: Date = new Date()): Observable<MedicationPlan[]> {
+    const checkDate = new Date(date);
+    checkDate.setHours(12, 0, 0, 0); // Mittag zur sicheren Prüfung
+    
+    return this.getMedicationPlans(patientId).pipe(
+      map(plans => plans.filter(plan => {
+        const validFrom = new Date(plan.validFrom);
+        validFrom.setHours(0, 0, 0, 0);
+        
+        const validTo = plan.validTo ? new Date(plan.validTo) : new Date(2099, 11, 31);
+        validTo.setHours(23, 59, 59, 999);
+        
+        return plan.isActive && validFrom <= checkDate && checkDate <= validTo;
+      }))
+    );
+  }
+
+  private formatDate(isoDate: string): string {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  private formatDateRange(isoFrom: string, isoTo: string): string {
+    const from = new Date(isoFrom);
+    const to = new Date(isoTo);
+    return `${from.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })} - ${to.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+  }
+
   // Get all available medications
   getAllMedications(): Observable<Medication[]> {
     return this.http.get<Medication[]>(`${this.API_URL}/Medications`);
@@ -191,11 +315,15 @@ export class MedicationPlanService {
    * Erstellt mehrere Medikamentenpläne aus dem Wizard-Schedule
    * @param weekSchedule Map von Tag-Index -> Map von Tageszeit -> Medikamente
    * @param patientId Patient ID
+   * @param validFromDate Start date for the plan (default: today)
+   * @param validToDate End date for the plan (null = unlimited)
    * @returns Observable der erstellten Pläne
    */
   createWeeklyMedicationPlans(
     weekSchedule: Map<number, Map<string, Array<{ medicationId: number | null; name: string; dosage: number; dosageUnit: string }>>>,
-    patientId: number
+    patientId: number,
+    validFromDate: Date = new Date(),
+    validToDate: Date | null = null
   ): Observable<any[]> {
     const timeOfDayMap: { [key: string]: number } = {
       'MORNING': 1,
@@ -225,6 +353,11 @@ export class MedicationPlanService {
       
       dayMap.forEach((medications, timeOfDay) => {
         const dayTimeFlag = timeOfDayMap[timeOfDay];
+        
+        if (dayTimeFlag === undefined) {
+          console.error(`❌ FEHLER: Unbekannte Tageszeit '${timeOfDay}'. Verfügbare Zeiten:`, Object.keys(timeOfDayMap));
+          return; // Skip this time slot
+        }
         
         medications.forEach(med => {
           if (!med.medicationId && !med.name.trim()) return;
@@ -257,6 +390,14 @@ export class MedicationPlanService {
       });
     });
 
+    console.log('📋 Gruppierte Medikamente:', Array.from(medicationGroups.entries()).map(([key, group]) => ({
+      key,
+      medication: group.medicationName,
+      weekdayFlags: group.weekdayFlags,
+      dayTimeFlags: group.dayTimeFlags,
+      dosage: group.dosage
+    })));
+
     // Erstelle zuerst neue Medikamente
     const createMedicationRequests = Array.from(newMedicationsToCreate).map(name =>
       this.http.post<Medication>(`${this.API_URL}/Medications`, { name, activeIngredient: null }).pipe(
@@ -276,7 +417,7 @@ export class MedicationPlanService {
       map(() => {
         // Jetzt haben wir IDs für alle neuen Medikamente
         const planRequests: Observable<any>[] = [];
-        const validFrom = new Date();
+        const validFrom = new Date(validFromDate);
         validFrom.setHours(0, 0, 0, 0);
 
         medicationGroups.forEach((group) => {
@@ -296,12 +437,18 @@ export class MedicationPlanService {
             DayTimeFlags: group.dayTimeFlags,
             Quantity: group.dosage,
             ValidFrom: validFrom.toISOString(),
-            ValidTo: null,
+            ValidTo: validToDate ? validToDate.toISOString() : null,
             Notes: `${group.dosageUnit}`,
             IsActive: true
           };
           
-          console.log('Erstelle Plan:', plan);
+          console.log('🚀 Erstelle Plan:', {
+            medication: group.medicationName,
+            medId,
+            weekdayFlags: group.weekdayFlags,
+            dayTimeFlags: group.dayTimeFlags,
+            plan
+          });
           planRequests.push(this.http.post(`${this.API_URL}/MedicationPlans`, plan));
         });
 
@@ -309,6 +456,94 @@ export class MedicationPlanService {
       }),
       switchMap(planRequests => planRequests.length > 0 ? forkJoin(planRequests) : of([]))
     );
+  }
+
+  // Deactivate all currently active plans for a patient by setting ValidTo date
+  deactivateActivePlans(patientId: number, validToDate: string): Observable<any> {
+    return this.getMedicationPlans(patientId).pipe(
+      switchMap(plans => {
+        // Filter nur aktive Pläne
+        const activePlans = plans.filter(p => p.isActive);
+        
+        if (activePlans.length === 0) {
+          console.log('ℹ️ Keine aktiven Pläne zum Deaktivieren');
+          return of(null);
+        }
+        
+        console.log(`🔄 Deaktiviere ${activePlans.length} Pläne sequenziell...`);
+        
+        // Deaktiviere Pläne sequenziell (einer nach dem anderen) um Concurrency-Probleme zu vermeiden
+        let chain$: Observable<any> = of(null);
+        
+        activePlans.forEach(plan => {
+          chain$ = chain$.pipe(
+            switchMap(() => {
+              // DTO für Update - NUR die primitiven Felder (kein id, keine Navigation Properties)
+              const dto = {
+                patientId: plan.patientId,
+                medicationId: plan.medicationId,
+                caregiverId: plan.caregiverId,
+                weekdayFlags: plan.weekdayFlags,
+                dayTimeFlags: plan.dayTimeFlags,
+                quantity: plan.quantity,
+                validFrom: plan.validFrom,
+                validTo: validToDate,
+                notes: plan.notes,
+                isActive: false
+              };
+              
+              console.log('📝 Update Plan:', plan.id, 'DTO:', JSON.stringify(dto, null, 2));
+              return this.http.put(`${this.API_URL}/MedicationPlans/${plan.id}`, dto);
+            })
+          );
+        });
+        
+        return chain$;
+      })
+    );
+  }
+
+  // Delete all medication plans for a patient
+  deleteAllPlansForPatient(patientId: number): Observable<any> {
+    // Zuerst alle Pläne des Patienten laden
+    return this.getMedicationPlans(patientId).pipe(
+      switchMap(plans => {
+        if (plans.length === 0) {
+          return of(null);
+        }
+        // Jeden Plan einzeln löschen
+        const deleteRequests = plans.map(plan => 
+          this.http.delete(`${this.API_URL}/MedicationPlans/${plan.id}`)
+        );
+        return forkJoin(deleteRequests);
+      })
+    );
+  }
+
+  // Create multiple medication plans at once
+  createMedicationPlans(plans: Partial<MedicationPlan>[]): Observable<MedicationPlan[]> {
+    const requests = plans.map(plan => {
+      const validFromDate = new Date(plan.validFrom!);
+      const validToDate = plan.validTo ? new Date(plan.validTo) : new Date(2099, 11, 31);
+      
+      const payload = {
+        PatientId: plan.patientId,
+        MedicationId: plan.medicationId,
+        CaregiverId: plan.caregiverId || 1,
+        WeekdayFlags: plan.weekdayFlags,
+        DayTimeFlags: plan.dayTimeFlags,
+        Quantity: plan.quantity,
+        ValidFrom: validFromDate.toISOString(),
+        ValidTo: validToDate.toISOString(),
+        Notes: plan.notes || '',
+        IsActive: true
+      };
+      
+      console.log('📤 POST Payload:', payload);
+      return this.http.post<MedicationPlan>(`${this.API_URL}/MedicationPlans`, payload);
+    });
+
+    return requests.length > 0 ? forkJoin(requests) : of([]);
   }
 }
 

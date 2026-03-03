@@ -122,42 +122,55 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMedicationPlan([FromBody] CreateMedicationPlanDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            // Map DTO to Entity
-            var medicationPlan = new MedicationPlan
+            try
             {
-                PatientId = dto.PatientId,
-                MedicationId = dto.MedicationId,
-                CaregiverId = dto.CaregiverId,
-                WeekdayFlags = dto.WeekdayFlags,
-                DayTimeFlags = dto.DayTimeFlags,
-                Quantity = dto.Quantity,
-                ValidFrom = dto.ValidFrom,
-                ValidTo = dto.ValidTo,
-                Notes = dto.Notes,
-                IsActive = dto.IsActive
-            };
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            await _unitOfWork.MedicationPlanRepository.AddAsync(medicationPlan);
-            await _unitOfWork.SaveChangesAsync();
+                // Map DTO to Entity
+                var medicationPlan = new MedicationPlan
+                {
+                    PatientId = dto.PatientId,
+                    MedicationId = dto.MedicationId,
+                    CaregiverId = dto.CaregiverId,
+                    WeekdayFlags = dto.WeekdayFlags,
+                    DayTimeFlags = dto.DayTimeFlags,
+                    Quantity = dto.Quantity,
+                    ValidFrom = dto.ValidFrom,
+                    ValidTo = dto.ValidTo,
+                    Notes = dto.Notes,
+                    IsActive = dto.IsActive
+                };
 
-            return CreatedAtAction(nameof(GetMedicationPlan), new { id = medicationPlan.Id }, medicationPlan);
+                await _unitOfWork.MedicationPlanRepository.AddAsync(medicationPlan);
+                await _unitOfWork.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetMedicationPlan), new { id = medicationPlan.Id }, medicationPlan);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ ERROR in CreateMedicationPlan: {ex.Message}");
+                Console.WriteLine($"   InnerException: {ex.InnerException?.Message}");
+                Console.WriteLine($"   StackTrace: {ex.StackTrace}");
+                Console.WriteLine($"   DTO Data: PatientId={dto.PatientId}, MedicationId={dto.MedicationId}, " +
+                                $"DayTimeFlags={dto.DayTimeFlags}, WeekdayFlags={dto.WeekdayFlags}");
+                return StatusCode(500, new { 
+                    error = ex.Message, 
+                    innerError = ex.InnerException?.Message,
+                    dayTimeFlags = dto.DayTimeFlags 
+                });
+            }
         }
 
         /// <summary>
         /// Updates an existing medication plan.
         /// </summary>
         /// <param name="id">Medication plan ID</param>
-        /// <param name="medicationPlan">New medication plan data</param>
+        /// <param name="dto">Updated medication plan data</param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMedicationPlan(int id, [FromBody] MedicationPlan medicationPlan)
+        public async Task<IActionResult> UpdateMedicationPlan(int id, [FromBody] UpdateMedicationPlanDto dto)
         {
-            if (id != medicationPlan.Id)
-                return BadRequest("ID mismatch");
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -165,7 +178,18 @@ namespace WebApi.Controllers
             if (existingPlan == null)
                 return NotFound();
 
-            _unitOfWork.MedicationPlanRepository.Update(medicationPlan);
+            // Update nur die Felder die sich ändern können (keine Foreign Keys ändern!)
+            // Structural fields (PatientId, MedicationId, CaregiverId) werden NICHT geändert
+            // um EF Tracking-Probleme zu vermeiden
+            existingPlan.WeekdayFlags = dto.WeekdayFlags;
+            existingPlan.DayTimeFlags = dto.DayTimeFlags;
+            existingPlan.Quantity = dto.Quantity;
+            existingPlan.ValidFrom = dto.ValidFrom;
+            existingPlan.ValidTo = dto.ValidTo;
+            existingPlan.Notes = dto.Notes;
+            existingPlan.IsActive = dto.IsActive;
+
+            // Kein expliziter Update() Call nötig - EF trackt die Änderungen
             await _unitOfWork.SaveChangesAsync();
 
             return NoContent();

@@ -1,0 +1,156 @@
+<div class="medication-plan-editor">
+  <header class="editor-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Zurück
+      </button>
+      <h1>Medikamentenplan bearbeiten</h1>
+    </div>
+    <div class="header-right">
+      <div class="validity-period">
+        <label>
+          <i class="fas fa-calendar-alt"></i> Gültig von:
+          <input type="date" [(ngModel)]="validFrom" class="date-input" />
+        </label>
+        <label>
+          <i class="fas fa-calendar-alt"></i> Gültig bis:
+          <input type="date" [(ngModel)]="validTo" class="date-input" placeholder="unbegrenzt" />
+        </label>
+      </div>
+      <button class="btn-save" (click)="savePlan()">
+        <i class="fas fa-save"></i> Plan speichern
+      </button>
+    </div>
+  </header>
+
+  <div class="editor-content">
+    <!-- Linke Seite: Verfügbare Medikamente -->
+    <aside class="medication-list">
+      <div class="section-header">
+        <h2>Verfügbare Medikamente</h2>
+        <button class="btn-add" (click)="showAddMedicationForm = !showAddMedicationForm">
+          <i class="fas fa-plus"></i> Neues Medikament
+        </button>
+      </div>
+
+      <!-- Neues Medikament hinzufügen -->
+      @if (showAddMedicationForm) {
+        <div class="add-medication-form">
+          <input 
+            type="text" 
+            [(ngModel)]="newMedicationName"
+            placeholder="Medikamentenname"
+            class="input-text"
+            (keyup.enter)="addNewMedication()"
+          />
+          <button class="btn-primary" (click)="addNewMedication()">Hinzufügen</button>
+          <button class="btn-cancel" (click)="showAddMedicationForm = false">Abbrechen</button>
+        </div>
+      }
+
+      <!-- Drag-Quelle: Medikamentenliste -->
+      <div 
+        cdkDropList
+        id="medicationList"
+        [cdkDropListData]="availableMedications"
+        [cdkDropListConnectedTo]="getDropListIds()"
+        class="medication-items"
+        cdkDropListSortingDisabled>
+        @for (med of availableMedications; track med.id) {
+          <div class="medication-item" cdkDrag>
+            <i class="fas fa-grip-vertical drag-handle"></i>
+            <span class="medication-name">{{ med.name }}</span>
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- Rechte Seite: Wochenplan -->
+    <main class="week-plan">
+      <!-- Copy-Mode Banner -->
+      @if (copyMode && copiedDayPlan) {
+        <div class="copy-mode-banner">
+          <div class="banner-content">
+            <i class="fas fa-copy"></i>
+            <span>Kopiere <strong>{{ copiedDayPlan.label }}</strong> - Klicke auf einen Ziel-Tag</span>
+          </div>
+          <button class="btn-cancel-copy" (click)="cancelCopyMode()">
+            <i class="fas fa-times"></i> Abbrechen
+          </button>
+        </div>
+      }
+
+      <!-- Kopfzeile: Tageszeiten -->
+      <div class="weekdays-header">
+        <div class="weekday-column"></div> <!-- Leere Ecke links oben -->
+        @for (slotTemplate of timeSlotTemplates; track slotTemplate.id) {
+          <div class="weekday-column">
+            <div class="day-header">
+              <h3>{{ slotTemplate.label }}</h3>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Wochentage (Zeilen) -->
+      @for (dayPlan of weekdayPlans; track dayPlan.label; let dayIdx = $index) {
+        <div class="time-row" 
+             [class.copy-source]="copyMode && copiedDayPlan === dayPlan"
+             [class.copy-target]="copyMode && copiedDayPlan !== dayPlan">
+          <div class="time-label-cell"
+               [class.is-copy-source]="copyMode && copiedDayPlan === dayPlan"
+               [class.is-copy-target]="copyMode && copiedDayPlan !== dayPlan"
+               (click)="copyMode && copiedDayPlan !== dayPlan ? pasteToDday(dayPlan) : null">
+            <h4>{{ dayPlan.label }}</h4>
+            @if (!copyMode) {
+              <button class="btn-copy" (click)="copyDayPlan(dayPlan)" title="Tag kopieren">
+                <i class="fas fa-copy"></i>
+              </button>
+            }
+          </div>
+          
+          @for (slotTemplate of timeSlotTemplates; track slotTemplate.id; let slotIdx = $index) {
+            <div class="time-slot-cell">
+              <div 
+                cdkDropList
+                [id]="dayPlan.timeSlots[slotIdx].id"
+                [cdkDropListData]="dayPlan.timeSlots[slotIdx].medications"
+                [cdkDropListConnectedTo]="['medicationList']"
+                (cdkDropListDropped)="drop($event)"
+                class="drop-zone">
+                
+                @if (dayPlan.timeSlots[slotIdx].medications.length === 0) {
+                  <div class="empty-placeholder">
+                    <i class="fas fa-hand-pointer"></i>
+                  </div>
+                }
+
+                @for (med of dayPlan.timeSlots[slotIdx].medications; track med.id; let idx = $index) {
+                  <div class="medication-assignment" cdkDrag>
+                    <i class="fas fa-grip-vertical drag-handle"></i>
+                    <div class="med-info">
+                      <span class="med-name">{{ med.name }}</span>
+                      <div class="quantity-controls">
+                        <button (click)="updateQuantity(med, med.quantity - 1)"><i class="fas fa-minus"></i></button>
+                        <input 
+                          type="number" 
+                          [(ngModel)]="med.quantity"
+                          min="1"
+                          class="quantity-input"
+                        />
+                        <button (click)="updateQuantity(med, med.quantity + 1)"><i class="fas fa-plus"></i></button>
+                      </div>
+                    </div>
+                    <button class="btn-remove" (click)="removeMedication(dayPlan.timeSlots[slotIdx], idx)">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </main>
+  </div>
+</div>

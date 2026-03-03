@@ -1,0 +1,85 @@
+@startuml CuraMedicationSystem_ERD
+
+skinparam linetype ortho
+
+entity "locations" as locations {
+  * id : serial
+  --
+  street : character varying(255)
+  house_number : character varying(10)
+  postal_code : character varying(10)
+  city : character varying(100)
+  floor : character varying(10)
+}
+
+entity "caregivers" as caregivers {
+  * id : serial
+  --
+  name : character varying(255)
+  phone_number : character varying(20)
+  email : character varying(25)
+  * location_id : integer
+}
+
+entity "patients" as patients {
+  * id : serial
+  --
+  name : character varying(255)
+  age : integer
+  * location_id : integer
+  phone_number : character varying(50)
+  email : character varying(255)
+}
+
+entity "medications" as medications {
+  * id : serial
+  --
+  name : character varying(255)
+  active_ingredient : character varying(255)
+}
+
+entity "rfid_chips" as rfid_chips {
+  * id : serial
+  --
+  chip_id : character varying(50)
+  * patient_id : integer
+  weekday : character varying(20)
+  is_active : boolean
+}
+
+entity "medication_plans" as medication_plans {
+  * id : serial
+  --
+  * patient_id : integer
+  * medication_id : integer
+  * caregiver_id : integer
+  weekday_flags : integer
+  day_time_flags : integer
+  quantity : integer
+  valid_from : date
+  valid_to : date
+  notes : text
+  is_active : boolean
+}
+
+entity "medication_intakes" as medication_intakes {
+  * id : serial
+  --
+  * patient_id : integer
+  * medication_plan_id : integer
+  intake_time : timestamp without time zone
+  quantity : integer
+  notes : text
+  rfid_tag : character varying(50)
+}
+
+caregivers }o--|| locations
+patients }o--|| locations
+rfid_chips }o--|| patients
+medication_plans }o--|| patients
+medication_plans }o--|| medications
+medication_plans }o--|| caregivers
+medication_intakes }o--|| patients
+medication_intakes }o--|| medication_plans
+
+@enduml
