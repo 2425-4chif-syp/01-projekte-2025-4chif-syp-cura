@@ -1154,8 +1154,8 @@ main {
   justify-content: space-between;
   padding: var(--space-lg);
   background: var(--bg-hover);
-  overflow-x: auto;
   gap: var(--space-sm);
+  flex-wrap: wrap;
 }
 
 .step {
