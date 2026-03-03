@@ -129,6 +129,9 @@ main {
   position: absolute;
   top: 0;
   left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   transform: rotateY(180deg);
 }
 
@@ -230,7 +233,7 @@ main {
   transform: scale(1.1);
 }
 
-.day-detail-content { overflow-y: auto; max-height: 260px; padding-right: var(--space-xs); }
+.day-detail-content { flex: 1; overflow-y: auto; padding-right: var(--space-xs); }
 .day-detail-content::-webkit-scrollbar { width: 6px; }
 .day-detail-content::-webkit-scrollbar-track { background: rgba(74,87,89,0.05); border-radius: var(--radius-sm); }
 .day-detail-content::-webkit-scrollbar-thumb { background: grey; border-radius: var(--radius-sm); }
