@@ -709,18 +709,33 @@ main {
   .mobile-medication .medication-table {
     font-size: var(--text-xs);
     flex: none;
+    min-width: 100%;
+    table-layout: auto;
   }
 
   .medication-table td,
   .medication-table th {
-    padding: var(--space-xs) 2px;
+    padding: var(--space-xs);
   }
   
   .medication-table th.time-label,
   .medication-table td.time-label {
-    min-width: 5px;
-    max-width: 30px;
-    padding-right: 2px;
+    min-width: 30px;
+    max-width: 35px;
+    padding: var(--space-xs) 0 var(--space-xs) var(--space-xs);
+    font-size: 0.65rem;
+  }
+
+  .medication-table td {
+    font-size: 0.7rem;
+    line-height: 1.3;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .medication-table th:not(.time-label),
+  .medication-table td:not(.time-label) {
+    width: auto;
   }
 
   .action-buttons {
