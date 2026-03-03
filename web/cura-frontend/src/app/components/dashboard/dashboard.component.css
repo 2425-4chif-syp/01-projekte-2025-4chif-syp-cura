@@ -713,14 +713,14 @@ main {
 
   .medication-table td,
   .medication-table th {
-    padding: var(--space-xs) var(--space-sm);
+    padding: var(--space-xs) 2px;
   }
   
   .medication-table th.time-label,
   .medication-table td.time-label {
-    min-width: 40px;
-    max-width: 45px;
-    padding-right: 4px;
+    min-width: 35px;
+    max-width: 38px;
+    padding-right: 2px;
   }
 
   .action-buttons {
