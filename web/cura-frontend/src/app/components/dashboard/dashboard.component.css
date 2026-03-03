@@ -715,6 +715,13 @@ main {
   .medication-table th {
     padding: var(--space-xs) var(--space-sm);
   }
+  
+  .medication-table th.time-label,
+  .medication-table td.time-label {
+    min-width: 45px;
+    max-width: 50px;
+    padding-right: var(--space-xs);
+  }
 
   .action-buttons {
     flex-direction: column;
