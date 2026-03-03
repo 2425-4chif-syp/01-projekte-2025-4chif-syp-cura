@@ -54,8 +54,8 @@ INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_f
 
 -- Patient 2: Elisabeth Gruber - Morning and noon medications
 INSERT INTO medication_plans (patient_id, medication_id, caregiver_id, weekday_flags, day_time_flags, quantity, valid_from, valid_to, notes) VALUES
-(2, 5, 2, 127, 1, 2, '2024-01-01', '2026-12-31', 'Metformin morning with meals'),
-(2, 5, 2, 127, 2, 1, '2024-01-01', '2026-12-31', 'Metformin noon with meals'),
+(2, 4, 2, 127, 1, 2, '2024-01-01', '2026-12-31', 'Metformin morning with meals'),
+(2, 7, 2, 127, 2, 1, '2024-01-01', '2026-12-31', 'Metformin noon with meals'),
 (2, 8, 2, 127, 1, 1, '2024-01-01', '2026-12-31', 'Stomach protection before eating'),
 (2, 3, 2, 127, 8, 1, '2024-01-01', '2026-12-31', 'Paracetamol evening for pain');
 
