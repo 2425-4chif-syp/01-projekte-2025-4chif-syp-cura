@@ -405,7 +405,10 @@ export class DashboardComponent implements OnInit {
 
     this.calendarService.getDailyStatus(patientId, year, month).subscribe({
       next: (statusData) => {
+        console.log('📅 Status-Daten vom Backend:', statusData);
+        console.log('📊 Status-Typen:', [...new Set(statusData.map(d => d.status))]);
         this.calendarDays = this.calendarService.generateCalendarFromStatus(statusData);
+        console.log('📅 Generierte Kalendertage:', this.calendarDays.filter(d => d.day > 0));
         this.intakeQuote = this.calendarService.calculateIntakeQuote(statusData);
         this.calculateStatusPercentages();
       },

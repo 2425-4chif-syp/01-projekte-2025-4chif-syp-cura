@@ -43,10 +43,14 @@ export class CalendarService {
         date: status.date
       };
 
+      console.log(`🗓️ Tag ${date.getDate()}: Status="${status.status}", Scheduled=${status.scheduled}, Taken=${status.taken}`);
+
       if (status.status === 'checked') dayData.checked = true;
       else if (status.status === 'partial') dayData.partial = true;
       else if (status.status === 'missed') dayData.missed = true;
       else if (status.status === 'empty') dayData.empty = true;
+
+      console.log(`  ➡️ dayData:`, dayData);
 
       calendarDays.push(dayData);
     }
