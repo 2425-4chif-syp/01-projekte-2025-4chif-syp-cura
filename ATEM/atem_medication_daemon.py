@@ -19,6 +19,7 @@ BACKEND_URL = "https://vm12.htl-leonding.ac.at/api/MedicationAlert/should-alert/
 ATEM_IP = "192.168.0.226"
 PATIENT_ID = 1
 
+# test
 # Polling Intervall in Sekunden
 POLL_INTERVAL = 30  # Alle 30 Sekunden checken
 
