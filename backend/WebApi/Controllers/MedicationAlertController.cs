@@ -87,14 +87,17 @@ namespace WebApi.Controllers
             // Einnahmen für diesen Zeitslot filtern (basierend auf IntakeTime)
             var timeSlotIntakes = todayIntakes.Where(intake =>
             {
-                var intakeHour = intake.IntakeTime.ToLocalTime().Hour;
-                
-                // Zeitslot der Einnahme bestimmen
+                // IntakeTime is stored as UTC. Mark it explicitly as UTC and convert to Austria local time.
+                var intakeUtc = DateTime.SpecifyKind(intake.IntakeTime, DateTimeKind.Utc);
+                var intakeLocal = TimeZoneInfo.ConvertTimeFromUtc(intakeUtc, austriaTimeZone);
+                var intakeHour = intakeLocal.Hour;
+
+                // Determine intake time slot
                 if (intakeHour >= 6 && intakeHour < 11 && currentTimeSlot == 1) return true;
                 if (intakeHour >= 11 && intakeHour < 14 && currentTimeSlot == 2) return true;
                 if (intakeHour >= 14 && intakeHour < 18 && currentTimeSlot == 4) return true;
                 if (intakeHour >= 18 && currentTimeSlot == 8) return true;
-                
+
                 return false;
             }).ToList();
 
