@@ -147,9 +147,10 @@ namespace WebApi.Controllers
                 });
             }
 
-            // 2. Heutigen Wochentag prüfen
-            var now = DateTime.Now;
-            var today = now.DayOfWeek;
+            // 2. Heutigen Wochentag in Europe/Vienna prüfen
+            var austriaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Vienna");
+            var nowLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, austriaTimeZone);
+            var today = nowLocal.DayOfWeek;
             var todayString = today.ToString().ToUpper();
             
             if (chip.Weekday.ToUpper() != todayString)
@@ -178,7 +179,7 @@ namespace WebApi.Controllers
             };
 
             // 4. Aktuelle Tageszeit ermitteln und Flag berechnen
-            var hour = now.Hour;
+            var hour = nowLocal.Hour;
             int dayTimeFlag;
             string dayTimeName;
             
@@ -207,14 +208,14 @@ namespace WebApi.Controllers
                 return Ok(new { 
                     Success = false,
                     Error = "OUTSIDE_TIME_WINDOW",
-                    Message = $"Current time {now:HH:mm} is outside medication time windows (00:00-06:00 night rest)",
-                    CurrentTime = now.ToString("HH:mm")
+                    Message = $"Current time {nowLocal:HH:mm} is outside medication time windows (00:00-06:00 night rest)",
+                    CurrentTime = nowLocal.ToString("HH:mm")
                 });
             }
 
             // 5. Medication Plans für diesen Patienten, Wochentag und Tageszeit finden
             var medicationPlans = await _unitOfWork.MedicationPlanRepository
-                .GetByPatientWeekdayAndDayTimeAsync(chip.PatientId, weekdayFlag, dayTimeFlag, DateTime.SpecifyKind(now.Date, DateTimeKind.Utc));
+                .GetByPatientWeekdayAndDayTimeAsync(chip.PatientId, weekdayFlag, dayTimeFlag, DateTime.SpecifyKind(nowLocal.Date, DateTimeKind.Utc));
 
             if (!medicationPlans.Any())
             {
@@ -237,7 +238,7 @@ namespace WebApi.Controllers
             {
                 // Check if there's already an intake for this plan today
                 var todayIntakes = await _unitOfWork.MedicationIntakeRepository
-                    .GetByPatientAndDateAsync(chip.PatientId, DateOnly.FromDateTime(now.Date));
+                    .GetByPatientAndDateAsync(chip.PatientId, DateOnly.FromDateTime(nowLocal.Date));
                 
                 bool hasAlreadyTaken = todayIntakes.Any(i => i.MedicationPlanId == plan.Id);
 
@@ -256,7 +257,7 @@ namespace WebApi.Controllers
                     {
                         PatientId = chip.PatientId,
                         MedicationPlanId = plan.Id,
-                        IntakeTime = now.ToUniversalTime(),
+                        IntakeTime = nowLocal.ToUniversalTime(),
                         Quantity = plan.Quantity,
                         RfidTag = request.ChipId,
                         Notes = $"Auto-recorded via RFID scan at {dayTimeName}"
@@ -280,7 +281,7 @@ namespace WebApi.Controllers
                 return Ok(new { 
                     Success = true,
                     Message = $"Medications recorded successfully for {dayTimeName}",
-                    Timestamp = now,
+                    Timestamp = nowLocal,
                     ChipId = request.ChipId,
                     PatientId = chip.PatientId,
                     Weekday = todayString,
