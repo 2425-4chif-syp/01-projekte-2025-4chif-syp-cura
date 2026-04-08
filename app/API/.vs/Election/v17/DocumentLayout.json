@@ -1,0 +1,550 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{053E3575-0C7E-4CB9-A126-F4EE5D17C426}|ConsoleFillDb\\ConsoleFillDb.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\consolefilldb\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{053E3575-0C7E-4CB9-A126-F4EE5D17C426}|ConsoleFillDb\\ConsoleFillDb.csproj|solutionrelative:consolefilldb\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{053E3575-0C7E-4CB9-A126-F4EE5D17C426}|ConsoleFillDb\\ConsoleFillDb.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\consolefilldb\\consolefilldb.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{053E3575-0C7E-4CB9-A126-F4EE5D17C426}|ConsoleFillDb\\ConsoleFillDb.csproj|solutionrelative:consolefilldb\\consolefilldb.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\webapi\\controllers\\electionresultcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|solutionrelative:webapi\\controllers\\electionresultcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\electionresultrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\electionresultrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\contracts\\ielectionresultrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\contracts\\ielectionresultrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\webapi\\controllers\\citycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|solutionrelative:webapi\\controllers\\citycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\webapi\\controllers\\partycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|solutionrelative:webapi\\controllers\\partycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\entities\\party.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\entities\\party.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\entities\\city.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\entities\\city.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\cityrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\cityrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\contracts\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\contracts\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\dtos\\cityresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\dtos\\cityresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\dtos\\citywithvotesdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\dtos\\citywithvotesdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\entities\\electionresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\entities\\electionresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\dtos\\winnerpartydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\dtos\\winnerpartydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\partyrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\partyrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\webapi\\webapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|solutionrelative:webapi\\webapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\contracts\\icityrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\contracts\\icityrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{053E3575-0C7E-4CB9-A126-F4EE5D17C426}|ConsoleFillDb\\ConsoleFillDb.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\consolefilldb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{053E3575-0C7E-4CB9-A126-F4EE5D17C426}|ConsoleFillDb\\ConsoleFillDb.csproj|solutionrelative:consolefilldb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F074B17-1420-4EA4-906A-DB08BA3FE332}|Utils\\Utils.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\utils\\utils.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{8F074B17-1420-4EA4-906A-DB08BA3FE332}|Utils\\Utils.csproj|solutionrelative:utils\\utils.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\persistence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\persistence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\contracts\\ipartyrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\contracts\\ipartyrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\core\\entities\\entityobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{940BD46C-C89B-4C62-87DF-6DA6428A63DF}|Core\\Core.csproj|solutionrelative:core\\entities\\entityobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|solutionrelative:webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{78E4C6AA-17E0-48A1-871F-DF340621F0A3}|WebApi\\WebApi.csproj|solutionrelative:webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\OneDrive\\HTL\\PR_IV\\Tests\\Angular\\Election\\Election\\Persistence\\Migrations\\20220627094607_intitialMigrate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|c:\\users\\leopo\\desktop\\01-projekte-2025-4chif-syp-cura\\app\\api\\persistence\\migrations\\20220627103122_intitialmigrate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0558BA60-913B-4EE4-B2B3-B385C2DCBBB8}|Persistence\\Persistence.csproj|solutionrelative:persistence\\migrations\\20220627103122_intitialmigrate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CityController.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Controllers\\CityController.cs",
+              "RelativeDocumentMoniker": "WebApi\\Controllers\\CityController.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Controllers\\CityController.cs",
+              "RelativeToolTip": "WebApi\\Controllers\\CityController.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAowCYAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T16:55:45.491Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ElectionResultController.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Controllers\\ElectionResultController.cs",
+              "RelativeDocumentMoniker": "WebApi\\Controllers\\ElectionResultController.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Controllers\\ElectionResultController.cs",
+              "RelativeToolTip": "WebApi\\Controllers\\ElectionResultController.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAvwDYAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T18:16:17.213Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IElectionResultRepository.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\IElectionResultRepository.cs",
+              "RelativeDocumentMoniker": "Core\\Contracts\\IElectionResultRepository.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\IElectionResultRepository.cs",
+              "RelativeToolTip": "Core\\Contracts\\IElectionResultRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.349Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ElectionResultRepository.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\ElectionResultRepository.cs",
+              "RelativeDocumentMoniker": "Persistence\\ElectionResultRepository.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\ElectionResultRepository.cs",
+              "RelativeToolTip": "Persistence\\ElectionResultRepository.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAkwBgAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.34Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ConsoleFillDb.csproj",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\ConsoleFillDb\\ConsoleFillDb.csproj",
+              "RelativeDocumentMoniker": "ConsoleFillDb\\ConsoleFillDb.csproj",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\ConsoleFillDb\\ConsoleFillDb.csproj",
+              "RelativeToolTip": "ConsoleFillDb\\ConsoleFillDb.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-07T11:54:57.778Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\ConsoleFillDb\\appsettings.json",
+              "RelativeDocumentMoniker": "ConsoleFillDb\\appsettings.json",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\ConsoleFillDb\\appsettings.json",
+              "RelativeToolTip": "ConsoleFillDb\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-07T11:54:50.344Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PartyController.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Controllers\\PartyController.cs",
+              "RelativeDocumentMoniker": "WebApi\\Controllers\\PartyController.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Controllers\\PartyController.cs",
+              "RelativeToolTip": "WebApi\\Controllers\\PartyController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.313Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Party.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\Party.cs",
+              "RelativeDocumentMoniker": "Core\\Entities\\Party.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\Party.cs",
+              "RelativeToolTip": "Core\\Entities\\Party.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAIwAsAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.222Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "City.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\City.cs",
+              "RelativeDocumentMoniker": "Core\\Entities\\City.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\City.cs",
+              "RelativeToolTip": "Core\\Entities\\City.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.315Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IUnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\IUnitOfWork.cs",
+              "RelativeDocumentMoniker": "Core\\Contracts\\IUnitOfWork.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\IUnitOfWork.cs",
+              "RelativeToolTip": "Core\\Contracts\\IUnitOfWork.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.309Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CityRepository.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\CityRepository.cs",
+              "RelativeDocumentMoniker": "Persistence\\CityRepository.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\CityRepository.cs",
+              "RelativeToolTip": "Persistence\\CityRepository.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwCkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.338Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CityResultDto.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Dtos\\CityResultDto.cs",
+              "RelativeDocumentMoniker": "Core\\Dtos\\CityResultDto.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Dtos\\CityResultDto.cs",
+              "RelativeToolTip": "Core\\Dtos\\CityResultDto.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAkwA0AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T19:06:06.756Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "CityWithVotesDto.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Dtos\\CityWithVotesDto.cs",
+              "RelativeDocumentMoniker": "Core\\Dtos\\CityWithVotesDto.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Dtos\\CityWithVotesDto.cs",
+              "RelativeToolTip": "Core\\Dtos\\CityWithVotesDto.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T16:55:06.245Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "WinnerPartyDto.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Dtos\\WinnerPartyDto.cs",
+              "RelativeDocumentMoniker": "Core\\Dtos\\WinnerPartyDto.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Dtos\\WinnerPartyDto.cs",
+              "RelativeToolTip": "Core\\Dtos\\WinnerPartyDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T18:17:35.865Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "PartyRepository.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\PartyRepository.cs",
+              "RelativeDocumentMoniker": "Persistence\\PartyRepository.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\PartyRepository.cs",
+              "RelativeToolTip": "Persistence\\PartyRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.191Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ElectionResult.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\ElectionResult.cs",
+              "RelativeDocumentMoniker": "Core\\Entities\\ElectionResult.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\ElectionResult.cs",
+              "RelativeToolTip": "Core\\Entities\\ElectionResult.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAowBAAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.22Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Persistence\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Persistence\\ApplicationDbContext.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAWwCwAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.346Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "WebApi.csproj",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\WebApi.csproj",
+              "RelativeDocumentMoniker": "WebApi\\WebApi.csproj",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\WebApi.csproj",
+              "RelativeToolTip": "WebApi\\WebApi.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-07T11:54:50.226Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ICityRepository.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\ICityRepository.cs",
+              "RelativeDocumentMoniker": "Core\\Contracts\\ICityRepository.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\ICityRepository.cs",
+              "RelativeToolTip": "Core\\Contracts\\ICityRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\appsettings.json",
+              "RelativeDocumentMoniker": "WebApi\\appsettings.json",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\appsettings.json",
+              "RelativeToolTip": "WebApi\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-07T11:54:50.304Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Core.csproj",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Core.csproj",
+              "RelativeDocumentMoniker": "Core\\Core.csproj",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Core.csproj",
+              "RelativeToolTip": "Core\\Core.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-07T11:55:02.573Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "IPartyRepository.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\IPartyRepository.cs",
+              "RelativeDocumentMoniker": "Core\\Contracts\\IPartyRepository.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Contracts\\IPartyRepository.cs",
+              "RelativeToolTip": "Core\\Contracts\\IPartyRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.308Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Program.cs",
+              "RelativeDocumentMoniker": "WebApi\\Program.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\WebApi\\Program.cs",
+              "RelativeToolTip": "WebApi\\Program.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAABcAAABHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.317Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\ConsoleFillDb\\Program.cs",
+              "RelativeDocumentMoniker": "ConsoleFillDb\\Program.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\ConsoleFillDb\\Program.cs",
+              "RelativeToolTip": "ConsoleFillDb\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Persistence.csproj",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\Persistence.csproj",
+              "RelativeDocumentMoniker": "Persistence\\Persistence.csproj",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\Persistence.csproj",
+              "RelativeToolTip": "Persistence\\Persistence.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABSAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-07T11:55:05.353Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Utils.csproj",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Utils\\Utils.csproj",
+              "RelativeDocumentMoniker": "Utils\\Utils.csproj",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Utils\\Utils.csproj",
+              "RelativeToolTip": "Utils\\Utils.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-07T11:56:03.075Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "EntityObject.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\EntityObject.cs",
+              "RelativeDocumentMoniker": "Core\\Entities\\EntityObject.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Core\\Entities\\EntityObject.cs",
+              "RelativeToolTip": "Core\\Entities\\EntityObject.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.319Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "Persistence\\UnitOfWork.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\UnitOfWork.cs",
+              "RelativeToolTip": "Persistence\\UnitOfWork.cs",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAQwHAAAACgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.323Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "20220627094607_intitialMigrate.cs",
+              "DocumentMoniker": "C:\\OneDrive\\HTL\\PR_IV\\Tests\\Angular\\Election\\Election\\Persistence\\Migrations\\20220627094607_intitialMigrate.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\OneDrive\\HTL\\PR_IV\\Tests\\Angular\\Election\\Election\\Persistence\\Migrations\\20220627094607_intitialMigrate.cs",
+              "ToolTip": "C:\\OneDrive\\HTL\\PR_IV\\Tests\\Angular\\Election\\Election\\Persistence\\Migrations\\20220627094607_intitialMigrate.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\OneDrive\\HTL\\PR_IV\\Tests\\Angular\\Election\\Election\\Persistence\\Migrations\\20220627094607_intitialMigrate.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2022-06-27T09:46:07.976Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "20220627103122_intitialMigrate.cs",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\Migrations\\20220627103122_intitialMigrate.cs",
+              "RelativeDocumentMoniker": "Persistence\\Migrations\\20220627103122_intitialMigrate.cs",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\Migrations\\20220627103122_intitialMigrate.cs",
+              "RelativeToolTip": "Persistence\\Migrations\\20220627103122_intitialMigrate.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T11:54:50.335Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\appsettings.json",
+              "RelativeDocumentMoniker": "Persistence\\appsettings.json",
+              "ToolTip": "C:\\Users\\leopo\\Desktop\\01-projekte-2025-4chif-syp-cura\\app\\API\\Persistence\\appsettings.json",
+              "RelativeToolTip": "Persistence\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAABaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-07T11:54:50.342Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 58,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 140,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

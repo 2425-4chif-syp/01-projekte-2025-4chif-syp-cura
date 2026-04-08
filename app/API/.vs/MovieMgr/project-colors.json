@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "940bd46c-c89b-4c62-87df-6da6428a63df": {
+      "ProjectGuid": "940bd46c-c89b-4c62-87df-6da6428a63df",
+      "DisplayName": "Core",
+      "ColorIndex": 0
+    },
+    "0558ba60-913b-4ee4-b2b3-b385c2dcbbb8": {
+      "ProjectGuid": "0558ba60-913b-4ee4-b2b3-b385c2dcbbb8",
+      "DisplayName": "Persistence",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "8f074b17-1420-4ea4-906a-db08ba3fe332": {
+      "ProjectGuid": "8f074b17-1420-4ea4-906a-db08ba3fe332",
+      "DisplayName": "Utils",
+      "ColorIndex": 2
+    },
+    "053e3575-0c7e-4cb9-a126-f4ee5d17c426": {
+      "ProjectGuid": "053e3575-0c7e-4cb9-a126-f4ee5d17c426",
+      "DisplayName": "ConsoleFillDb",
+      "ColorIndex": 3
+    },
+    "aecea389-3b52-46a4-94c2-ab4067abf234": {
+      "ProjectGuid": "aecea389-3b52-46a4-94c2-ab4067abf234",
+      "DisplayName": "WebApi",
+      "ColorIndex": 4
+    }
+  },
+  "NextColorIndex": 5
+}
