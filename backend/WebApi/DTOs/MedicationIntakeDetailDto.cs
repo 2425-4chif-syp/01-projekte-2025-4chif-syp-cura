@@ -52,29 +52,57 @@ namespace WebApi.DTOs
         /// Time of day flag (1=Morning, 2=Noon, 4=Afternoon, 8=Evening)
         /// Calculated from IntakeTime hour
         /// </summary>
-        public int DayTimeFlag => GetDayTimeFlag(IntakeTime.Hour);
+        public int DayTimeFlag => GetDayTimeFlag(IntakeTime, Notes);
         
         /// <summary>
         /// Human-readable time of day label
         /// </summary>
-        public string TimeLabel => GetTimeLabel(IntakeTime.Hour);
+        public string TimeLabel => GetTimeLabel(IntakeTime, Notes);
         
-        private static int GetDayTimeFlag(int hour) => hour switch
+        private static int GetDayTimeFlag(DateTime intakeTime, string? notes)
         {
-            >= 6 and < 11 => 1,   // Morning
-            >= 11 and < 14 => 2,  // Noon
-            >= 14 and < 18 => 4,  // Afternoon
-            >= 18 and < 22 => 8,  // Evening
-            _ => 1                // Default to Morning
-        };
+            if (!string.IsNullOrWhiteSpace(notes))
+            {
+                if (notes.Contains("MORNING", StringComparison.OrdinalIgnoreCase)) return 1;
+                if (notes.Contains("NOON", StringComparison.OrdinalIgnoreCase)) return 2;
+                if (notes.Contains("AFTERNOON", StringComparison.OrdinalIgnoreCase)) return 4;
+                if (notes.Contains("EVENING", StringComparison.OrdinalIgnoreCase)) return 8;
+            }
+
+            var localHour = GetAustriaLocalHour(intakeTime);
+
+            return localHour switch
+            {
+                >= 6 and < 11 => 1,   // Morning
+                >= 11 and < 14 => 2,  // Noon
+                >= 14 and < 18 => 4,  // Afternoon
+                >= 18 and < 22 => 8,  // Evening
+                _ => 1                // Default to Morning
+            };
+        }
         
-        private static string GetTimeLabel(int hour) => hour switch
+        private static string GetTimeLabel(DateTime intakeTime, string? notes) => GetDayTimeFlag(intakeTime, notes) switch
         {
-            >= 6 and < 11 => "Morning",
-            >= 11 and < 14 => "Noon",
-            >= 14 and < 18 => "Afternoon",
-            >= 18 and < 22 => "Evening",
+            1 => "Morning",
+            2 => "Noon",
+            4 => "Afternoon",
+            8 => "Evening",
             _ => "Unknown"
         };
+
+        private static int GetAustriaLocalHour(DateTime intakeTime)
+        {
+            var austriaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Vienna");
+
+            var localTime = intakeTime.Kind switch
+            {
+                DateTimeKind.Utc => TimeZoneInfo.ConvertTimeFromUtc(intakeTime, austriaTimeZone),
+                DateTimeKind.Local => TimeZoneInfo.ConvertTime(intakeTime, austriaTimeZone),
+                // Legacy values without kind are treated as UTC in this API.
+                _ => TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(intakeTime, DateTimeKind.Utc), austriaTimeZone)
+            };
+
+            return localTime.Hour;
+        }
     }
 }
