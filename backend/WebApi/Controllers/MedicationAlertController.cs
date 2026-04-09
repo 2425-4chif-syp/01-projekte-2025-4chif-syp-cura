@@ -84,7 +84,16 @@ namespace WebApi.Controllers
             var todayIntakes = await _unitOfWork.MedicationIntakeRepository
                 .GetByPatientAndDateAsync(patientId, DateOnly.FromDateTime(today));
 
-            // Einnahmen für diesen Zeitslot filtern (basierend auf IntakeTime)
+            // Primärlogik: Prüfe anhand der geplanten MedicationPlanIds für diesen Zeitslot.
+            // Das ist robuster als reine Zeitstempel-Auswertung und entspricht der Scan-Logik.
+            var scheduledPlanIds = medicationPlans.Select(p => p.Id).ToHashSet();
+            var takenPlanIds = todayIntakes
+                .Where(i => i.MedicationPlanId.HasValue && scheduledPlanIds.Contains(i.MedicationPlanId.Value))
+                .Select(i => i.MedicationPlanId!.Value)
+                .Distinct()
+                .ToHashSet();
+
+            // Fallback für legacy/planlose Einträge: Slot-basiert über Notes/Zeitfenster.
             var timeSlotIntakes = todayIntakes.Where(intake =>
             {
                 // Prefer explicit slot from notes for backward compatibility with legacy timestamps.
@@ -116,8 +125,10 @@ namespace WebApi.Controllers
                 return intakeSlot == currentTimeSlot;
             }).ToList();
 
+            var hasTakenForCurrentSlot = takenPlanIds.Count > 0 || timeSlotIntakes.Any();
+
             // Wenn noch keine Einnahme für diesen Zeitslot existiert → Alert!
-            if (!timeSlotIntakes.Any())
+            if (!hasTakenForCurrentSlot)
             {
                 return Ok(new
                 {
@@ -143,7 +154,7 @@ namespace WebApi.Controllers
                 TimeSlot = timeSlotName,
                 CurrentTime = now.ToString("HH:mm"),
                 ScheduledMedications = medicationPlans.Count(),
-                TakenMedications = timeSlotIntakes.Count
+                TakenMedications = Math.Max(takenPlanIds.Count, timeSlotIntakes.Count)
             });
         }
     }

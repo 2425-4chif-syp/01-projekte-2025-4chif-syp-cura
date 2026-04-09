@@ -233,14 +233,42 @@ namespace WebApi.Controllers
             // 6. Prüfen welche Medikamente noch nicht eingenommen wurden
             var recordedIntakes = new List<object>();
             var alreadyTaken = new List<object>();
+            var todayIntakes = (await _unitOfWork.MedicationIntakeRepository
+                .GetByPatientAndDateAsync(chip.PatientId, DateOnly.FromDateTime(nowLocal.Date)))
+                .ToList();
 
             foreach (var plan in medicationPlans)
             {
-                // Check if there's already an intake for this plan today
-                var todayIntakes = await _unitOfWork.MedicationIntakeRepository
-                    .GetByPatientAndDateAsync(chip.PatientId, DateOnly.FromDateTime(nowLocal.Date));
-                
-                bool hasAlreadyTaken = todayIntakes.Any(i => i.MedicationPlanId == plan.Id);
+                // Check if there is already an intake for this plan in the SAME time slot.
+                bool hasAlreadyTaken = todayIntakes.Any(i =>
+                {
+                    if (i.MedicationPlanId != plan.Id) return false;
+
+                    var notes = i.Notes ?? string.Empty;
+                    if (notes.Contains("MORNING", StringComparison.OrdinalIgnoreCase)) return dayTimeFlag == 1;
+                    if (notes.Contains("NOON", StringComparison.OrdinalIgnoreCase)) return dayTimeFlag == 2;
+                    if (notes.Contains("AFTERNOON", StringComparison.OrdinalIgnoreCase)) return dayTimeFlag == 4;
+                    if (notes.Contains("EVENING", StringComparison.OrdinalIgnoreCase)) return dayTimeFlag == 8;
+
+                    // Fallback for legacy entries without slot marker in notes.
+                    var intakeLocal = i.IntakeTime.Kind switch
+                    {
+                        DateTimeKind.Utc => TimeZoneInfo.ConvertTimeFromUtc(i.IntakeTime, austriaTimeZone),
+                        DateTimeKind.Local => TimeZoneInfo.ConvertTime(i.IntakeTime, austriaTimeZone),
+                        _ => i.IntakeTime
+                    };
+
+                    var intakeSlot = intakeLocal.Hour switch
+                    {
+                        >= 6 and < 11 => 1,
+                        >= 11 and < 14 => 2,
+                        >= 14 and < 18 => 4,
+                        >= 18 => 8,
+                        _ => 0
+                    };
+
+                    return intakeSlot == dayTimeFlag;
+                });
 
                 if (hasAlreadyTaken)
                 {
