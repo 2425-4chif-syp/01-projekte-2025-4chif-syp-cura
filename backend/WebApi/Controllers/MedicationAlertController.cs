@@ -87,18 +87,33 @@ namespace WebApi.Controllers
             // Einnahmen für diesen Zeitslot filtern (basierend auf IntakeTime)
             var timeSlotIntakes = todayIntakes.Where(intake =>
             {
-                // IntakeTime is stored as UTC. Mark it explicitly as UTC and convert to Austria local time.
-                var intakeUtc = DateTime.SpecifyKind(intake.IntakeTime, DateTimeKind.Utc);
-                var intakeLocal = TimeZoneInfo.ConvertTimeFromUtc(intakeUtc, austriaTimeZone);
+                // Prefer explicit slot from notes for backward compatibility with legacy timestamps.
+                var notes = intake.Notes ?? string.Empty;
+                if (notes.Contains("MORNING", StringComparison.OrdinalIgnoreCase)) return currentTimeSlot == 1;
+                if (notes.Contains("NOON", StringComparison.OrdinalIgnoreCase)) return currentTimeSlot == 2;
+                if (notes.Contains("AFTERNOON", StringComparison.OrdinalIgnoreCase)) return currentTimeSlot == 4;
+                if (notes.Contains("EVENING", StringComparison.OrdinalIgnoreCase)) return currentTimeSlot == 8;
+
+                // Fallback: map intake timestamp to Austria local time.
+                var intakeLocal = intake.IntakeTime.Kind switch
+                {
+                    DateTimeKind.Utc => TimeZoneInfo.ConvertTimeFromUtc(intake.IntakeTime, austriaTimeZone),
+                    DateTimeKind.Local => TimeZoneInfo.ConvertTime(intake.IntakeTime, austriaTimeZone),
+                    // Legacy DB values are often stored without kind information and represent local wall-clock time.
+                    _ => intake.IntakeTime
+                };
+
                 var intakeHour = intakeLocal.Hour;
+                var intakeSlot = intakeHour switch
+                {
+                    >= 6 and < 11 => 1,
+                    >= 11 and < 14 => 2,
+                    >= 14 and < 18 => 4,
+                    >= 18 => 8,
+                    _ => 0
+                };
 
-                // Determine intake time slot
-                if (intakeHour >= 6 && intakeHour < 11 && currentTimeSlot == 1) return true;
-                if (intakeHour >= 11 && intakeHour < 14 && currentTimeSlot == 2) return true;
-                if (intakeHour >= 14 && intakeHour < 18 && currentTimeSlot == 4) return true;
-                if (intakeHour >= 18 && currentTimeSlot == 8) return true;
-
-                return false;
+                return intakeSlot == currentTimeSlot;
             }).ToList();
 
             // Wenn noch keine Einnahme für diesen Zeitslot existiert → Alert!

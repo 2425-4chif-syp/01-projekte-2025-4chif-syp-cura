@@ -257,7 +257,10 @@ namespace WebApi.Controllers
                     {
                         PatientId = chip.PatientId,
                         MedicationPlanId = plan.Id,
-                        IntakeTime = nowLocal.ToUniversalTime(),
+                        // Convert from Austria local time explicitly to UTC.
+                        // Using ToUniversalTime on an Unspecified DateTime can produce wrong results
+                        // depending on the server's local timezone.
+                        IntakeTime = TimeZoneInfo.ConvertTimeToUtc(nowLocal, austriaTimeZone),
                         Quantity = plan.Quantity,
                         RfidTag = request.ChipId,
                         Notes = $"Auto-recorded via RFID scan at {dayTimeName}"
